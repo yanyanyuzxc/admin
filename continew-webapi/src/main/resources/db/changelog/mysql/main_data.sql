@@ -78,7 +78,7 @@ VALUES
 (1114, '修改', 1110, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:storage:update', 4, 1, 1, NOW()),
 (1115, '删除', 1110, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:storage:delete', 5, 1, 1, NOW()),
 
-( 1180, '客户端管理', 1000, 2, '/system/client', 'SystemClient', 'system/client/index', NULL, 'mobile', b'0', b'0', b'0', NULL, 9, 1, 1, NOW()),
+( 1180, '终端管理', 1000, 2, '/system/client', 'SystemClient', 'system/client/index', NULL, 'mobile', b'0', b'0', b'0', NULL, 9, 1, 1, NOW()),
 (1181, '列表', 1180, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:client:list', 1, 1, 1, NOW()),
 (1182, '详情', 1180, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:client:detail', 2, 1, 1, NOW()),
 (1183, '新增', 1180, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:client:add', 3, 1, 1, NOW()),
@@ -190,7 +190,7 @@ INSERT INTO `sys_dict`
 VALUES
 (1, '公告类型', 'notice_type', NULL, b'1', 1, NOW()),
 (2, '消息类型', 'message_type', NULL, b'1', 1, NOW()),
-(3, '客户端类型', 'client_type', NULL, b'1', 1, NOW());
+(3, '终端类型', 'client_type', NULL, b'1', 1, NOW());
 
 INSERT INTO `sys_dict_item`
 (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`)
@@ -247,7 +247,7 @@ VALUES
 (1, '开发环境', 'local_dev', 2, NULL, NULL, NULL, 'C:/continew-admin/data/file/', 'http://localhost:8000/file', '本地存储', b'1', 1, 1, 1, NOW()),
 (2, '生产环境', 'local_prod', 2, NULL, NULL, NULL, '../data/file/', 'http://api.continew.top/file', '本地存储', b'0', 2, 2, 1, NOW());
 
--- 初始化客户端数据
+-- 初始化终端数据
 INSERT INTO `sys_client`
 (`id`, `client_id`, `client_key`, `client_secret`, `auth_type`, `client_type`, `active_timeout`, `timeout`, `status`, `create_user`, `create_time`)
 VALUES
