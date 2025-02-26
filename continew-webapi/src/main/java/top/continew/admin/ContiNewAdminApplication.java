@@ -25,6 +25,7 @@ import com.github.xiaoymin.knife4j.spring.configuration.Knife4jProperties;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -44,6 +45,7 @@ import top.continew.starter.web.model.R;
  * @since 2022/12/8 23:15
  */
 @Slf4j
+@EnableFileStorage
 @EnableMethodCache(basePackages = "top.continew.admin")
 @EnableGlobalResponse
 @EnableCrudRestController

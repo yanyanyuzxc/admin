@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.enums;
+package top.continew.admin.system.validation;
+
+import jakarta.validation.groups.Default;
 
 /**
- * 参数类别枚举
+ * 分组校验
  *
  * @author Charles7c
- * @since 2024/11/14 20:00
+ * @since 2024/7/3 22:01
  */
-public enum OptionCategoryEnum {
+public interface ValidationGroup extends Default {
 
     /**
-     * 系统配置
+     * 分组校验-增删改查
      */
-    SITE,
+    interface Storage extends ValidationGroup {
+        /**
+         * 本地存储
+         */
+        interface Local extends Storage {
+        }
 
-    /**
-     * 密码配置
-     */
-    PASSWORD,
-
-    /**
-     * 邮箱配置
-     */
-    MAIL,
-
-    /**
-     * 登录配置
-     */
-    LOGIN,
+        /**
+         * 兼容S3协议存储
+         */
+        interface S3 extends Storage {
+        }
+    }
 }

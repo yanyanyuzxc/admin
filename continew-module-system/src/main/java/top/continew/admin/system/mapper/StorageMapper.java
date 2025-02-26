@@ -14,33 +14,16 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.enums;
+package top.continew.admin.system.mapper;
+
+import top.continew.admin.system.model.entity.StorageDO;
+import top.continew.starter.data.mp.base.BaseMapper;
 
 /**
- * 参数类别枚举
+ * 存储 Mapper
  *
  * @author Charles7c
- * @since 2024/11/14 20:00
+ * @since 2023/12/26 22:09
  */
-public enum OptionCategoryEnum {
-
-    /**
-     * 系统配置
-     */
-    SITE,
-
-    /**
-     * 密码配置
-     */
-    PASSWORD,
-
-    /**
-     * 邮箱配置
-     */
-    MAIL,
-
-    /**
-     * 登录配置
-     */
-    LOGIN,
+public interface StorageMapper extends BaseMapper<StorageDO> {
 }

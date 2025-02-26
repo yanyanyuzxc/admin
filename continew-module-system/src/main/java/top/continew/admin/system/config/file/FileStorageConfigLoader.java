@@ -16,24 +16,25 @@
 
 package top.continew.admin.system.config.file;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import top.continew.admin.system.enums.OptionCategoryEnum;
-import top.continew.admin.system.mapper.FileMapper;
-import top.continew.admin.system.service.OptionService;
-import top.continew.starter.storage.dao.StorageDao;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.system.model.query.StorageQuery;
+import top.continew.admin.system.model.req.StorageReq;
+import top.continew.admin.system.model.resp.StorageResp;
+import top.continew.admin.system.service.StorageService;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 文件存储配置加载器
  *
  * @author Charles7c
- * @author echo
  * @since 2023/12/24 22:31
  */
 @Slf4j
@@ -41,22 +42,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FileStorageConfigLoader implements ApplicationRunner {
 
-    private final OptionService optionService;
-    private final FileStorageInit fileStorageInit;
+    private final StorageService storageService;
 
     @Override
     public void run(ApplicationArguments args) {
-        // 查询存储配置
-        Map<String, String> map = optionService.getByCategory(OptionCategoryEnum.STORAGE);
-        // 加载存储配置
-        fileStorageInit.load(map);
-    }
-
-    /**
-     * 存储持久层接口本地实现类
-     */
-    @Bean
-    public StorageDao storageDao(FileMapper fileMapper) {
-        return new StorageDaoImpl(fileMapper);
+        StorageQuery query = new StorageQuery();
+        query.setStatus(DisEnableStatusEnum.ENABLE);
+        List<StorageResp> storageList = storageService.list(query, null);
+        if (CollUtil.isEmpty(storageList)) {
+            return;
+        }
+        storageList.forEach(s -> storageService.load(BeanUtil.copyProperties(s, StorageReq.class)));
     }
 }
