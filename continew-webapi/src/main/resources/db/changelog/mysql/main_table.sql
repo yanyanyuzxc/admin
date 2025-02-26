@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `sys_log` (
     `id`               bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',
     `trace_id`         varchar(255) DEFAULT NULL                COMMENT '链路ID',
     `description`      varchar(255) NOT NULL                    COMMENT '日志描述',
-    `module`           varchar(50)  NOT NULL                    COMMENT '所属模块',
+    `module`           varchar(100) NOT NULL                    COMMENT '所属模块',
     `request_url`      varchar(512) NOT NULL                    COMMENT '请求URL',
     `request_method`   varchar(10)  NOT NULL                    COMMENT '请求方式',
     `request_headers`  text         DEFAULT NULL                COMMENT '请求头',

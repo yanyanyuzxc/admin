@@ -312,7 +312,7 @@ CREATE TABLE IF NOT EXISTS "sys_log" (
     "id"               int8         NOT NULL,
     "trace_id"         varchar(255) DEFAULT NULL,
     "description"      varchar(255) NOT NULL,
-    "module"           varchar(50)  NOT NULL,
+    "module"           varchar(100) NOT NULL,
     "request_url"      varchar(512) NOT NULL,
     "request_method"   varchar(10)  NOT NULL,
     "request_headers"  text         DEFAULT NULL,
