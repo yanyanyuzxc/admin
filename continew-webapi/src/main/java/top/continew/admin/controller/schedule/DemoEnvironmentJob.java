@@ -131,7 +131,7 @@ public class DemoEnvironmentJob {
                 roleMenuMapper.lambdaUpdate().notIn(RoleMenuDO::getRoleId, ROLE_FLAG).remove();
                 return roleMapper.lambdaUpdate().notIn(RoleDO::getId, ROLE_FLAG).remove();
             });
-            this.clean(menuCount, "菜单", CacheConstants.MENU_KEY_PREFIX, () -> menuMapper.lambdaUpdate()
+            this.clean(menuCount, "菜单", CacheConstants.ROLE_MENU_KEY_PREFIX, () -> menuMapper.lambdaUpdate()
                 .gt(MenuDO::getId, DELETE_FLAG)
                 .remove());
             this.clean(deptCount, "部门", null, () -> deptMapper.lambdaUpdate().gt(DeptDO::getId, DEPT_FLAG).remove());

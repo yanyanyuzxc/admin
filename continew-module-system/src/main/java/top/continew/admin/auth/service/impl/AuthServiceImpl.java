@@ -32,6 +32,7 @@ import top.continew.admin.auth.model.resp.LoginResp;
 import top.continew.admin.auth.model.resp.RouteResp;
 import top.continew.admin.auth.service.AuthService;
 import top.continew.admin.common.constant.SysConstants;
+import top.continew.admin.common.context.RoleContext;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.system.enums.MenuTypeEnum;
 import top.continew.admin.system.model.resp.ClientResp;
@@ -86,16 +87,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public List<RouteResp> buildRouteTree(Long userId) {
-        Set<String> roleCodeSet = roleService.listCodeByUserId(userId);
-        if (CollUtil.isEmpty(roleCodeSet)) {
+        Set<RoleContext> roleSet = roleService.listByUserId(userId);
+        if (CollUtil.isEmpty(roleSet)) {
             return new ArrayList<>(0);
         }
         // 查询菜单列表
         Set<MenuResp> menuSet = new LinkedHashSet<>();
-        if (roleCodeSet.contains(SysConstants.SUPER_ROLE_CODE)) {
-            menuSet.addAll(menuService.listAll());
+        if (roleSet.stream().anyMatch(r -> SysConstants.SUPER_ROLE_ID.equals(r.getId()))) {
+            menuSet.addAll(menuService.listByRoleId(SysConstants.SUPER_ROLE_ID));
         } else {
-            roleCodeSet.forEach(roleCode -> menuSet.addAll(menuService.listByRoleCode(roleCode)));
+            roleSet.forEach(r -> menuSet.addAll(menuService.listByRoleId(r.getId())));
         }
         List<MenuResp> menuList = menuSet.stream().filter(m -> !MenuTypeEnum.BUTTON.equals(m.getType())).toList();
         if (CollUtil.isEmpty(menuList)) {
