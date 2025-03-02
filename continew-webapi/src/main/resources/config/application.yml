@@ -65,6 +65,8 @@ continew-starter.web:
     default-error-msg: error
     # 是否将原生异常错误信息填充到状态信息中
     origin-exception-using-detail-message: false
+    # 响应类全名（配置后 response-style 将不再生效）
+    response-class-full-name: top.continew.starter.web.model.R
 
 --- ### 全局树结构配置（简单树，对应前端 UI）
 continew-starter.crud:
