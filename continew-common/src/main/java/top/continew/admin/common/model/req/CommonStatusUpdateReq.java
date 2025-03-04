@@ -14,32 +14,29 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.validation;
+package top.continew.admin.common.model.req;
 
-import jakarta.validation.groups.Default;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+
+import java.io.Serializable;
 
 /**
- * 分组校验
+ * 修改状态请求参数
  *
  * @author Charles7c
- * @since 2024/7/3 22:01
+ * @since 2025/3/4 20:09
  */
-public interface ValidationGroup extends Default {
+@Data
+@Schema(description = "修改状态请求参数")
+public class CommonStatusUpdateReq implements Serializable {
 
     /**
-     * 分组校验-增删改查
+     * 状态
      */
-    interface Storage extends ValidationGroup {
-        /**
-         * 本地存储
-         */
-        interface Local extends Storage {
-        }
-
-        /**
-         * 对象存储
-         */
-        interface OSS extends Storage {
-        }
-    }
+    @Schema(description = "状态", example = "1")
+    @NotNull(message = "状态非法")
+    private DisEnableStatusEnum status;
 }
