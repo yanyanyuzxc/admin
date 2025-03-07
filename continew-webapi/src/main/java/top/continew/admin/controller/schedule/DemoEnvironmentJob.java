@@ -102,9 +102,16 @@ public class DemoEnvironmentJob {
             this.log(appCount, "应用");
             Long clientCount = clientsMapper.lambdaQuery().gt(ClientDO::getId, DELETE_FLAG).count();
             this.log(clientCount, "终端");
-            // 清理数据
             InterceptorIgnoreHelper.handle(IgnoreStrategy.builder().blockAttack(true).build());
             SnailJobLog.REMOTE.info("演示环境待清理数据项检测完成，开始执行清理。");
+            // 清理关联数据
+            messageUserMapper.lambdaUpdate().gt(MessageUserDO::getMessageId, MESSAGE_FLAG).remove();
+            userRoleMapper.lambdaUpdate().notIn(UserRoleDO::getRoleId, ROLE_FLAG).remove();
+            userRoleMapper.lambdaUpdate().notIn(UserRoleDO::getUserId, USER_FLAG).remove();
+            roleDeptMapper.lambdaUpdate().notIn(RoleDeptDO::getRoleId, ROLE_FLAG).remove();
+            roleMenuMapper.lambdaUpdate().notIn(RoleMenuDO::getRoleId, ROLE_FLAG).remove();
+            userSocialMapper.lambdaUpdate().notIn(UserSocialDO::getUserId, USER_FLAG).remove();
+            // 清理具体数据
             this.clean(dictItemCount, "字典项", null, () -> dictItemMapper.lambdaUpdate()
                 .gt(DictItemDO::getId, DELETE_FLAG)
                 .remove());
@@ -117,20 +124,11 @@ public class DemoEnvironmentJob {
             this.clean(noticeCount, "公告", null, () -> noticeMapper.lambdaUpdate()
                 .gt(NoticeDO::getId, DELETE_FLAG)
                 .remove());
-            this.clean(messageCount, "通知", null, () -> {
-                messageUserMapper.lambdaUpdate().gt(MessageUserDO::getMessageId, MESSAGE_FLAG).remove();
-                return messageMapper.lambdaUpdate().gt(MessageDO::getId, MESSAGE_FLAG).remove();
-            });
-            this.clean(userCount, "用户", null, () -> {
-                userRoleMapper.lambdaUpdate().notIn(UserRoleDO::getUserId, USER_FLAG).remove();
-                userSocialMapper.lambdaUpdate().notIn(UserSocialDO::getUserId, USER_FLAG).remove();
-                return userMapper.lambdaUpdate().notIn(UserDO::getId, USER_FLAG).remove();
-            });
-            this.clean(roleCount, "角色", null, () -> {
-                roleDeptMapper.lambdaUpdate().notIn(RoleDeptDO::getRoleId, ROLE_FLAG).remove();
-                roleMenuMapper.lambdaUpdate().notIn(RoleMenuDO::getRoleId, ROLE_FLAG).remove();
-                return roleMapper.lambdaUpdate().notIn(RoleDO::getId, ROLE_FLAG).remove();
-            });
+            this.clean(messageCount, "通知", null, () -> messageMapper.lambdaUpdate()
+                .gt(MessageDO::getId, MESSAGE_FLAG)
+                .remove());
+            this.clean(userCount, "用户", null, () -> userMapper.lambdaUpdate().notIn(UserDO::getId, USER_FLAG).remove());
+            this.clean(roleCount, "角色", null, () -> roleMapper.lambdaUpdate().notIn(RoleDO::getId, ROLE_FLAG).remove());
             this.clean(menuCount, "菜单", CacheConstants.ROLE_MENU_KEY_PREFIX, () -> menuMapper.lambdaUpdate()
                 .gt(MenuDO::getId, DELETE_FLAG)
                 .remove());
