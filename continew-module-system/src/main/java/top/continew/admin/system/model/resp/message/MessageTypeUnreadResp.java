@@ -14,51 +14,37 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.model.resp;
+package top.continew.admin.system.model.resp.message;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
+import top.continew.admin.system.enums.MessageTypeEnum;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Map;
 
 /**
- * 文件上传响应信息
+ * 各类型未读消息信息
  *
  * @author Charles7c
- * @since 2024/3/6 22:26
+ * @since 2023/11/2 23:00
  */
 @Data
-@Builder
-@Schema(description = "文件上传响应信息")
-public class FileUploadResp implements Serializable {
+@Schema(description = "各类型未读消息信息")
+public class MessageTypeUnreadResp implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 文件 id
+     * 类型
      */
-    @Schema(description = "文件 id", example = "1897293810343682049")
-    private String id;
+    @Schema(description = "类型（1：系统消息）", example = "1")
+    private MessageTypeEnum type;
 
     /**
-     * 文件 URL
+     * 数量
      */
-    @Schema(description = "文件 URL", example = "http://localhost:8000/file/65e87dc3fb377a6fb58bdece.jpg")
-    private String url;
-
-    /**
-     * 缩略图文件 URL
-     */
-    @Schema(description = "缩略图文件 URL", example = "http://localhost:8000/file/65e87dc3fb377a6fb58bdece.jpg")
-    private String thUrl;
-
-    /**
-     * 元数据
-     */
-    @Schema(description = "元数据")
-    private Map<String, String> metadata;
+    @Schema(description = "数量", example = "10")
+    private Long count;
 }

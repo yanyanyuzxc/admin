@@ -71,24 +71,14 @@ public class FileDO extends BaseDO {
     private String absPath;
 
     /**
-     * 文件元数据
-     */
-    private String metadata;
-
-    /**
-     * 文件类型
-     */
-    private String contentType;
-
-    /**
-     * 文件md5值
-     */
-    private String md5;
-
-    /**
      * 扩展名
      */
     private String extension;
+
+    /**
+     * 内容类型
+     */
+    private String contentType;
 
     /**
      * 类型
@@ -96,17 +86,27 @@ public class FileDO extends BaseDO {
     private FileTypeEnum type;
 
     /**
+     * MD5 值
+     */
+    private String md5;
+
+    /**
+     * 元数据
+     */
+    private String metadata;
+
+    /**
      * 缩略图大小（字节)
      */
     private Long thumbnailSize;
 
     /**
-     * 缩略图URL
+     * 缩略图 URL
      */
     private String thumbnailUrl;
 
     /**
-     * 文件元数据
+     * 缩略图元数据
      */
     private String thumbnailMetadata;
 
@@ -126,10 +126,10 @@ public class FileDO extends BaseDO {
         fileInfo.setUrl(this.url);
         fileInfo.setSize(this.size);
         fileInfo.setFilename(StrUtil.contains(this.url, StringConstants.SLASH)
-                ? StrUtil.subAfter(this.url, StringConstants.SLASH, true)
-                : this.url);
+            ? StrUtil.subAfter(this.url, StringConstants.SLASH, true)
+            : this.url);
         fileInfo.setOriginalFilename(StrUtils
-                .blankToDefault(this.extension, this.name, ex -> this.name + StringConstants.DOT + ex));
+            .blankToDefault(this.extension, this.name, ex -> this.name + StringConstants.DOT + ex));
         fileInfo.setBasePath(StringConstants.EMPTY);
         // 优化 path 处理
         fileInfo.setPath(extractRelativePath(this.url, storageDO));
@@ -138,8 +138,8 @@ public class FileDO extends BaseDO {
         fileInfo.setPlatform(storageDO.getCode());
         fileInfo.setThUrl(this.thumbnailUrl);
         fileInfo.setThFilename(StrUtil.contains(this.thumbnailUrl, StringConstants.SLASH)
-                ? StrUtil.subAfter(this.thumbnailUrl, StringConstants.SLASH, true)
-                : this.thumbnailUrl);
+            ? StrUtil.subAfter(this.thumbnailUrl, StringConstants.SLASH, true)
+            : this.thumbnailUrl);
         fileInfo.setThSize(this.thumbnailSize);
         if (StrUtil.isNotBlank(this.thumbnailMetadata)) {
             fileInfo.setThMetadata(JSONUtil.toBean(this.thumbnailMetadata, Map.class));

@@ -14,39 +14,51 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.model.resp;
+package top.continew.admin.system.model.resp.file;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 /**
- * 未读消息信息
+ * 文件上传响应信息
  *
  * @author Charles7c
- * @since 2023/11/2 23:00
+ * @since 2024/3/6 22:26
  */
 @Data
-@Schema(description = "未读消息信息")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class MessageUnreadResp implements Serializable {
+@Builder
+@Schema(description = "文件上传响应信息")
+public class FileUploadResp implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 未读消息数量
+     * 文件 id
      */
-    @Schema(description = "未读消息数量", example = "20")
-    private Long total;
+    @Schema(description = "文件 id", example = "1897293810343682049")
+    private String id;
 
     /**
-     * 各类型未读消息数量
+     * 文件 URL
      */
-    @Schema(description = "各类型未读消息数量")
-    private List<MessageTypeUnreadResp> details;
+    @Schema(description = "文件 URL", example = "http://localhost:8000/file/65e87dc3fb377a6fb58bdece.jpg")
+    private String url;
+
+    /**
+     * 缩略图文件 URL
+     */
+    @Schema(description = "缩略图文件 URL", example = "http://localhost:8000/file/65e87dc3fb377a6fb58bdece.jpg")
+    private String thUrl;
+
+    /**
+     * 元数据
+     */
+    @Schema(description = "元数据")
+    private Map<String, String> metadata;
 }

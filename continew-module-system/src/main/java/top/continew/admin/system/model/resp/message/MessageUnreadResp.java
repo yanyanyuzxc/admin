@@ -14,37 +14,39 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.model.resp;
+package top.continew.admin.system.model.resp.message;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import top.continew.admin.system.enums.MessageTypeEnum;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * 各类型未读消息信息
+ * 未读消息信息
  *
  * @author Charles7c
  * @since 2023/11/2 23:00
  */
 @Data
-@Schema(description = "各类型未读消息信息")
-public class MessageTypeUnreadResp implements Serializable {
+@Schema(description = "未读消息信息")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class MessageUnreadResp implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 类型
+     * 未读消息数量
      */
-    @Schema(description = "类型（1：系统消息）", example = "1")
-    private MessageTypeEnum type;
+    @Schema(description = "未读消息数量", example = "20")
+    private Long total;
 
     /**
-     * 数量
+     * 各类型未读消息数量
      */
-    @Schema(description = "数量", example = "10")
-    private Long count;
+    @Schema(description = "各类型未读消息数量")
+    private List<MessageTypeUnreadResp> details;
 }

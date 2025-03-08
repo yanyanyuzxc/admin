@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.model.resp;
+package top.continew.admin.system.model.resp.message;
 
 import cn.crane4j.annotation.Assemble;
 import com.fasterxml.jackson.annotation.JsonIgnore;

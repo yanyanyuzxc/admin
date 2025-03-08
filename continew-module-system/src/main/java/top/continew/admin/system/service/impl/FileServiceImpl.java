@@ -36,8 +36,8 @@ import top.continew.admin.system.model.entity.FileDO;
 import top.continew.admin.system.model.entity.StorageDO;
 import top.continew.admin.system.model.query.FileQuery;
 import top.continew.admin.system.model.req.FileReq;
-import top.continew.admin.system.model.resp.FileResp;
-import top.continew.admin.system.model.resp.FileStatisticsResp;
+import top.continew.admin.system.model.resp.file.FileResp;
+import top.continew.admin.system.model.resp.file.FileStatisticsResp;
 import top.continew.admin.system.service.FileService;
 import top.continew.admin.system.service.StorageService;
 import top.continew.starter.core.constant.StringConstants;
@@ -91,12 +91,12 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
         }
         LocalDate today = LocalDate.now();
         String path = today.getYear() + StringConstants.SLASH + today.getMonthValue() + StringConstants.SLASH + today
-                .getDayOfMonth() + StringConstants.SLASH;
+            .getDayOfMonth() + StringConstants.SLASH;
         UploadPretreatment uploadPretreatment = fileStorageService.of(file)
-                .setPlatform(storage.getCode())
-                .setHashCalculatorMd5(true)
-                .putAttr(ClassUtil.getClassName(StorageDO.class, false), storage)
-                .setPath(path);
+            .setPlatform(storage.getCode())
+            .setHashCalculatorMd5(true)
+            .putAttr(ClassUtil.getClassName(StorageDO.class, false), storage)
+            .setPath(path);
         // 图片文件生成缩略图
         if (FileTypeEnum.IMAGE.getExtensions().contains(FileNameUtil.extName(file.getOriginalFilename()))) {
             uploadPretreatment.thumbnail(img -> img.size(100, 100));
@@ -155,7 +155,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
             String url = URLUtil.normalize(prefix + fileResp.getUrl());
             fileResp.setUrl(url);
             String thumbnailUrl = StrUtils.blankToDefault(fileResp.getThumbnailUrl(), url, thUrl -> URLUtil
-                    .normalize(prefix + thUrl));
+                .normalize(prefix + thUrl));
             fileResp.setThumbnailUrl(thumbnailUrl);
             fileResp.setStorageName("%s (%s)".formatted(storage.getName(), storage.getCode()));
         }
