@@ -80,14 +80,14 @@ const columns: ColumnItem[] = reactive([
     <#elseif fieldConfig.formType = 'RADIO'>
     type: 'radio-group',
     </#if>
+    span: 24,
+    <#if fieldConfig.isRequired>
+    required: true,
+    </#if>
     <#if fieldConfig.dictCode?? && fieldConfig.dictCode != ''>
     props: {
       options: ${fieldConfig.dictCode},
     },
-    </#if>
-    span: 24,
-    <#if fieldConfig.isRequired>
-    rules: [{ required: true, message: '请输入${fieldConfig.comment}' }]
     </#if>
   },
   </#if>

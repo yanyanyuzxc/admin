@@ -19,7 +19,7 @@
 	  <#if fieldConfig.formType == "SELECT"><#-- 下拉框 -->
         <a-select
           v-model="queryForm.${fieldConfig.fieldName}"
-          :options="${fieldConfig.columnName}_enum"
+          :options="${fieldConfig.dictCode}"
           placeholder="请选择${fieldConfig.comment}"
           allow-clear
           style="width: 150px"
