@@ -19,9 +19,9 @@ package top.continew.admin.system.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alicp.jetcache.anno.Cached;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.system.mapper.DictItemMapper;
@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
  * @author Charles7c
  * @since 2023/9/11 21:29
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DictItemServiceImpl extends BaseServiceImpl<DictItemMapper, DictItemDO, DictItemResp, DictItemResp, DictItemQuery, DictItemReq> implements DictItemService {
@@ -70,7 +71,6 @@ public class DictItemServiceImpl extends BaseServiceImpl<DictItemMapper, DictIte
     }
 
     @Override
-    @Cached(key = "#dictCode", name = CacheConstants.DICT_KEY_PREFIX)
     public List<LabelValueResp> listByDictCode(String dictCode) {
         return Optional.ofNullable(ENUM_DICT_CACHE.get(dictCode.toLowerCase()))
             .orElseGet(() -> baseMapper.listByDictCode(dictCode));
@@ -129,5 +129,6 @@ public class DictItemServiceImpl extends BaseServiceImpl<DictItemMapper, DictIte
         ENUM_DICT_CACHE.putAll(classSet.stream()
             .collect(Collectors.toMap(cls -> StrUtil.toUnderlineCase(cls.getSimpleName())
                 .toLowerCase(), this::toEnumDict)));
+        log.debug("枚举字典已缓存到内存：{}", ENUM_DICT_CACHE.keySet());
     }
 }

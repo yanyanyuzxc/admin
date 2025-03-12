@@ -16,15 +16,20 @@
 
 package top.continew.admin.controller.system;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.controller.BaseController;
 import top.continew.admin.system.model.query.MenuQuery;
 import top.continew.admin.system.model.req.MenuReq;
 import top.continew.admin.system.model.resp.MenuResp;
 import top.continew.admin.system.service.MenuService;
+import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.URLUtils;
 import top.continew.starter.core.validation.ValidationUtils;
@@ -44,6 +49,13 @@ import java.lang.reflect.Method;
 @RestController
 @CrudRequestMapping(value = "/system/menu", api = {Api.TREE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE})
 public class MenuController extends BaseController<MenuService, MenuResp, MenuResp, MenuQuery, MenuReq> {
+
+    @Operation(summary = "清除缓存", description = "清除缓存")
+    @SaCheckPermission("system:menu:clearCache")
+    @DeleteMapping("/cache")
+    public void clearCache() {
+        RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
+    }
 
     @Override
     public void preHandle(CrudApi crudApi, Object[] args, Method targetMethod, Class<?> targetClass) throws Exception {
