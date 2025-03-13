@@ -44,7 +44,7 @@ import top.continew.starter.extension.crud.enums.Api;
 public class DictController extends BaseController<DictService, DictResp, DictResp, DictQuery, DictReq> {
 
     @Operation(summary = "清除缓存", description = "清除缓存")
-    @SaCheckPermission("system:dict:item:clearCache")
+    @SaCheckPermission("system:dict:clearCache")
     @DeleteMapping("/cache/{code}")
     public void clearCache(@PathVariable String code) {
         RedisUtils.deleteByPattern(CacheConstants.DICT_KEY_PREFIX + code);
