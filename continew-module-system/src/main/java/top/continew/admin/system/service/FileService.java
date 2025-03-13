@@ -18,15 +18,16 @@ package top.continew.admin.system.service;
 
 import org.dromara.x.file.storage.core.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
-import top.continew.admin.common.constant.SysFileConstants;
 import top.continew.admin.system.model.entity.FileDO;
 import top.continew.admin.system.model.query.FileQuery;
 import top.continew.admin.system.model.req.FileReq;
 import top.continew.admin.system.model.resp.file.FileResp;
 import top.continew.admin.system.model.resp.file.FileStatisticsResp;
+import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.data.mp.service.IService;
 import top.continew.starter.extension.crud.service.BaseService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -44,13 +45,14 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @return 文件信息
      */
     default FileInfo upload(MultipartFile file) {
-        return upload(file, SysFileConstants.getDefaultFilePath(), null);
+        return upload(file, getDefaultFilePath(), null);
     }
 
     /**
      * 上传到默认存储
      *
      * @param file 文件信息
+     * @param path 文件路径
      * @return 文件信息
      */
     default FileInfo upload(MultipartFile file, String path) {
@@ -81,4 +83,15 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @return 资源统计信息
      */
     FileStatisticsResp statistics();
+
+    /**
+     * 获取默认文件路径
+     *
+     * @return 默认文件路径
+     */
+    default String getDefaultFilePath() {
+        LocalDate today = LocalDate.now();
+        return today.getYear() + StringConstants.SLASH + today.getMonthValue() + StringConstants.SLASH + today
+            .getDayOfMonth() + StringConstants.SLASH;
+    }
 }

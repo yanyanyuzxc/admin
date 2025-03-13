@@ -263,8 +263,11 @@ spring.servlet:
     max-file-size: 10MB
     # 单次总上传文件大小限制
     max-request-size: 20MB
-## 头像支持格式配置
+## 头像配置
 avatar:
+  # 存储路径
+  path: user/avatar/
+  # 支持的后缀
   support-suffix: jpg,jpeg,png,gif
 
 --- ### Snail Job 配置

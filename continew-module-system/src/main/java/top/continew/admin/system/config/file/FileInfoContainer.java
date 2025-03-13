@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.config.container;
+package top.continew.admin.system.config.file;
 
 import cn.crane4j.core.container.Container;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +29,26 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 文件信息填充容器
+ *
+ * @author luoqiz
+ * @since 2025/3/12 18:11
+ */
 @Component
 @RequiredArgsConstructor
 public class FileInfoContainer implements Container<Long> {
 
     private final FileService fileService;
 
+    @Override
     public String getNamespace() {
         return ContainerConstants.FILE_INFO;
     }
 
+    @Override
     public Map<Long, FileDO> get(Collection<Long> ids) {
         List<FileDO> list = fileService.listByIds(ids);
         return list.stream().collect(Collectors.toMap(FileDO::getId, Function.identity()));
     }
-
 }

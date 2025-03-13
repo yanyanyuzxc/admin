@@ -57,7 +57,6 @@ import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.auth.service.OnlineUserService;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.constant.SysConstants;
-import top.continew.admin.common.constant.SysFileConstants;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
@@ -122,6 +121,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     private DeptService deptService;
     @Value("${avatar.support-suffix}")
     private String[] avatarSupportSuffix;
+    @Value("${avatar.path}")
+    private String avatarPath;
 
     @Override
     public PageResp<UserResp> page(UserQuery query, PageQuery pageQuery) {
@@ -389,11 +390,18 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         String avatarImageType = FileNameUtil.extName(avatarFile.getOriginalFilename());
         CheckUtils.throwIf(!StrUtil.equalsAnyIgnoreCase(avatarImageType, avatarSupportSuffix), "头像仅支持 {} 格式的图片", String
             .join(StringConstants.CHINESE_COMMA, avatarSupportSuffix));
-        FileInfo fileInfo = fileService.upload(avatarFile, SysFileConstants.USER_AVATAR_PATH);
-        UserDO userInfo = getById(id);
-        fileStorageService.delete(userInfo.getAvatar());
-        baseMapper.lambdaUpdate().set(UserDO::getAvatar, fileInfo.getUrl()).eq(UserDO::getId, id).update();
-        return fileInfo.getUrl();
+        // 上传新头像
+        UserDO user = super.getById(id);
+        FileInfo fileInfo = fileService.upload(avatarFile, avatarPath);
+        // 更新用户头像
+        String newAvatar = fileInfo.getUrl();
+        baseMapper.lambdaUpdate().set(UserDO::getAvatar, newAvatar).eq(UserDO::getId, id).update();
+        // 删除原头像
+        String oldAvatar = user.getAvatar();
+        if (StrUtil.isNotBlank(oldAvatar)) {
+            fileStorageService.delete(oldAvatar);
+        }
+        return newAvatar;
     }
 
     @Override
