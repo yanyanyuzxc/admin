@@ -102,10 +102,10 @@
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
 import ${classNamePrefix}AddModal from './${classNamePrefix}AddModal.vue'
 import ${classNamePrefix}DetailDrawer from './${classNamePrefix}DetailDrawer.vue'
 import { type ${classNamePrefix}Resp, type ${classNamePrefix}Query, delete${classNamePrefix}, export${classNamePrefix}, list${classNamePrefix} } from '@/apis/${apiModuleName}/${apiName}'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
@@ -133,7 +133,7 @@ const {
   search,
   handleDelete
 } = useTable((page) => list${classNamePrefix}({ ...queryForm, ...page }), { immediate: true })
-const columns = ref<TableInstanceColumns[]>([
+const columns: TableInstance['columns'] = [
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
   <#if fieldConfig.showInList>
@@ -156,7 +156,7 @@ const columns = ref<TableInstanceColumns[]>([
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['${apiModuleName}:${apiName}:detail', '${apiModuleName}:${apiName}:update', '${apiModuleName}:${apiName}:delete'])
   }
-]);
+]
 
 // 重置
 const reset = () => {
