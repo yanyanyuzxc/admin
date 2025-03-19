@@ -17,6 +17,7 @@
 package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.PostConstruct;
@@ -40,7 +41,6 @@ import top.continew.starter.extension.crud.service.BaseServiceImpl;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * 字典项业务实现
@@ -114,6 +114,9 @@ public class DictItemServiceImpl extends BaseServiceImpl<DictItemMapper, DictIte
      */
     private List<LabelValueResp> toEnumDict(Class<?> enumClass) {
         Object[] enumConstants = enumClass.getEnumConstants();
+        if (ArrayUtil.isEmpty(enumConstants)) {
+            return List.of();
+        }
         return Arrays.stream(enumConstants).map(e -> {
             BaseEnum baseEnum = (BaseEnum)e;
             return new LabelValueResp(baseEnum.getDescription(), baseEnum.getValue(), baseEnum.getColor());
@@ -126,9 +129,14 @@ public class DictItemServiceImpl extends BaseServiceImpl<DictItemMapper, DictIte
     @PostConstruct
     public void init() {
         Set<Class<?>> classSet = ClassUtil.scanPackageBySuper(projectProperties.getBasePackage(), BaseEnum.class);
-        ENUM_DICT_CACHE.putAll(classSet.stream()
-            .collect(Collectors.toMap(cls -> StrUtil.toUnderlineCase(cls.getSimpleName())
-                .toLowerCase(), this::toEnumDict)));
+        for (Class<?> cls : classSet) {
+            List<LabelValueResp> value = this.toEnumDict(cls);
+            if (CollUtil.isEmpty(value)) {
+                continue;
+            }
+            String key = StrUtil.toUnderlineCase(cls.getSimpleName()).toLowerCase();
+            ENUM_DICT_CACHE.put(key, value);
+        }
         log.debug("枚举字典已缓存到内存：{}", ENUM_DICT_CACHE.keySet());
     }
 }
