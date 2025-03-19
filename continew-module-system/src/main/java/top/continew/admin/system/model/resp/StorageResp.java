@@ -26,13 +26,13 @@ import top.continew.starter.security.mask.annotation.JsonMask;
 import java.io.Serial;
 
 /**
- * 存储响应信息
+ * 存储信息
  *
  * @author Charles7c
  * @since 2023/12/26 22:09
  */
 @Data
-@Schema(description = "存储响应信息")
+@Schema(description = "存储信息")
 public class StorageResp extends BaseDetailResp {
 
     @Serial
