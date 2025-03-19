@@ -18,6 +18,8 @@ package top.continew.admin.system.model.query;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.system.enums.SmsSupplierEnum;
 import top.continew.starter.data.core.annotation.Query;
 import top.continew.starter.data.core.enums.QueryType;
 
@@ -25,13 +27,14 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 短信服务配置查询条件
+ * 短信配置查询条件
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 18:41
  */
 @Data
-@Schema(description = "短信服务配置查询条件")
+@Schema(description = "短信配置查询条件")
 public class SmsConfigQuery implements Serializable {
 
     @Serial
@@ -40,42 +43,27 @@ public class SmsConfigQuery implements Serializable {
     /**
      * 名称
      */
-    @Schema(description = "名称")
+    @Schema(description = "名称", example = "短信配置1")
     @Query(type = QueryType.LIKE)
     private String name;
 
     /**
-     * 厂商名称标识
+     * 厂商
      */
-    @Schema(description = "厂商名称标识")
-    @Query(type = QueryType.EQ)
-    private String supplier;
+    @Schema(description = "厂商", example = "cloopen")
+    @Query
+    private SmsSupplierEnum supplier;
 
     /**
-     * Access Key 或 API Key
+     * Access Key
      */
-    @Schema(description = "Access Key 或 API Key")
-    @Query(type = QueryType.EQ)
-    private String accessKeyId;
+    @Schema(description = "Access Key", example = "7aaf0708674db3ee05676ecbc2f31b7b")
+    @Query
+    private String accessKey;
 
     /**
-     * 短信签名
+     * 状态
      */
-    @Schema(description = "短信签名")
-    @Query(type = QueryType.EQ)
-    private String signature;
-
-    /**
-     * 模板 ID
-     */
-    @Schema(description = "模板 ID")
-    @Query(type = QueryType.EQ)
-    private String templateId;
-
-    /**
-     * 是否启用
-     */
-    @Schema(description = "是否启用")
-    @Query(type = QueryType.EQ)
-    private Boolean isEnable;
+    @Schema(description = "状态", example = "1")
+    private DisEnableStatusEnum status;
 }

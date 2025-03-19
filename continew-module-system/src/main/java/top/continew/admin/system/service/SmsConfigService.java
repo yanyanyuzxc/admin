@@ -16,16 +16,15 @@
 
 package top.continew.admin.system.service;
 
-import top.continew.starter.extension.crud.service.BaseService;
 import top.continew.admin.system.model.query.SmsConfigQuery;
 import top.continew.admin.system.model.req.SmsConfigReq;
-import top.continew.admin.system.model.resp.SmsConfigDetailResp;
 import top.continew.admin.system.model.resp.SmsConfigResp;
+import top.continew.starter.extension.crud.service.BaseService;
 
 /**
- * 短信服务配置业务接口
+ * 短信配置业务接口
  *
  * @author luoqiz
  * @since 2025/03/15 18:41
  */
-public interface SmsConfigService extends BaseService<SmsConfigResp, SmsConfigDetailResp, SmsConfigQuery, SmsConfigReq> {}
+public interface SmsConfigService extends BaseService<SmsConfigResp, SmsConfigResp, SmsConfigQuery, SmsConfigReq> {}

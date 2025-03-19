@@ -14,42 +14,15 @@
  * limitations under the License.
  */
 
-package top.continew.admin.common.enums;
+package top.continew.admin.system.mapper;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import top.continew.starter.core.enums.BaseEnum;
+import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.admin.system.model.entity.SmsLogDO;
 
 /**
- * 方法类型枚举
+ * 短信日志 Mapper
  *
  * @author luoqiz
- * @since 2025/03/16 13:38
+ * @since 2025/03/15 22:15
  */
-@Getter
-@RequiredArgsConstructor
-public enum MethodTypeEnum implements BaseEnum<String> {
-
-    /**
-     * 新增
-     */
-    ADD("add", "新增"),
-
-    /**
-     * 更新
-     */
-    UPDATE("update", "更新"),
-
-    /**
-     * 删除
-     */
-    DELETE("delete", "删除"),
-    /**
-     * 删除
-     */
-    SEARCH("search", "查询"),;
-
-    private final String value;
-    private final String description;
-
-}
+public interface SmsLogMapper extends BaseMapper<SmsLogDO> {}

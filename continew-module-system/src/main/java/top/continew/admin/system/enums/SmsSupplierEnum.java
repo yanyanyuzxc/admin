@@ -18,21 +18,72 @@ package top.continew.admin.system.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.dromara.sms4j.aliyun.config.AlibabaConfig;
+import org.dromara.sms4j.cloopen.config.CloopenConfig;
 import org.dromara.sms4j.comm.constant.SupplierConstant;
+import org.dromara.sms4j.ctyun.config.CtyunConfig;
+import org.dromara.sms4j.provider.config.BaseConfig;
+import top.continew.admin.system.model.resp.SmsConfigResp;
 import top.continew.starter.core.enums.BaseEnum;
 
 /**
- * 菜单类型枚举
+ * 短信厂商枚举
  *
+ * @author luoqiz
  * @author Charles7c
- * @since 2023/2/15 20:12
+ * @since 2025/03/15 22:15
  */
 @Getter
 @RequiredArgsConstructor
 public enum SmsSupplierEnum implements BaseEnum<String> {
 
-    ALIBABA(SupplierConstant.ALIBABA, "阿里云"), CLOOPEN(SupplierConstant.CLOOPEN, "容联云"),
-    CTYUN(SupplierConstant.CTYUN, "天翼云"),
+    /**
+     * 阿里云
+     */
+    ALIBABA(SupplierConstant.ALIBABA, "阿里云") {
+        @Override
+        public BaseConfig toBaseConfig(SmsConfigResp smsConfig) {
+            AlibabaConfig config = new AlibabaConfig();
+            config.setConfigId(smsConfig.getId().toString());
+            config.setAccessKeyId(smsConfig.getAccessKey());
+            config.setAccessKeySecret(smsConfig.getSecretKey());
+            config.setSignature(smsConfig.getSignature());
+            config.setTemplateId(smsConfig.getTemplateId());
+            return config;
+        }
+    },
+
+    /**
+     * 容联云
+     */
+    CLOOPEN(SupplierConstant.CLOOPEN, "容联云") {
+        @Override
+        public BaseConfig toBaseConfig(SmsConfigResp smsConfig) {
+            CloopenConfig config = new CloopenConfig();
+            config.setConfigId(smsConfig.getId().toString());
+            config.setAccessKeyId(smsConfig.getAccessKey());
+            config.setAccessKeySecret(smsConfig.getSecretKey());
+            config.setSignature(smsConfig.getSignature());
+            config.setTemplateId(smsConfig.getTemplateId());
+            return config;
+        }
+    },
+
+    /**
+     * 天翼云
+     */
+    CTYUN(SupplierConstant.CTYUN, "天翼云") {
+        @Override
+        public BaseConfig toBaseConfig(SmsConfigResp smsConfig) {
+            CtyunConfig config = new CtyunConfig();
+            config.setConfigId(smsConfig.getId().toString());
+            config.setAccessKeyId(smsConfig.getAccessKey());
+            config.setAccessKeySecret(smsConfig.getSecretKey());
+            config.setSignature(smsConfig.getSignature());
+            config.setTemplateId(smsConfig.getTemplateId());
+            return config;
+        }
+    },
     //    EMAY(SupplierConstant.EMAY, "亿美软通"), HUAWEI(SupplierConstant.HUAWEI, "华为云短信"),
     //    JDCLOUD(SupplierConstant.JDCLOUD, "京东云短信"), NETEASE(SupplierConstant.NETEASE, "网易云信"),
     //    TENCENT(SupplierConstant.TENCENT, "腾讯云短信"), UNISMS(SupplierConstant.UNISMS, "合一短信"),
@@ -47,4 +98,12 @@ public enum SmsSupplierEnum implements BaseEnum<String> {
 
     private final String value;
     private final String description;
+
+    /**
+     * 转换为 BaseConfig
+     *
+     * @param smsConfig 短信配置
+     * @return BaseConfig
+     */
+    public abstract BaseConfig toBaseConfig(SmsConfigResp smsConfig);
 }

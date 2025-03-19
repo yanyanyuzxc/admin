@@ -16,23 +16,29 @@
 
 package top.continew.admin.system.model.resp;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import top.continew.admin.common.model.resp.BaseResp;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.common.model.resp.BaseDetailResp;
+import top.continew.admin.system.enums.SmsSupplierEnum;
+import top.continew.starter.file.excel.converter.ExcelBaseEnumConverter;
 import top.continew.starter.security.mask.annotation.JsonMask;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
 
 /**
- * 短信服务配置信息
+ * 短信配置信息
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 18:41
  */
 @Data
-@Schema(description = "短信服务配置信息")
-public class SmsConfigResp extends BaseResp {
+@ExcelIgnoreUnannotated
+@Schema(description = "短信配置信息")
+public class SmsConfigResp extends BaseDetailResp {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -40,85 +46,85 @@ public class SmsConfigResp extends BaseResp {
     /**
      * 名称
      */
-    @Schema(description = "名称")
+    @Schema(description = "名称", example = "短信配置1")
+    @ExcelProperty(value = "名称")
     private String name;
 
     /**
-     * 厂商名称标识
+     * 厂商
      */
-    @Schema(description = "厂商名称标识")
-    private String supplier;
+    @Schema(description = "厂商", example = "cloopen")
+    @ExcelProperty(value = "厂商")
+    private SmsSupplierEnum supplier;
 
     /**
-     * Access Key 或 API Key
+     * Access Key
      */
-    @Schema(description = "Access Key 或 API Key")
-    private String accessKeyId;
+    @Schema(description = "Access Key", example = "7aaf0708674db3ee05676ecbc2f31b7b")
+    @ExcelProperty(value = "Access Key")
+    private String accessKey;
 
     /**
-     * Access Secret 或 API Secret
+     * Secret Key
      */
-    @Schema(description = "Access Secret 或 API Secret")
-    @JsonMask(left = 4, right = 4, character = '*')
-    private String accessKeySecret;
+    @Schema(description = "Secret Key", example = "7fd4************************57be")
+    @ExcelProperty(value = "Secret Key")
+    @JsonMask(left = 4, right = 4)
+    private String secretKey;
 
     /**
      * 短信签名
      */
-    @Schema(description = "短信签名")
+    @Schema(description = "短信签名", example = "")
+    @ExcelProperty(value = "短信签名")
     private String signature;
 
     /**
      * 模板 ID
      */
-    @Schema(description = "模板 ID")
+    @Schema(description = "模板 ID", example = "1")
+    @ExcelProperty(value = "模板 ID")
     private String templateId;
 
     /**
      * 负载均衡权重
      */
-    @Schema(description = "负载均衡权重")
+    @Schema(description = "负载均衡权重", example = "1")
+    @ExcelProperty(value = "负载均衡权重")
     private Integer weight;
 
     /**
-     * 短信自动重试间隔时间（秒）
+     * 重试间隔（单位：秒）
      */
-    @Schema(description = "短信自动重试间隔时间（秒）")
+    @Schema(description = "重试间隔（单位：秒）", example = "5")
+    @ExcelProperty(value = "重试间隔（单位：秒）")
     private Integer retryInterval;
 
     /**
-     * 短信重试次数
+     * 重试次数
      */
-    @Schema(description = "短信重试次数")
+    @Schema(description = "重试次数", example = "0")
+    @ExcelProperty(value = "重试次数")
     private Integer maxRetries;
 
     /**
-     * 当前厂商的发送数量上限
+     * 发送上限
      */
-    @Schema(description = "当前厂商的发送数量上限")
+    @Schema(description = "发送上限")
+    @ExcelProperty(value = "发送上限")
     private Integer maximum;
 
     /**
      * 各个厂商独立配置
      */
-    @Schema(description = "各个厂商独立配置")
+    @Schema(description = "各个厂商独立配置", example = "")
+    @ExcelProperty(value = "各个厂商独立配置")
     private String supplierConfig;
 
     /**
-     * 是否启用
+     * 状态
      */
-    @Schema(description = "是否启用")
-    private Boolean isEnable;
-
-    /**
-     * 修改人
-     */
-    @Schema(description = "修改人")
-    private Long updateUser;
-
-    /**
-     * 修改时间
-     */
-    @Schema(description = "修改时间")
-    private LocalDateTime updateTime;
+    @Schema(description = "状态", example = "1")
+    @ExcelProperty(value = "状态", converter = ExcelBaseEnumConverter.class)
+    private DisEnableStatusEnum status;
 }

@@ -16,18 +16,16 @@
 
 package top.continew.admin.system.service.impl;
 
-import jakarta.annotation.Resource;
+import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
+import org.dromara.sms4j.core.factory.SmsFactory;
+import org.dromara.sms4j.provider.config.BaseConfig;
 import org.springframework.stereotype.Service;
-import top.continew.admin.common.enums.MethodTypeEnum;
-import top.continew.admin.system.config.sms.event.SmsEventMessage;
-import top.continew.admin.system.config.sms.event.SmsRedisConfig;
-import top.continew.admin.system.config.sms.event.SmsRedisMessagePublisher;
+import top.continew.admin.system.enums.SmsSupplierEnum;
 import top.continew.admin.system.mapper.SmsConfigMapper;
 import top.continew.admin.system.model.entity.SmsConfigDO;
 import top.continew.admin.system.model.query.SmsConfigQuery;
 import top.continew.admin.system.model.req.SmsConfigReq;
-import top.continew.admin.system.model.resp.SmsConfigDetailResp;
 import top.continew.admin.system.model.resp.SmsConfigResp;
 import top.continew.admin.system.service.SmsConfigService;
 import top.continew.starter.extension.crud.service.BaseServiceImpl;
@@ -35,39 +33,55 @@ import top.continew.starter.extension.crud.service.BaseServiceImpl;
 import java.util.List;
 
 /**
- * 短信服务配置业务实现
+ * 短信配置业务实现
  *
  * @author luoqiz
  * @since 2025/03/15 18:41
  */
 @Service
 @RequiredArgsConstructor
-public class SmsConfigServiceImpl extends BaseServiceImpl<SmsConfigMapper, SmsConfigDO, SmsConfigResp, SmsConfigDetailResp, SmsConfigQuery, SmsConfigReq> implements SmsConfigService {
-    @Resource
-    private SmsRedisMessagePublisher smsRedisMessagePublisher;
+public class SmsConfigServiceImpl extends BaseServiceImpl<SmsConfigMapper, SmsConfigDO, SmsConfigResp, SmsConfigResp, SmsConfigQuery, SmsConfigReq> implements SmsConfigService {
 
     @Override
-    protected void afterAdd(SmsConfigReq req, SmsConfigDO entity) {
-        super.afterAdd(req, entity);
-        smsRedisMessagePublisher.publish(SmsRedisConfig.SysSmsChannel, new SmsEventMessage(MethodTypeEnum.ADD, entity
-            .getId()
-            .toString()));
+    public void afterAdd(SmsConfigReq req, SmsConfigDO entity) {
+        this.load(entity);
     }
 
     @Override
-    protected void afterUpdate(SmsConfigReq req, SmsConfigDO entity) {
-        super.afterUpdate(req, entity);
-        smsRedisMessagePublisher.publish(SmsRedisConfig.SysSmsChannel, new SmsEventMessage(MethodTypeEnum.UPDATE, entity
-            .getId()
-            .toString()));
+    public void afterUpdate(SmsConfigReq req, SmsConfigDO entity) {
+        // 重新加载配置
+        // 先卸载
+        this.unload(entity.getId().toString());
+        // 再加载
+        this.load(entity);
     }
 
     @Override
-    protected void afterDelete(List<Long> ids) {
-        super.afterDelete(ids);
+    public void afterDelete(List<Long> ids) {
         for (Long id : ids) {
-            smsRedisMessagePublisher.publish(SmsRedisConfig.SysSmsChannel, new SmsEventMessage(MethodTypeEnum.DELETE, id
-                .toString()));
+            this.unload(id.toString());
+        }
+    }
+
+    /**
+     * 加载配置
+     *
+     * @param entity 配置信息
+     */
+    private void load(SmsConfigDO entity) {
+        SmsSupplierEnum supplier = entity.getSupplier();
+        BaseConfig config = supplier.toBaseConfig(BeanUtil.toBean(entity, SmsConfigResp.class));
+        SmsFactory.createSmsBlend(config);
+    }
+
+    /**
+     * 卸载配置
+     *
+     * @param configId 配置 ID
+     */
+    private void unload(String configId) {
+        if (SmsFactory.getSmsBlend(configId) != null) {
+            SmsFactory.unregister(configId);
         }
     }
 }

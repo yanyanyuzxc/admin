@@ -20,7 +20,7 @@ import top.continew.starter.data.mp.base.BaseMapper;
 import top.continew.admin.system.model.entity.SmsConfigDO;
 
 /**
- * 短信服务配置 Mapper
+ * 短信配置 Mapper
  *
  * @author luoqiz
  * @since 2025/03/15 18:41

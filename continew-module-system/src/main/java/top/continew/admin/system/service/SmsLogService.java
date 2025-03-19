@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.mapper;
+package top.continew.admin.system.service;
 
-import top.continew.starter.data.mp.base.BaseMapper;
-import top.continew.admin.system.model.entity.SmsRecordDO;
+import top.continew.admin.system.model.query.SmsLogQuery;
+import top.continew.admin.system.model.req.SmsLogReq;
+import top.continew.admin.system.model.resp.SmsLogResp;
+import top.continew.starter.extension.crud.service.BaseService;
 
 /**
- * 短信记录 Mapper
+ * 短信日志业务接口
  *
  * @author luoqiz
  * @since 2025/03/15 22:15
  */
-public interface SmsRecordMapper extends BaseMapper<SmsRecordDO> {}
+public interface SmsLogService extends BaseService<SmsLogResp, SmsLogResp, SmsLogQuery, SmsLogReq> {}

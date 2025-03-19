@@ -14,51 +14,48 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.model.entity;
+package top.continew.admin.system.model.query;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import com.baomidou.mybatisplus.annotation.TableName;
-
-import top.continew.admin.common.model.entity.BaseDO;
+import top.continew.admin.common.enums.SuccessFailureStatusEnum;
+import top.continew.starter.data.core.annotation.Query;
 
 import java.io.Serial;
+import java.io.Serializable;
 
 /**
- * 短信记录实体
+ * 短信日志查询条件
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 22:15
  */
 @Data
-@TableName("sys_sms_record")
-public class SmsRecordDO extends BaseDO {
+@Schema(description = "短信日志查询条件")
+public class SmsLogQuery implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 配置id
+     * 配置 ID
      */
+    @Schema(description = "配置 ID", example = "1")
+    @Query
     private Long configId;
 
     /**
      * 手机号
      */
+    @Schema(description = "手机号", example = "18888888888")
+    @Query
     private String phone;
-
-    /**
-     * 参数配置
-     */
-    private String params;
 
     /**
      * 发送状态
      */
-    private Boolean status;
-
-    /**
-     * 返回数据
-     */
-    private String resMsg;
+    @Schema(description = "发送状态", example = "1")
+    @Query
+    private SuccessFailureStatusEnum status;
 }

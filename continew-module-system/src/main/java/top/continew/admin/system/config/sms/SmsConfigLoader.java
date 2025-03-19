@@ -16,30 +16,33 @@
 
 package top.continew.admin.system.config.sms;
 
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.core.proxy.SmsProxyFactory;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * 短信配置加载器
+ *
+ * @author luoqiz
+ * @author Charles7c
+ * @since 2025/03/15 22:15
+ */
 @Slf4j
 @Component
-public class SmsBlendConfig {
+@RequiredArgsConstructor
+public class SmsConfigLoader implements ApplicationRunner {
 
-    @Resource
-    SmsJdbcReadConfig config;
+    private final SmsReadConfigDatabaseImpl smsReadConfig;
+    private final SmsLogProcessor smsLogProcessor;
 
-    @Resource
-    private SmsRecordProcessor smsRecordProcessor;
-
-    @EventListener
-    public void init(ContextRefreshedEvent event) {
-        log.info("初始化短信配置");
-        // 创建SmsBlend 短信实例
-        SmsFactory.createSmsBlend(config);
-        SmsProxyFactory.addPreProcessor(smsRecordProcessor);
-        log.info("初始化短信配置完成");
+    @Override
+    public void run(ApplicationArguments args) {
+        SmsFactory.createSmsBlend(smsReadConfig);
+        SmsProxyFactory.addPreProcessor(smsLogProcessor);
+        log.debug("短信配置初始化完成");
     }
 }

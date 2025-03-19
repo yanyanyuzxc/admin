@@ -16,48 +16,49 @@
 
 package top.continew.admin.system.config.sms;
 
-import jakarta.annotation.Resource;
+import cn.hutool.core.collection.CollUtil;
+import lombok.RequiredArgsConstructor;
 import org.dromara.sms4j.core.datainterface.SmsReadConfig;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.springframework.stereotype.Component;
-import top.continew.admin.system.config.sms.utils.SmsConvertUtils;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.system.model.query.SmsConfigQuery;
-import top.continew.admin.system.model.resp.SmsConfigDetailResp;
 import top.continew.admin.system.model.resp.SmsConfigResp;
 import top.continew.admin.system.service.SmsConfigService;
-import top.continew.starter.extension.crud.model.query.SortQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 短信配置读取-数据源实现
+ *
+ * @author luoqiz
+ * @author Charles7c
+ * @since 2025/03/15 22:15
+ */
 @Component
-public class SmsJdbcReadConfig implements SmsReadConfig {
+@RequiredArgsConstructor
+public class SmsReadConfigDatabaseImpl implements SmsReadConfig {
 
-    @Resource
-    private SmsConfigService smsConfigService;
+    private final SmsConfigService smsConfigService;
 
     @Override
     public BaseConfig getSupplierConfig(String configId) {
         Long id = Long.parseLong(configId);
-        SmsConfigDetailResp smsConfig = smsConfigService.get(id);
-        if (smsConfig == null || !smsConfig.getIsEnable()) {
+        SmsConfigResp smsConfig = smsConfigService.get(id);
+        if (DisEnableStatusEnum.DISABLE.equals(smsConfig.getStatus())) {
             return null;
         }
-        return SmsConvertUtils.smsConfig2BaseConfig(smsConfig);
+        return smsConfig.getSupplier().toBaseConfig(smsConfig);
     }
 
     @Override
     public List<BaseConfig> getSupplierConfigList() {
-        SmsConfigQuery smsConfigQuery = new SmsConfigQuery();
-        smsConfigQuery.setIsEnable(true);
-        SortQuery sortQuery = new SortQuery();
-        sortQuery.setSort(new String[] {"id", "desc"});
-        List<SmsConfigResp> smsConfigList = smsConfigService.list(smsConfigQuery, sortQuery);
-        List<BaseConfig> baseConfigList = new ArrayList<>();
-        for (SmsConfigResp smsConfigResp : smsConfigList) {
-            baseConfigList.add(SmsConvertUtils.smsConfig2BaseConfig(smsConfigResp));
+        SmsConfigQuery query = new SmsConfigQuery();
+        query.setStatus(DisEnableStatusEnum.ENABLE);
+        List<SmsConfigResp> list = smsConfigService.list(query, null);
+        if (CollUtil.isEmpty(list)) {
+            return List.of();
         }
-        return baseConfigList;
+        return list.stream().map(smsConfig -> smsConfig.getSupplier().toBaseConfig(smsConfig)).toList();
     }
-
 }

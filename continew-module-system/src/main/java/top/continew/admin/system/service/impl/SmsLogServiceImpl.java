@@ -16,25 +16,20 @@
 
 package top.continew.admin.system.service.impl;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
-
+import top.continew.admin.system.mapper.SmsLogMapper;
+import top.continew.admin.system.model.entity.SmsLogDO;
+import top.continew.admin.system.model.query.SmsLogQuery;
+import top.continew.admin.system.model.req.SmsLogReq;
+import top.continew.admin.system.model.resp.SmsLogResp;
+import top.continew.admin.system.service.SmsLogService;
 import top.continew.starter.extension.crud.service.BaseServiceImpl;
-import top.continew.admin.system.mapper.SmsRecordMapper;
-import top.continew.admin.system.model.entity.SmsRecordDO;
-import top.continew.admin.system.model.query.SmsRecordQuery;
-import top.continew.admin.system.model.req.SmsRecordReq;
-import top.continew.admin.system.model.resp.SmsRecordDetailResp;
-import top.continew.admin.system.model.resp.SmsRecordResp;
-import top.continew.admin.system.service.SmsRecordService;
 
 /**
- * 短信记录业务实现
+ * 短信日志业务实现
  *
  * @author luoqiz
  * @since 2025/03/15 22:15
  */
 @Service
-@RequiredArgsConstructor
-public class SmsRecordServiceImpl extends BaseServiceImpl<SmsRecordMapper, SmsRecordDO, SmsRecordResp, SmsRecordDetailResp, SmsRecordQuery, SmsRecordReq> implements SmsRecordService {}
+public class SmsLogServiceImpl extends BaseServiceImpl<SmsLogMapper, SmsLogDO, SmsLogResp, SmsLogResp, SmsLogQuery, SmsLogReq> implements SmsLogService {}

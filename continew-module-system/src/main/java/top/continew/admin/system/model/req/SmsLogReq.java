@@ -14,18 +14,49 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.service;
+package top.continew.admin.system.model.req;
 
-import top.continew.starter.extension.crud.service.BaseService;
-import top.continew.admin.system.model.query.SmsRecordQuery;
-import top.continew.admin.system.model.req.SmsRecordReq;
-import top.continew.admin.system.model.resp.SmsRecordDetailResp;
-import top.continew.admin.system.model.resp.SmsRecordResp;
+import lombok.Data;
+import top.continew.admin.common.enums.SuccessFailureStatusEnum;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
- * 短信记录业务接口
+ * 创建或修改短信日志参数
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 22:15
  */
-public interface SmsRecordService extends BaseService<SmsRecordResp, SmsRecordDetailResp, SmsRecordQuery, SmsRecordReq> {}
+@Data
+public class SmsLogReq implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 配置 ID
+     */
+    private Long configId;
+
+    /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 参数配置
+     */
+    private String params;
+
+    /**
+     * 发送状态
+     */
+    private SuccessFailureStatusEnum status;
+
+    /**
+     * 返回数据
+     */
+    private String resMsg;
+}

@@ -14,63 +14,65 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.model.req;
+package top.continew.admin.system.model.resp;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
+import top.continew.admin.common.enums.SuccessFailureStatusEnum;
+import top.continew.admin.common.model.resp.BaseResp;
+import top.continew.starter.file.excel.converter.ExcelBaseEnumConverter;
 
 import java.io.Serial;
-import java.io.Serializable;
 
 /**
- * 创建或修改短信记录参数
+ * 短信日志信息
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 22:15
  */
 @Data
-@Schema(description = "创建或修改短信记录参数")
-public class SmsRecordReq implements Serializable {
+@ExcelIgnoreUnannotated
+@Schema(description = "短信日志信息")
+public class SmsLogResp extends BaseResp {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 配置id
+     * 配置 ID
      */
-    @Schema(description = "配置id")
-    @NotNull(message = "配置id不能为空")
+    @Schema(description = "配置 ID", example = "")
+    @ExcelProperty(value = "配置 ID")
     private Long configId;
 
     /**
      * 手机号
      */
-    @Schema(description = "手机号")
-    @NotBlank(message = "手机号不能为空")
-    @Length(max = 25, message = "手机号长度不能超过 {max} 个字符")
+    @Schema(description = "手机号", example = "18888888888")
+    @ExcelProperty(value = "手机号")
     private String phone;
 
     /**
      * 参数配置
      */
     @Schema(description = "参数配置")
+    @ExcelProperty(value = "参数配置")
     private String params;
 
     /**
      * 发送状态
      */
-    @Schema(description = "发送状态")
-    @NotNull(message = "发送状态不能为空")
-    private Boolean status;
+    @Schema(description = "发送状态", example = "1")
+    @ExcelProperty(value = "发送状态", converter = ExcelBaseEnumConverter.class)
+    private SuccessFailureStatusEnum status;
 
     /**
      * 返回数据
      */
     @Schema(description = "返回数据")
-    @NotBlank(message = "返回数据不能为空")
-    @Length(max = 2048, message = "返回数据长度不能超过 {max} 个字符")
+    @ExcelProperty(value = "返回数据")
     private String resMsg;
 }

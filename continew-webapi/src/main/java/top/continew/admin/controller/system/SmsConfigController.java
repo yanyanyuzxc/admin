@@ -16,28 +16,26 @@
 
 package top.continew.admin.controller.system;
 
-import top.continew.starter.extension.crud.enums.Api;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.web.bind.annotation.*;
-
-import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.controller.BaseController;
 import top.continew.admin.system.model.query.SmsConfigQuery;
 import top.continew.admin.system.model.req.SmsConfigReq;
-import top.continew.admin.system.model.resp.SmsConfigDetailResp;
 import top.continew.admin.system.model.resp.SmsConfigResp;
 import top.continew.admin.system.service.SmsConfigService;
+import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+import top.continew.starter.extension.crud.enums.Api;
 
 /**
- * 短信服务配置管理 API
+ * 短信配置管理 API
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 18:41
  */
-@Tag(name = "短信服务配置管理 API")
+@Tag(name = "短信配置管理 API")
+@Validated
 @RestController
-@CrudRequestMapping(value = "/system/smsConfig", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
-    Api.EXPORT})
-public class SmsConfigController extends BaseController<SmsConfigService, SmsConfigResp, SmsConfigDetailResp, SmsConfigQuery, SmsConfigReq> {}
+@CrudRequestMapping(value = "/system/smsConfig", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE})
+public class SmsConfigController extends BaseController<SmsConfigService, SmsConfigResp, SmsConfigResp, SmsConfigQuery, SmsConfigReq> {}

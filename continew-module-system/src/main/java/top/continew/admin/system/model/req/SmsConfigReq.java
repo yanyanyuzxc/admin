@@ -23,18 +23,21 @@ import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import org.hibernate.validator.constraints.Length;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.system.enums.SmsSupplierEnum;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 创建或修改短信服务配置参数
+ * 创建或修改短信配置参数
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 18:41
  */
 @Data
-@Schema(description = "创建或修改短信服务配置参数")
+@Schema(description = "创建或修改短信配置参数")
 public class SmsConfigReq implements Serializable {
 
     @Serial
@@ -43,86 +46,83 @@ public class SmsConfigReq implements Serializable {
     /**
      * 名称
      */
-    @Schema(description = "名称")
+    @Schema(description = "名称", example = "短信配置1")
     @NotBlank(message = "名称不能为空")
-    @Length(max = 255, message = "名称长度不能超过 {max} 个字符")
+    @Length(max = 100, message = "名称长度不能超过 {max} 个字符")
     private String name;
 
     /**
-     * 厂商名称标识
+     * 厂商
      */
-    @Schema(description = "厂商名称标识")
-    @NotBlank(message = "厂商名称标识不能为空")
-    @Length(max = 50, message = "厂商名称标识长度不能超过 {max} 个字符")
-    private String supplier;
+    @Schema(description = "厂商", example = "cloopen")
+    @NotNull(message = "厂商无效")
+    private SmsSupplierEnum supplier;
 
     /**
-     * Access Key 或 API Key
+     * Access Key
      */
-    @Schema(description = "Access Key 或 API Key")
-    @NotBlank(message = "Access Key 或 API Key不能为空")
-    @Length(max = 255, message = "Access Key 或 API Key长度不能超过 {max} 个字符")
-    private String accessKeyId;
+    @Schema(description = "Access Key", example = "7aaf0708674db3ee05676ecbc2f31b7b")
+    @NotBlank(message = "Access Key 不能为空")
+    @Length(max = 255, message = "Access Key 长度不能超过 {max} 个字符")
+    private String accessKey;
 
     /**
-     * Access Secret 或 API Secret
+     * Secret Key
      */
-    @Schema(description = "Access Secret 或 API Secret")
-    @NotBlank(message = "Access Secret 或 API Secret不能为空")
-    @Length(max = 255, message = "Access Secret 或 API Secret长度不能超过 {max} 个字符")
-    private String accessKeySecret;
+    @Schema(description = "Secret Key", example = "7fd47ade9ae54cddb222222sdsdss57be")
+    @NotBlank(message = "Secret Key 不能为空")
+    @Length(max = 255, message = "Secret Key 长度不能超过 {max} 个字符")
+    private String secretKey;
 
     /**
      * 短信签名
      */
-    @Schema(description = "短信签名")
-    @NotBlank(message = "短信签名不能为空")
+    @Schema(description = "短信签名", example = "")
     @Length(max = 100, message = "短信签名长度不能超过 {max} 个字符")
     private String signature;
 
     /**
      * 模板 ID
      */
-    @Schema(description = "模板 ID")
-    @NotBlank(message = "模板 ID不能为空")
-    @Length(max = 50, message = "模板 ID长度不能超过 {max} 个字符")
+    @Schema(description = "模板 ID", example = "1")
+    @NotBlank(message = "模板 ID 不能为空")
+    @Length(max = 50, message = "模板 ID 长度不能超过 {max} 个字符")
     private String templateId;
 
     /**
      * 负载均衡权重
      */
-    @Schema(description = "负载均衡权重")
+    @Schema(description = "负载均衡权重", example = "1")
     private Integer weight;
 
     /**
-     * 短信自动重试间隔时间（秒）
+     * 重试间隔（单位：秒）
      */
-    @Schema(description = "短信自动重试间隔时间（秒）")
+    @Schema(description = "重试间隔（单位：秒）", example = "5")
     private Integer retryInterval;
 
     /**
-     * 短信重试次数
+     * 重试次数
      */
-    @Schema(description = "短信重试次数")
+    @Schema(description = "重试次数", example = "0")
     private Integer maxRetries;
 
     /**
-     * 当前厂商的发送数量上限
+     * 发送上限
      */
-    @Schema(description = "当前厂商的发送数量上限")
+    @Schema(description = "发送上限")
     private Integer maximum;
 
     /**
      * 各个厂商独立配置
      */
-    @Schema(description = "各个厂商独立配置")
-    @Length(max = 10000, message = "各个厂商独立配置长度不能超过 {max} 个字符")
+    @Schema(description = "各个厂商独立配置", example = "")
+    @Length(max = 65535, message = "各个厂商独立配置长度不能超过 {max} 个字符")
     private String supplierConfig;
 
     /**
-     * 是否启用
+     * 状态
      */
-    @Schema(description = "是否启用")
-    @NotNull(message = "是否启用不能为空")
-    private Boolean isEnable;
+    @Schema(description = "状态", example = "1")
+    private DisEnableStatusEnum status;
 }

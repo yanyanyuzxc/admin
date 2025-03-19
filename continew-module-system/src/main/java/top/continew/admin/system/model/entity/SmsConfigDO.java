@@ -18,15 +18,18 @@ package top.continew.admin.system.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.model.entity.BaseDO;
+import top.continew.admin.system.enums.SmsSupplierEnum;
 import top.continew.starter.security.crypto.annotation.FieldEncrypt;
 
 import java.io.Serial;
 
 /**
- * 短信服务配置实体
+ * 短信配置实体
  *
  * @author luoqiz
+ * @author Charles7c
  * @since 2025/03/15 18:41
  */
 @Data
@@ -42,20 +45,20 @@ public class SmsConfigDO extends BaseDO {
     private String name;
 
     /**
-     * 厂商名称标识
+     * 厂商
      */
-    private String supplier;
+    private SmsSupplierEnum supplier;
 
     /**
-     * Access Key 或 API Key
+     * Access Key
      */
-    private String accessKeyId;
+    private String accessKey;
 
     /**
-     * Access Secret 或 API Secret
+     * Secret Key
      */
     @FieldEncrypt
-    private String accessKeySecret;
+    private String secretKey;
 
     /**
      * 短信签名
@@ -73,17 +76,17 @@ public class SmsConfigDO extends BaseDO {
     private Integer weight;
 
     /**
-     * 短信自动重试间隔时间（秒）
+     * 重试间隔（单位：秒）
      */
     private Integer retryInterval;
 
     /**
-     * 短信重试次数
+     * 重试次数
      */
     private Integer maxRetries;
 
     /**
-     * 当前厂商的发送数量上限
+     * 发送上限
      */
     private Integer maximum;
 
@@ -93,7 +96,7 @@ public class SmsConfigDO extends BaseDO {
     private String supplierConfig;
 
     /**
-     * 是否启用
+     * 状态
      */
-    private Boolean isEnable;
+    private DisEnableStatusEnum status;
 }
