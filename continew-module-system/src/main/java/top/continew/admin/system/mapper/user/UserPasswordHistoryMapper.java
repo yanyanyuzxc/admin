@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.mapper;
+package top.continew.admin.system.mapper.user;
 
 import org.apache.ibatis.annotations.Param;
-import top.continew.admin.system.model.entity.UserSocialDO;
+import top.continew.admin.system.model.entity.user.UserPasswordHistoryDO;
 import top.continew.starter.data.mp.base.BaseMapper;
 
 /**
- * 用户社会化关联 Mapper
+ * 用户历史密码 Mapper
  *
  * @author Charles7c
- * @since 2023/10/11 22:10
+ * @since 2024/5/16 21:58
  */
-public interface UserSocialMapper extends BaseMapper<UserSocialDO> {
+public interface UserPasswordHistoryMapper extends BaseMapper<UserPasswordHistoryDO> {
 
     /**
-     * 根据来源和开放 ID 查询
+     * 删除过期历史密码
      *
-     * @param source 来源
-     * @param openId 开放 ID
-     * @return 用户社会化关联信息
+     * @param userId 用户 ID
+     * @param count  保留 N 个历史
      */
-    UserSocialDO selectBySourceAndOpenId(@Param("source") String source, @Param("openId") String openId);
+    void deleteExpired(@Param("userId") Long userId, @Param("count") int count);
 }

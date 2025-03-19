@@ -28,7 +28,11 @@ import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.open.mapper.AppMapper;
 import top.continew.admin.open.model.entity.AppDO;
 import top.continew.admin.system.mapper.*;
+import top.continew.admin.system.mapper.user.UserMapper;
+import top.continew.admin.system.mapper.user.UserSocialMapper;
 import top.continew.admin.system.model.entity.*;
+import top.continew.admin.system.model.entity.user.UserDO;
+import top.continew.admin.system.model.entity.user.UserSocialDO;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
 

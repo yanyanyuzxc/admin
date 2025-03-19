@@ -18,10 +18,7 @@ package top.continew.admin.system.model.req.user;
 
 import cn.hutool.core.lang.RegexPool;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import top.continew.admin.common.constant.RegexConstants;
@@ -75,6 +72,7 @@ public class UserReq implements Serializable {
     @Schema(description = "邮箱", example = "123456789@qq.com")
     @Pattern(regexp = "^$|" + RegexPool.EMAIL, message = "邮箱格式错误")
     @Length(max = 255, message = "邮箱长度不能超过 {max} 个字符")
+    @Email
     private String email;
 
     /**

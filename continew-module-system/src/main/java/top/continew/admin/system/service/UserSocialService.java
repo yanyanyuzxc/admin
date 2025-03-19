@@ -17,7 +17,7 @@
 package top.continew.admin.system.service;
 
 import me.zhyd.oauth.model.AuthUser;
-import top.continew.admin.system.model.entity.UserSocialDO;
+import top.continew.admin.system.model.entity.user.UserSocialDO;
 
 import java.util.List;
 
