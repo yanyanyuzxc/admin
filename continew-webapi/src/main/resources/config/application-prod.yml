@@ -129,7 +129,7 @@ captcha:
   ## 短信验证码配置
   sms:
     # 内容长度
-    length: 4
+    length: 6
     # 过期时间
     expirationInMinutes: 5
     # 模板 ID
