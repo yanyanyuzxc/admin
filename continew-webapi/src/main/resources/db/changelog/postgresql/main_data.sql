@@ -60,8 +60,8 @@ VALUES
 
 (1090, '通知公告', 1000, 2, '/system/notice', 'SystemNotice', 'system/notice/index', NULL, 'notification', false, false, false, NULL, 6, 1, 1, NOW()),
 (1091, '列表', 1090, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:notice:list', 1, 1, 1, NOW()),
-(1092, '详情', 1090, 2, '/system/notice/detail', 'SystemNoticeDetail', 'system/notice/detail/index', NULL, NULL, false, false, true, 'system:notice:detail', 2, 1, 1, NOW()),
-(1093, '新增', 1090, 2, '/system/notice/add', 'SystemNoticeAdd', 'system/notice/add/index', NULL, NULL, false, false, true, 'system:notice:add', 3, 1, 1, NOW()),
+(1092, '公告详情', 1090, 2, '/system/notice/detail', 'SystemNoticeDetail', 'system/notice/detail/index', NULL, NULL, false, false, true, 'system:notice:detail', 2, 1, 1, NOW()),
+(1093, '发布公告', 1090, 2, '/system/notice/add', 'SystemNoticeAdd', 'system/notice/add/index', NULL, NULL, false, false, true, 'system:notice:add', 3, 1, 1, NOW()),
 (1094, '修改', 1090, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:notice:update', 4, 1, 1, NOW()),
 (1095, '删除', 1090, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:notice:delete', 5, 1, 1, NOW()),
 
