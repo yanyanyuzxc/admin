@@ -19,13 +19,13 @@ package top.continew.admin.schedule.api;
 import com.aizuda.snailjob.common.core.model.Result;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.*;
 import top.continew.admin.schedule.model.JobPageResult;
 import top.continew.admin.schedule.model.req.JobReq;
 import top.continew.admin.schedule.model.req.JobStatusReq;
+import top.continew.admin.schedule.model.req.JobTriggerReq;
 import top.continew.admin.schedule.model.resp.JobResp;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public interface JobApi {
      * @return 响应信息
      */
     @PostExchange("/job")
-    ResponseEntity<Result<Boolean>> add(@RequestBody JobReq req);
+    ResponseEntity<Result<Boolean>> create(@RequestBody JobReq req);
 
     /**
      * 修改
@@ -97,11 +97,11 @@ public interface JobApi {
     /**
      * 执行
      *
-     * @param id ID
+     * @param req 参数
      * @return 响应信息
      */
-    @PostExchange("/job/trigger/{id}")
-    ResponseEntity<Result<Boolean>> trigger(@PathVariable("id") Long id);
+    @PostExchange("/job/trigger")
+    ResponseEntity<Result<Boolean>> trigger(@RequestBody JobTriggerReq req);
 
     /**
      * 查询分组列表

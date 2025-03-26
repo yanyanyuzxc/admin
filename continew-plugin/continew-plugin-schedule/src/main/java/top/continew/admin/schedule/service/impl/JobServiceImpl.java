@@ -23,6 +23,7 @@ import top.continew.admin.schedule.api.JobClient;
 import top.continew.admin.schedule.model.query.JobQuery;
 import top.continew.admin.schedule.model.req.JobReq;
 import top.continew.admin.schedule.model.req.JobStatusReq;
+import top.continew.admin.schedule.model.req.JobTriggerReq;
 import top.continew.admin.schedule.model.resp.JobResp;
 import top.continew.admin.schedule.service.JobService;
 import top.continew.starter.extension.crud.model.resp.PageResp;
@@ -51,8 +52,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public boolean add(JobReq req) {
-        return Boolean.TRUE.equals(jobClient.request(() -> jobApi.add(req)));
+    public boolean create(JobReq req) {
+        return Boolean.TRUE.equals(jobClient.request(() -> jobApi.create(req)));
     }
 
     @Override
@@ -73,8 +74,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public boolean trigger(Long id) {
-        return Boolean.TRUE.equals(jobClient.request(() -> jobApi.trigger(id)));
+    public boolean trigger(JobTriggerReq req) {
+        return Boolean.TRUE.equals(jobClient.request(() -> jobApi.trigger(req)));
     }
 
     @Override

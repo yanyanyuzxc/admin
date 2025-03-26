@@ -67,7 +67,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
     private FileService fileService;
 
     @Override
-    public void beforeAdd(StorageReq req) {
+    public void beforeCreate(StorageReq req) {
         this.decodeSecretKey(req, null);
         String code = req.getCode();
         CheckUtils.throwIf(this.isCodeExists(code, null), "新增失败，[{}] 已存在", code);

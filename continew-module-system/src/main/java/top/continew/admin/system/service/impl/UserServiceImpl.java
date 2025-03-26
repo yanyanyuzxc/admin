@@ -137,7 +137,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     }
 
     @Override
-    public void beforeAdd(UserReq req) {
+    public void beforeCreate(UserReq req) {
         final String errorMsgTemplate = "新增失败，[{}] 已存在";
         String username = req.getUsername();
         CheckUtils.throwIf(this.isNameExists(username, null), errorMsgTemplate, username);
@@ -148,7 +148,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     }
 
     @Override
-    public void afterAdd(UserReq req, UserDO user) {
+    public void afterCreate(UserReq req, UserDO user) {
         Long userId = user.getId();
         baseMapper.lambdaUpdate().set(UserDO::getPwdResetTime, LocalDateTime.now()).eq(UserDO::getId, userId).update();
         // 保存用户和角色关联

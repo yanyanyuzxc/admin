@@ -58,9 +58,9 @@ import top.continew.starter.core.validation.CheckUtils;
 import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.log.annotation.Log;
 import top.continew.starter.messaging.mail.util.MailUtils;
-import top.continew.starter.security.limiter.annotation.RateLimiter;
-import top.continew.starter.security.limiter.annotation.RateLimiters;
-import top.continew.starter.security.limiter.enums.LimitType;
+import top.continew.starter.ratelimiter.annotation.RateLimiter;
+import top.continew.starter.ratelimiter.annotation.RateLimiters;
+import top.continew.starter.ratelimiter.enums.LimitType;
 import top.continew.starter.web.model.R;
 
 import java.time.Duration;

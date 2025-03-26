@@ -58,7 +58,7 @@ public class UserImportRowReq implements Serializable {
     /**
      * 密码
      */
-    @NotBlank(message = "密码不能为空", groups = CrudValidationGroup.Add.class)
+    @NotBlank(message = "密码不能为空", groups = CrudValidationGroup.Create.class)
     private String password;
 
     /**

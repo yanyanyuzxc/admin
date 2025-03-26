@@ -38,16 +38,15 @@ continew-starter.log:
 logging:
   config: classpath:logback-spring.xml
 
---- ### 链路跟踪配置
-continew-starter.web:
-  trace:
-    enabled: true
-    trace-id-name: traceId
-    ## TLog 配置
-    tlog:
-      enable-invoke-time-print: false
-      pattern: '[$spanId][$traceId]'
-      mdc-enable: false
+--- ### 链路追踪配置
+continew-starter.trace:
+  enabled: true
+  trace-id-name: traceId
+  ## TLog 配置
+  tlog:
+    enable-invoke-time-print: false
+    pattern: '[$spanId][$traceId]'
+    mdc-enable: false
 
 --- ### 全局响应配置
 continew-starter.web:
@@ -204,7 +203,9 @@ cosid:
     share:
       # 开启时钟回拨同步
       clock-sync: true
-      friendly: true
+      converter:
+        friendly:
+          pad-start: true
     provider:
       safe-js:
         machine-bit: 7
