@@ -500,7 +500,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     protected QueryWrapper<UserDO> buildQueryWrapper(UserQuery query) {
         String description = query.getDescription();
         DisEnableStatusEnum status = query.getStatus();
-        List<Date> createTimeList = query.getCreateTime();
+        List<LocalDateTime> createTimeList = query.getCreateTime();
         Long deptId = query.getDeptId();
         List<Long> userIdList = query.getUserIds();
         // 获取排除用户 ID 列表

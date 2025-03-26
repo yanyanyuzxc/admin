@@ -16,13 +16,11 @@
 
 package top.continew.admin.schedule.model.query;
 
-import cn.hutool.core.date.DatePattern;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
 import top.continew.admin.schedule.enums.JobExecuteStatusEnum;
 
 import java.io.Serial;
@@ -70,7 +68,6 @@ public class JobLogQuery implements Serializable {
      * 创建时间
      */
     @Schema(description = "创建时间", example = "2023-08-08 00:00:00,2023-08-08 23:59:59")
-    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @Size(max = 2, message = "创建时间必须是一个范围")
     private LocalDateTime[] datetimeRange;
 
