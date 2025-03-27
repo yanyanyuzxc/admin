@@ -138,7 +138,7 @@ captcha:
 --- ### 日志配置
 ## API 请求/响应日志配置
 continew-starter.log:
-  access:
+  access-log:
     # 是否打印访问日志（类似于 Nginx access log）
     enabled: false
 ## 项目日志配置（配置重叠部分，优先级高于 logback-spring.xml 中的配置）
