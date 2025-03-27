@@ -104,7 +104,7 @@ public class UserCenterController {
         String captchaKey = CacheConstants.CAPTCHA_KEY_PREFIX + updateReq.getPhone();
         String captcha = RedisUtils.get(captchaKey);
         ValidationUtils.throwIfBlank(captcha, CAPTCHA_EXPIRED);
-        ValidationUtils.throwIfNotEqualIgnoreCase(updateReq.getCaptcha(), captcha, "验证码错误");
+        ValidationUtils.throwIfNotEqualIgnoreCase(updateReq.getCaptcha(), captcha, "验证码不正确");
         RedisUtils.delete(captchaKey);
         userService.updatePhone(updateReq.getPhone(), rawOldPassword, UserContextHolder.getUserId());
     }
@@ -118,7 +118,7 @@ public class UserCenterController {
         String captchaKey = CacheConstants.CAPTCHA_KEY_PREFIX + updateReq.getEmail();
         String captcha = RedisUtils.get(captchaKey);
         ValidationUtils.throwIfBlank(captcha, CAPTCHA_EXPIRED);
-        ValidationUtils.throwIfNotEqualIgnoreCase(updateReq.getCaptcha(), captcha, "验证码错误");
+        ValidationUtils.throwIfNotEqualIgnoreCase(updateReq.getCaptcha(), captcha, "验证码不正确");
         RedisUtils.delete(captchaKey);
         userService.updateEmail(updateReq.getEmail(), rawOldPassword, UserContextHolder.getUserId());
     }

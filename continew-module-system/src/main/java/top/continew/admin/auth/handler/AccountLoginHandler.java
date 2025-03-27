@@ -63,7 +63,7 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
         boolean isError = ObjectUtil.isNull(user) || !passwordEncoder.matches(rawPassword, user.getPassword());
         // 检查账号锁定状态
         this.checkUserLocked(req.getUsername(), request, isError);
-        ValidationUtils.throwIf(isError, "用户名或密码错误");
+        ValidationUtils.throwIf(isError, "用户名或密码不正确");
         // 检查用户状态
         super.checkUserStatus(user);
         // 执行认证
@@ -97,7 +97,7 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
      *
      * @param username 用户名
      * @param request  请求对象
-     * @param isError  是否登录错误
+     * @param isError  是否登录失败
      */
     private void checkUserLocked(String username, HttpServletRequest request, boolean isError) {
         // 不锁定

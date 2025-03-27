@@ -47,7 +47,7 @@ public enum PasswordPolicyEnum {
     /**
      * 密码错误锁定阈值
      */
-    PASSWORD_ERROR_LOCK_COUNT("密码错误锁定阈值取值范围为 %d-%d", SysConstants.NO, 10, "密码错误已达 %d 次，账号锁定 %d 分钟"),
+    PASSWORD_ERROR_LOCK_COUNT("密码错误锁定阈值取值范围为 %d-%d", SysConstants.NO, 10, "密码不正确已达 %d 次，账号锁定 %d 分钟"),
 
     /**
      * 账号锁定时长（分钟）

@@ -68,10 +68,10 @@ public class MenuController extends BaseController<MenuService, MenuResp, MenuRe
         Boolean isExternal = ObjectUtil.defaultIfNull(req.getIsExternal(), false);
         String path = req.getPath();
         ValidationUtils.throwIf(Boolean.TRUE.equals(isExternal) && !URLUtils
-            .isHttpUrl(path), "路由地址格式错误，请以 http:// 或 https:// 开头");
+            .isHttpUrl(path), "路由地址格式不正确，请以 http:// 或 https:// 开头");
         // 非外链菜单参数修正
         if (Boolean.FALSE.equals(isExternal)) {
-            ValidationUtils.throwIf(URLUtils.isHttpUrl(path), "路由地址格式错误");
+            ValidationUtils.throwIf(URLUtils.isHttpUrl(path), "路由地址格式不正确");
             req.setPath(StrUtil.isBlank(path) ? path : StrUtil.prependIfMissing(path, StringConstants.SLASH));
             req.setName(StrUtil.removePrefix(req.getName(), StringConstants.SLASH));
             req.setComponent(StrUtil.removePrefix(req.getComponent(), StringConstants.SLASH));
