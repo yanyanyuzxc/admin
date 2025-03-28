@@ -256,6 +256,7 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 | [CosID](https://cosid.ahoo.me/guide/getting-started.html)    | 2.11.0       | 旨在提供通用、灵活、高性能的分布式 ID 生成器。               |
 | [Graceful Response](https://doc.feiniaojin.com/graceful-response/home.html) | 5.0.4-boot3  | 一个Spring Boot技术栈下的优雅响应处理组件，可以帮助开发者完成响应数据封装、异常处理、错误码填充等过程，提高开发效率，提高代码质量。 |
 | <a href="https://doc.xiaominfo.com/" target="_blank">Knife4j</a> | 4.5.0        | 前身是 swagger-bootstrap-ui，集 Swagger2 和 OpenAPI3 为一体的增强解决方案。 |
+| [OpenFeign](https://springdoc.cn/spring-cloud-openfeign/)    | 13.5         | Spring Cloud OpenFeign 是一种基于 Spring Cloud 的声明式 REST 客户端，它简化了与 HTTP 服务交互的过程。 |
 | <a href="https://www.hutool.cn/" target="_blank">Hutool</a>  | 5.8.36       | 小而全的 Java 工具类库，通过静态方法封装，降低相关 API 的学习成本，提高工作效率，使 Java 拥有函数式语言般的优雅，让 Java 语言也可以“甜甜的”。 |
 | <a href="https://projectlombok.org/" target="_blank">Lombok</a> | 1.18.36      | 在 Java 开发过程中用注解的方式，简化了 JavaBean 的编写，避免了冗余和样板式代码，让编写的类更加简洁。 |
 

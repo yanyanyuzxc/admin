@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.continew.admin.schedule.api.JobApi;
 import top.continew.admin.schedule.api.JobClient;
+import top.continew.admin.schedule.api.JobGroupApi;
 import top.continew.admin.schedule.model.query.JobQuery;
 import top.continew.admin.schedule.model.req.JobReq;
 import top.continew.admin.schedule.model.req.JobStatusReq;
@@ -44,11 +45,11 @@ public class JobServiceImpl implements JobService {
 
     private final JobClient jobClient;
     private final JobApi jobApi;
+    private final JobGroupApi jobGroupApi;
 
     @Override
     public PageResp<JobResp> page(JobQuery query) {
-        return jobClient.requestPage(() -> jobApi.page(query.getGroupName(), query.getJobName(), query
-            .getJobStatus() != null ? query.getJobStatus().getValue() : null, query.getPage(), query.getSize()));
+        return jobClient.requestPage(() -> jobApi.page(query));
     }
 
     @Override
@@ -80,6 +81,6 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<String> listGroup() {
-        return jobClient.request(jobApi::listGroup);
+        return jobClient.request(jobGroupApi::listGroup);
     }
 }
