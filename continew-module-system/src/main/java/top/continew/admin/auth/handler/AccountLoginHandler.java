@@ -16,6 +16,9 @@
 
 package top.continew.admin.auth.handler;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -108,10 +111,9 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
         // 检测是否已被锁定
         String key = CacheConstants.USER_PASSWORD_ERROR_KEY_PREFIX + RedisUtils.formatKey(username, JakartaServletUtil
             .getClientIP(request));
-        int lockMinutes = optionService.getValueByCode2Int(PasswordPolicyEnum.PASSWORD_ERROR_LOCK_MINUTES.name());
         Integer currentErrorCount = ObjectUtil.defaultIfNull(RedisUtils.get(key), 0);
         CheckUtils.throwIf(currentErrorCount >= maxErrorCount, PasswordPolicyEnum.PASSWORD_ERROR_LOCK_MINUTES.getMsg()
-            .formatted(lockMinutes));
+            .formatted(this.getUnlockTime(key)));
         // 登录成功清除计数
         if (!isError) {
             RedisUtils.delete(key);
@@ -119,8 +121,24 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
         }
         // 登录失败递增计数
         currentErrorCount++;
+        int lockMinutes = optionService.getValueByCode2Int(PasswordPolicyEnum.PASSWORD_ERROR_LOCK_MINUTES.name());
         RedisUtils.set(key, currentErrorCount, Duration.ofMinutes(lockMinutes));
         CheckUtils.throwIf(currentErrorCount >= maxErrorCount, PasswordPolicyEnum.PASSWORD_ERROR_LOCK_COUNT.getMsg()
-            .formatted(maxErrorCount, lockMinutes));
+            .formatted(maxErrorCount, lockMinutes, this.getUnlockTime(key)));
+    }
+
+    /**
+     * 获取解锁时间
+     *
+     * @param key 键
+     * @return 解锁时间
+     */
+    private String getUnlockTime(String key) {
+        long timeToLive = RedisUtils.getTimeToLive(key);
+        return timeToLive > 0
+            ? DateUtil.date()
+                .offset(DateField.MILLISECOND, (int)timeToLive)
+                .toString(DatePattern.CHINESE_DATE_TIME_FORMAT)
+            : "";
     }
 }
