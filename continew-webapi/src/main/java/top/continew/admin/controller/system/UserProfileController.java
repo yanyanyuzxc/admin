@@ -41,6 +41,7 @@ import top.continew.admin.system.model.req.user.UserPasswordUpdateReq;
 import top.continew.admin.system.model.req.user.UserPhoneUpdateReq;
 import top.continew.admin.system.model.resp.AvatarResp;
 import top.continew.admin.system.model.resp.user.UserSocialBindResp;
+import top.continew.admin.system.service.NoticeService;
 import top.continew.admin.system.service.UserService;
 import top.continew.admin.system.service.UserSocialService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
@@ -51,22 +52,23 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 个人中心 API
+ * 个人信息 API
  *
  * @author Charles7c
  * @since 2023/1/2 11:41
  */
-@Tag(name = "个人中心 API")
+@Tag(name = "个人信息 API")
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/system/user")
-public class UserCenterController {
+@RequestMapping("/user/profile")
+public class UserProfileController {
 
     private static final String DECRYPT_FAILED = "当前密码解密失败";
     private static final String CAPTCHA_EXPIRED = "验证码已失效";
     private final UserService userService;
     private final UserSocialService userSocialService;
+    private final NoticeService noticeService;
     private final AuthRequestFactory authRequestFactory;
 
     @Operation(summary = "修改头像", description = "用户修改个人头像")
