@@ -10,7 +10,7 @@
         WHERE (effective_time IS NULL OR NOW() > effective_time)
         AND (terminate_time IS NULL OR terminate_time > NOW())
         <if test="userId != null">
-            AND (notice_scope = 1 OR (notice_scope = 2 AND JSON_EXTRACT(notice_users, "$[0]") = CAST(#{userId} AS CHAR)))
+            AND (notice_scope = 1 OR (notice_scope = 2 AND JSON_CONTAINS(notice_users, CONCAT('"', #{userId}, '"'))))
         </if>
         ORDER BY sort ASC, effective_time DESC
         LIMIT 5
