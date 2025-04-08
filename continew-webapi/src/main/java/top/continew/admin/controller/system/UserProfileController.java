@@ -72,7 +72,7 @@ public class UserProfileController {
     private final AuthRequestFactory authRequestFactory;
 
     @Operation(summary = "修改头像", description = "用户修改个人头像")
-    @PostMapping("/avatar")
+    @PatchMapping("/avatar")
     public AvatarResp updateAvatar(@NotNull(message = "头像不能为空") MultipartFile avatarFile) throws IOException {
         ValidationUtils.throwIf(avatarFile::isEmpty, "头像不能为空");
         String newAvatar = userService.updateAvatar(avatarFile, UserContextHolder.getUserId());
