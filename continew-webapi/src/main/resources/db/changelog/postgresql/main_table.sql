@@ -514,10 +514,8 @@ COMMENT ON TABLE  "sys_file"                      IS '文件表';
 CREATE TABLE IF NOT EXISTS "sys_client" (
     "id"             int8         NOT NULL,
     "client_id"      varchar(50)  NOT NULL,
-    "client_key"     varchar(255) NOT NULL,
-    "client_secret"  varchar(255) NOT NULL,
-    "auth_type"      json         NOT NULL,
     "client_type"    varchar(50)  NOT NULL,
+    "auth_type"      json         NOT NULL,
     "active_timeout" int8         NOT NULL DEFAULT -1,
     "timeout"        int8         NOT NULL DEFAULT 2592000,
     "status"         int2         NOT NULL DEFAULT 1,
@@ -532,10 +530,8 @@ CREATE INDEX "idx_client_create_user" ON "sys_client" ("create_user");
 CREATE INDEX "idx_client_update_user" ON "sys_client" ("update_user");
 COMMENT ON COLUMN "sys_client"."id"             IS 'ID';
 COMMENT ON COLUMN "sys_client"."client_id"      IS '终端ID';
-COMMENT ON COLUMN "sys_client"."client_key"     IS '终端Key';
-COMMENT ON COLUMN "sys_client"."client_secret"  IS '终端秘钥';
-COMMENT ON COLUMN "sys_client"."auth_type"      IS '认证类型';
 COMMENT ON COLUMN "sys_client"."client_type"    IS '终端类型';
+COMMENT ON COLUMN "sys_client"."auth_type"      IS '认证类型';
 COMMENT ON COLUMN "sys_client"."active_timeout" IS 'Token最低活跃频率（单位：秒，-1：不限制，永不冻结）';
 COMMENT ON COLUMN "sys_client"."timeout"        IS 'Token有效期（单位：秒，-1：永不过期）';
 COMMENT ON COLUMN "sys_client"."status"         IS '状态（1：启用；2：禁用）';

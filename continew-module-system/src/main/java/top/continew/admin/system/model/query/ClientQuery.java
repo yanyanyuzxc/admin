@@ -41,16 +41,10 @@ public class ClientQuery implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 终端 Key
+     * 终端类型
      */
-    @Schema(description = "终端 Key", example = "PC")
-    private String clientKey;
-
-    /**
-     * 终端秘钥
-     */
-    @Schema(description = "终端秘钥", example = "dd77ab1e353a027e0d60ce3b151e8642")
-    private String clientSecret;
+    @Schema(description = "终端类型", example = "PC")
+    private String clientType;
 
     /**
      * 认证类型
@@ -58,12 +52,6 @@ public class ClientQuery implements Serializable {
     @Schema(description = "认证类型", example = "ACCOUNT")
     @Query(type = QueryType.IN)
     private List<String> authType;
-
-    /**
-     * 终端类型
-     */
-    @Schema(description = "终端类型", example = "PC")
-    private String clientType;
 
     /**
      * 状态

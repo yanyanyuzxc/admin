@@ -53,17 +53,12 @@ public class ClientResp extends BaseDetailResp {
     private String clientId;
 
     /**
-     * 终端 Key
+     * 终端类型（取值于字典 client_type
      */
-    @Schema(description = "终端 Key", example = "PC")
-    @ExcelProperty(value = "终端 Key", order = 3)
-    private String clientKey;
-
-    /**
-     * 终端秘钥
-     */
-    @Schema(description = "终端秘钥", example = "dd77ab1e353a027e0d60ce3b151e8642")
-    private String clientSecret;
+    @Schema(description = "终端类型（取值于字典 client_type）", example = "PC")
+    @ExcelProperty(value = "终端类型", converter = ExcelDictConverter.class, order = 5)
+    @DictExcelProperty("client_type")
+    private String clientType;
 
     /**
      * 认证类型
@@ -71,14 +66,6 @@ public class ClientResp extends BaseDetailResp {
     @Schema(description = "认证类型", example = "ACCOUNT")
     @ExcelProperty(value = "认证类型", converter = ExcelListConverter.class, order = 4)
     private List<String> authType;
-
-    /**
-     * 终端类型（取值于字典 client_type
-     */
-    @Schema(description = "终端类型（取值于字典 client_type）", example = "PC")
-    @ExcelProperty(value = "终端类型", converter = ExcelDictConverter.class, order = 5)
-    @DictExcelProperty("client_type")
-    private String clientType;
 
     /**
      * Token 最低活跃频率（单位：秒，-1：不限制，永不冻结）

@@ -308,10 +308,8 @@ CREATE TABLE IF NOT EXISTS `sys_file` (
 CREATE TABLE IF NOT EXISTS `sys_client` (
     `id`             bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',
     `client_id`      varchar(50)  NOT NULL                    COMMENT '终端ID',
-    `client_key`     varchar(255) NOT NULL                    COMMENT '终端Key',
-    `client_secret`  varchar(255) NOT NULL                    COMMENT '终端秘钥',
-    `auth_type`      json         NOT NULL                    COMMENT '认证类型',
     `client_type`    varchar(50)  NOT NULL                    COMMENT '终端类型',
+    `auth_type`      json         NOT NULL                    COMMENT '认证类型',
     `active_timeout` bigint(20)   DEFAULT -1                  COMMENT 'Token最低活跃频率（单位：秒，-1：不限制，永不冻结）',
     `timeout`        bigint(20)   DEFAULT 2592000             COMMENT 'Token有效期（单位：秒，-1：永不过期）',
     `status`         tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态（1：启用；2：禁用）',
