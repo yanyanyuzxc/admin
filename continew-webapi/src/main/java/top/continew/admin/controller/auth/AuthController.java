@@ -116,11 +116,7 @@ public class AuthController {
     private AuthRequest getAuthRequest(String source) {
         try {
             AuthConfig authConfig = authProperties.getType().get(source.toUpperCase());
-            return AuthRequestBuilder
-                .builder()
-                .source(source)
-                .authConfig(authConfig)
-                .build();
+            return AuthRequestBuilder.builder().source(source).authConfig(authConfig).build();
         } catch (Exception e) {
             throw new BadRequestException("暂不支持 [%s] 平台账号登录".formatted(source));
         }

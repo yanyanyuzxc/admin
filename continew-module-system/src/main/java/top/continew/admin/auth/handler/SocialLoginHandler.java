@@ -23,7 +23,6 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
-import com.xkcoding.justauth.AuthRequestFactory;
 import com.xkcoding.justauth.autoconfigure.JustAuthProperties;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -108,7 +107,7 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
             user = new UserDO();
             user.setUsername(username);
             user.setNickname(nickname);
-            if(Objects.nonNull(authUser.getGender())) {
+            if (Objects.nonNull(authUser.getGender())) {
                 user.setGender(GenderEnum.valueOf(authUser.getGender().name()));
             }
             user.setAvatar(authUser.getAvatar());
@@ -157,11 +156,7 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
     private AuthRequest getAuthRequest(String source) {
         try {
             AuthConfig authConfig = authProperties.getType().get(source.toUpperCase());
-            return AuthRequestBuilder
-                .builder()
-                .source(source)
-                .authConfig(authConfig)
-                .build();
+            return AuthRequestBuilder.builder().source(source).authConfig(authConfig).build();
         } catch (Exception e) {
             throw new BadRequestException("暂不支持 [%s] 平台账号登录".formatted(source));
         }
