@@ -307,8 +307,8 @@ CREATE TABLE IF NOT EXISTS `sys_file` (
 
 CREATE TABLE IF NOT EXISTS `sys_client` (
     `id`             bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',
-    `client_id`      varchar(50)  NOT NULL                    COMMENT '终端ID',
-    `client_type`    varchar(50)  NOT NULL                    COMMENT '终端类型',
+    `client_id`      varchar(50)  NOT NULL                    COMMENT '客户端ID',
+    `client_type`    varchar(50)  NOT NULL                    COMMENT '客户端类型',
     `auth_type`      json         NOT NULL                    COMMENT '认证类型',
     `active_timeout` bigint(20)   DEFAULT -1                  COMMENT 'Token最低活跃频率（单位：秒，-1：不限制，永不冻结）',
     `timeout`        bigint(20)   DEFAULT 2592000             COMMENT 'Token有效期（单位：秒，-1：永不过期）',
@@ -321,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `sys_client` (
     UNIQUE INDEX `uk_client_id`(`client_id`),
     INDEX `idx_create_user`(`create_user`),
     INDEX `idx_update_user`(`update_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='终端表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='客户端表';
 
 CREATE TABLE IF NOT EXISTS `sys_sms_config`  (
     `id`              bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',

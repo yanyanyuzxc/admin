@@ -27,23 +27,23 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 终端查询条件
+ * 客户端查询条件
  *
  * @author KAI
  * @author Charles7c
  * @since 2024/12/03 16:04
  */
 @Data
-@Schema(description = "终端查询条件")
+@Schema(description = "客户端查询条件")
 public class ClientQuery implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 终端类型
+     * 客户端类型
      */
-    @Schema(description = "终端类型", example = "PC")
+    @Schema(description = "客户端类型", example = "PC")
     private String clientType;
 
     /**

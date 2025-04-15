@@ -529,8 +529,8 @@ CREATE UNIQUE INDEX "uk_client_client_id" ON "sys_client" ("client_id");
 CREATE INDEX "idx_client_create_user" ON "sys_client" ("create_user");
 CREATE INDEX "idx_client_update_user" ON "sys_client" ("update_user");
 COMMENT ON COLUMN "sys_client"."id"             IS 'ID';
-COMMENT ON COLUMN "sys_client"."client_id"      IS '终端ID';
-COMMENT ON COLUMN "sys_client"."client_type"    IS '终端类型';
+COMMENT ON COLUMN "sys_client"."client_id"      IS '客户端ID';
+COMMENT ON COLUMN "sys_client"."client_type"    IS '客户端类型';
 COMMENT ON COLUMN "sys_client"."auth_type"      IS '认证类型';
 COMMENT ON COLUMN "sys_client"."active_timeout" IS 'Token最低活跃频率（单位：秒，-1：不限制，永不冻结）';
 COMMENT ON COLUMN "sys_client"."timeout"        IS 'Token有效期（单位：秒，-1：永不过期）';
@@ -539,7 +539,7 @@ COMMENT ON COLUMN "sys_client"."create_user"    IS '创建人';
 COMMENT ON COLUMN "sys_client"."create_time"    IS '创建时间';
 COMMENT ON COLUMN "sys_client"."update_user"    IS '修改人';
 COMMENT ON COLUMN "sys_client"."update_time"    IS '修改时间';
-COMMENT ON TABLE  "sys_client"                  IS '终端表';
+COMMENT ON TABLE  "sys_client"                  IS '客户端表';
 
 CREATE TABLE IF NOT EXISTS "sys_sms_config" (
     "id"              int8         NOT NULL,

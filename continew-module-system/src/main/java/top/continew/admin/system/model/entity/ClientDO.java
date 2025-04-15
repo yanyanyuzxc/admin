@@ -27,7 +27,7 @@ import java.io.Serial;
 import java.util.List;
 
 /**
- * 终端实体
+ * 客户端实体
  *
  * @author KAI
  * @author Charles7c
@@ -41,12 +41,12 @@ public class ClientDO extends BaseDO {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 终端 ID
+     * 客户端 ID
      */
     private String clientId;
 
     /**
-     * 终端类型
+     * 客户端类型
      */
     private String clientType;
 

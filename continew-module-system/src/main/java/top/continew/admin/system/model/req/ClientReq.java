@@ -28,25 +28,25 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 创建或修改终端参数
+ * 创建或修改客户端参数
  *
  * @author KAI
  * @author Charles7c
  * @since 2024/12/03 16:04
  */
 @Data
-@Schema(description = "创建或修改终端参数")
+@Schema(description = "创建或修改客户端参数")
 public class ClientReq implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 终端类型
+     * 客户端类型
      */
-    @Schema(description = "终端类型", example = "PC")
-    @NotBlank(message = "终端类型不能为空")
-    @Length(max = 32, message = "终端类型长度不能超过 {max} 个字符")
+    @Schema(description = "客户端类型", example = "PC")
+    @NotBlank(message = "客户端类型不能为空")
+    @Length(max = 32, message = "客户端类型长度不能超过 {max} 个字符")
     private String clientType;
 
     /**
@@ -75,7 +75,7 @@ public class ClientReq implements Serializable {
     private DisEnableStatusEnum status;
 
     /**
-     * 终端 ID
+     * 客户端 ID
      */
     @Schema(hidden = true)
     private String clientId;

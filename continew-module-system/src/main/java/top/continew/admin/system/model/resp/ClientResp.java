@@ -31,7 +31,7 @@ import java.io.Serial;
 import java.util.List;
 
 /**
- * 终端信息
+ * 客户端信息
  *
  * @author KAI
  * @author Charles7c
@@ -39,24 +39,24 @@ import java.util.List;
  */
 @Data
 @ExcelIgnoreUnannotated
-@Schema(description = "终端信息")
+@Schema(description = "客户端信息")
 public class ClientResp extends BaseDetailResp {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 终端 ID
+     * 客户端 ID
      */
-    @Schema(description = "终端 ID", example = "ef51c9a3e9046c4f2ea45142c8a8344a")
-    @ExcelProperty(value = "终端 ID", order = 2)
+    @Schema(description = "客户端 ID", example = "ef51c9a3e9046c4f2ea45142c8a8344a")
+    @ExcelProperty(value = "客户端 ID", order = 2)
     private String clientId;
 
     /**
-     * 终端类型（取值于字典 client_type
+     * 客户端类型（取值于字典 client_type
      */
-    @Schema(description = "终端类型（取值于字典 client_type）", example = "PC")
-    @ExcelProperty(value = "终端类型", converter = ExcelDictConverter.class, order = 5)
+    @Schema(description = "客户端类型（取值于字典 client_type）", example = "PC")
+    @ExcelProperty(value = "客户端类型", converter = ExcelDictConverter.class, order = 5)
     @DictExcelProperty("client_type")
     private String clientType;
 
