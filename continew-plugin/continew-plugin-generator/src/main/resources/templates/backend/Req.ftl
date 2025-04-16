@@ -9,7 +9,11 @@ import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import org.hibernate.validator.constraints.Length;
-
+<#if imports??>
+    <#list imports as className>
+import ${className};
+    </#list>
+</#if>
 import java.io.Serial;
 import java.io.Serializable;
 <#if hasTimeField>
