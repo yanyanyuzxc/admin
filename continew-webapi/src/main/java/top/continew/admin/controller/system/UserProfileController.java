@@ -36,7 +36,7 @@ import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.enums.SocialSourceEnum;
 import top.continew.admin.system.model.entity.user.UserSocialDO;
 import top.continew.admin.system.model.req.user.UserBasicInfoUpdateReq;
-import top.continew.admin.system.model.req.user.UserEmailUpdateRequest;
+import top.continew.admin.system.model.req.user.UserEmailUpdateReq;
 import top.continew.admin.system.model.req.user.UserPasswordUpdateReq;
 import top.continew.admin.system.model.req.user.UserPhoneUpdateReq;
 import top.continew.admin.system.model.resp.AvatarResp;
@@ -113,7 +113,7 @@ public class UserProfileController {
 
     @Operation(summary = "修改邮箱", description = "修改用户邮箱")
     @PatchMapping("/email")
-    public void updateEmail(@Validated @RequestBody UserEmailUpdateRequest updateReq) {
+    public void updateEmail(@Validated @RequestBody UserEmailUpdateReq updateReq) {
         String rawOldPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(updateReq
             .getOldPassword()));
         ValidationUtils.throwIfBlank(rawOldPassword, DECRYPT_FAILED);

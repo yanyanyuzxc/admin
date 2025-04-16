@@ -30,13 +30,13 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 在线用户信息
+ * 在线用户响应参数
  *
  * @author Charles7c
  * @since 2023/1/20 21:54
  */
 @Data
-@Schema(description = "在线用户信息")
+@Schema(description = "在线用户响应参数")
 public class OnlineUserResp implements Serializable {
 
     @Serial

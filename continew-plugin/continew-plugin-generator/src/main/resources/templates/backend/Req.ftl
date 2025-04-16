@@ -24,13 +24,13 @@ import java.math.BigDecimal;
 </#if>
 
 /**
- * 创建或修改${businessName}参数
+ * ${businessName}创建或修改参数
  *
  * @author ${author}
  * @since ${datetime}
  */
 @Data
-@Schema(description = "创建或修改${businessName}参数")
+@Schema(description = "${businessName}创建或修改参数")
 public class ${className} implements Serializable {
 
     @Serial

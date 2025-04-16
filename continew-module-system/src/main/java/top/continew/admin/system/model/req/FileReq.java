@@ -25,13 +25,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 修改文件参数
+ * 文件修改请求参数
  *
  * @author Charles7c
  * @since 2023/12/23 10:38
  */
 @Data
-@Schema(description = "修改文件参数")
+@Schema(description = "文件修改请求参数")
 public class FileReq implements Serializable {
 
     @Serial

@@ -28,14 +28,14 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 创建或修改客户端参数
+ * 客户端创建或修改请求参数
  *
  * @author KAI
  * @author Charles7c
  * @since 2024/12/03 16:04
  */
 @Data
-@Schema(description = "创建或修改客户端参数")
+@Schema(description = "客户端创建或修改请求参数")
 public class ClientReq implements Serializable {
 
     @Serial

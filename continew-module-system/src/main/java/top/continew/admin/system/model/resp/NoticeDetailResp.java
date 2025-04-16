@@ -32,14 +32,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 公告详情信息
+ * 公告详情响应参数
  *
  * @author Charles7c
  * @since 2023/8/20 10:55
  */
 @Data
 @ExcelIgnoreUnannotated
-@Schema(description = "公告详情信息")
+@Schema(description = "公告详情响应参数")
 public class NoticeDetailResp extends BaseDetailResp {
 
     @Serial

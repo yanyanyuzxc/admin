@@ -31,7 +31,7 @@ import java.io.Serial;
 import java.util.List;
 
 /**
- * 客户端信息
+ * 客户端响应参数
  *
  * @author KAI
  * @author Charles7c
@@ -39,7 +39,7 @@ import java.util.List;
  */
 @Data
 @ExcelIgnoreUnannotated
-@Schema(description = "客户端信息")
+@Schema(description = "客户端响应参数")
 public class ClientResp extends BaseDetailResp {
 
     @Serial
