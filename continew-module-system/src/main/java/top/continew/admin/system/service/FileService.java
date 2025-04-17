@@ -98,15 +98,17 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
 
     /**
      * 检查文件是否存在
-     * @param fileHash
-     * @return
+     * 
+     * @param fileHash 文件 Hash
+     * @return 响应参数
      */
     FileResp check(String fileHash);
 
     /**
      * 创建目录
-     * @param req
-     * @return
+     * 
+     * @param req 请求参数
+     * @return ID
      */
     IdResp<Long> createDir(FileReq req);
 }
