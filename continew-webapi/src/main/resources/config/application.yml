@@ -75,6 +75,13 @@ continew-starter.crud:
     name-key: title
     weight-key: sort
 
+--- ### 安全配置：密码编码器配置
+continew-starter.security:
+  password:
+    enabled: true
+    # BCryptPasswordEncoder（如有改动，需同步调整 top.continew.admin.common.config.mybatis.BCryptEncryptor）
+    encoding-id: bcrypt
+
 --- ### 接口文档配置
 springdoc:
   # 设置对象型参数的展示形式（设为 true 表示将对象型参数平展开，即对象内的属性直接作为参数展示而不是嵌套在对象内，默认 false）
