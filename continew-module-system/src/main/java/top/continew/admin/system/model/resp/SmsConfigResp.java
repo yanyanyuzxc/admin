@@ -53,8 +53,7 @@ public class SmsConfigResp extends BaseDetailResp {
 
     /**
      * 厂商
-     * 对齐 sms4j 短信服务商常量类
-     * 
+     *
      * @see org.dromara.sms4j.comm.constant.SupplierConstant
      */
     @Schema(description = "厂商", example = "cloopen")

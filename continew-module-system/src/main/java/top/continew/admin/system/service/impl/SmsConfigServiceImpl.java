@@ -17,11 +17,9 @@
 package top.continew.admin.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
-
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.springframework.stereotype.Service;
-
 import top.continew.admin.system.config.sms.SmsConfigUtil;
 import top.continew.admin.system.mapper.SmsConfigMapper;
 import top.continew.admin.system.model.entity.SmsConfigDO;
@@ -32,7 +30,6 @@ import top.continew.admin.system.service.SmsConfigService;
 import top.continew.starter.extension.crud.service.BaseServiceImpl;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 短信配置业务实现
@@ -72,10 +69,10 @@ public class SmsConfigServiceImpl extends BaseServiceImpl<SmsConfigMapper, SmsCo
      */
     private void load(SmsConfigDO entity) {
         SmsConfigResp smsConfig = this.get(entity.getId());
-
         BaseConfig config = SmsConfigUtil.from(smsConfig);
-        if (Objects.nonNull(config))
+        if (config != null) {
             SmsFactory.createSmsBlend(config);
+        }
     }
 
     /**

@@ -61,6 +61,6 @@ public class SmsReadConfigDatabaseImpl implements SmsReadConfig {
         if (CollUtil.isEmpty(list)) {
             return List.of();
         }
-        return list.stream().map(smsConfig -> SmsConfigUtil.from(smsConfig)).toList();
+        return list.stream().map(SmsConfigUtil::from).toList();
     }
 }

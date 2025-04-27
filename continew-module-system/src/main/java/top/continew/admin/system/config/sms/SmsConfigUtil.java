@@ -16,21 +16,18 @@
 
 package top.continew.admin.system.config.sms;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.dromara.sms4j.provider.config.BaseConfig;
 import org.dromara.sms4j.provider.factory.BaseProviderFactory;
 import org.dromara.sms4j.provider.factory.ProviderFactoryHolder;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import top.continew.admin.system.model.resp.SmsConfigResp;
+import top.continew.starter.json.jackson.util.JSONUtils;
+
+import java.util.Map;
 
 /**
  * 短信配置工具类
@@ -42,47 +39,41 @@ import top.continew.admin.system.model.resp.SmsConfigResp;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SmsConfigUtil {
 
-    private static final TypeReference<Map<String, Object>> CONFIG_MAP_TYPE = new TypeReference<Map<String, Object>>() {};
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
     /**
-     * 将本地配置对象转换为 BaseConfig
+     * 将本地配置转换为 SMS4J 配置
      * 
      * @param smsConfig 本地配置对象
-     * @return SMS4j 配置基类
-     */ 
+     * @return SMS4J 配置基类
+     */
     public static BaseConfig from(SmsConfigResp smsConfig) {
-        if (Objects.isNull(smsConfig))
+        if (smsConfig == null) {
             return null;
-
-        String supplierName = smsConfig.getSupplier();
-        BaseProviderFactory<?, ?> providerFactory = ProviderFactoryHolder.requireForSupplier(supplierName);
-        if (Objects.isNull(providerFactory))
+        }
+        String supplier = smsConfig.getSupplier();
+        BaseProviderFactory<?, ?> providerFactory = ProviderFactoryHolder.requireForSupplier(supplier);
+        if (providerFactory == null) {
             return null;
-
-        Map<String, Object> configInfo = new HashMap<>();
+        }
+        // 构建配置
+        Map<String, Object> configInfo = MapUtil.newHashMap();
         configInfo.put("configId", smsConfig.getId().toString());
         configInfo.put("accessKeyId", smsConfig.getAccessKey());
         configInfo.put("accessKeySecret", smsConfig.getSecretKey());
         configInfo.put("signature", smsConfig.getSignature());
         configInfo.put("templateId", smsConfig.getTemplateId());
-        if (Objects.nonNull(smsConfig.getWeight()))
+        if (smsConfig.getWeight() != null) {
             configInfo.put("weight", smsConfig.getWeight());
-        if (Objects.nonNull(smsConfig.getRetryInterval()))
-            configInfo.put("retryInterval", smsConfig.getRetryInterval());
-        if (Objects.nonNull(smsConfig.getMaxRetries()))
-            configInfo.put("maxRetries", smsConfig.getMaxRetries());
-
-        if (Objects.nonNull(smsConfig.getSupplierConfig())) {
-            Map<String, Object> supplierInfo = OBJECT_MAPPER.convertValue(smsConfig
-                .getSupplierConfig(), CONFIG_MAP_TYPE);
-            configInfo.putAll(supplierInfo);
         }
-
-        BaseConfig config = (BaseConfig)OBJECT_MAPPER.convertValue(configInfo, providerFactory.getConfigClass());
-        return config;
+        if (smsConfig.getRetryInterval() != null) {
+            configInfo.put("retryInterval", smsConfig.getRetryInterval());
+        }
+        if (smsConfig.getMaxRetries() != null) {
+            configInfo.put("maxRetries", smsConfig.getMaxRetries());
+        }
+        if (StrUtil.isNotBlank(smsConfig.getSupplierConfig())) {
+            configInfo.putAll(JSONUtils.toBean(smsConfig.getSupplierConfig(), Map.class));
+        }
+        return (BaseConfig)BeanUtil.toBean(configInfo, providerFactory.getConfigClass());
     }
 
 }
