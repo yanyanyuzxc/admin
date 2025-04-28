@@ -470,7 +470,7 @@ CREATE TABLE IF NOT EXISTS "sys_file" (
     "parent_path"        varchar(512) NOT NULL DEFAULT '/',
     "abs_path"           varchar(512) NOT NULL,
     "extension"          varchar(100) DEFAULT NULL,
-    "content_type"       varchar(64)  NOT NULL,
+    "content_type"       varchar(255) NOT NULL,
     "type"               int2         NOT NULL DEFAULT 1,
     "sha256"       		 varchar(256) NOT NULL,
     "metadata"           text         DEFAULT NULL,

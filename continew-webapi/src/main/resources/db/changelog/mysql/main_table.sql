@@ -284,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `sys_file` (
     `parent_path`        varchar(512)  DEFAULT '/'                 COMMENT '上级目录',
     `abs_path`           varchar(1024) NOT NULL                    COMMENT '绝对路径',
     `extension`          varchar(100)  DEFAULT NULL                COMMENT '扩展名',
-    `content_type`       varchar(64)   NOT NULL                    COMMENT '内容类型',
+    `content_type`       varchar(255)  NOT NULL                    COMMENT '内容类型',
     `type`               tinyint(1)    UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型（0: 目录；1：其他；2：图片；3：文档；4：视频；5：音频）',
     `sha256`             varchar(256)  NOT NULL                    COMMENT 'SHA256值',
     `metadata`           text          DEFAULT NULL                COMMENT '元数据',
