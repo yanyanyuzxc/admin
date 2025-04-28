@@ -58,7 +58,7 @@ public class SmsConfigResp extends BaseDetailResp {
      */
     @Schema(description = "厂商", example = "cloopen")
     @ExcelProperty(value = "厂商", converter = ExcelDictConverter.class)
-    @DictExcelProperty("sms_supplier_type")
+    @DictExcelProperty("sms_supplier")
     private String supplier;
 
     /**

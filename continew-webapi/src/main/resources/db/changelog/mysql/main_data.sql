@@ -214,7 +214,8 @@ INSERT INTO `sys_dict`
 VALUES
 (1, '公告类型', 'notice_type', NULL, b'1', 1, NOW()),
 (2, '消息类型', 'message_type', NULL, b'1', 1, NOW()),
-(3, '客户端类型', 'client_type', NULL, b'1', 1, NOW());
+(3, '客户端类型', 'client_type', NULL, b'1', 1, NOW()),
+(4, '短信厂商', 'sms_supplier', NULL, b'1', 1, NOW());
 
 INSERT INTO `sys_dict_item`
 (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`)
@@ -225,7 +226,10 @@ VALUES
 (4, '活动消息', '2', 'success', 2, NULL, 1, 2, 1, NOW()),
 (5, '桌面端', 'PC', 'primary', 1, NULL, 1, 3, 1, NOW()),
 (6, '安卓', 'ANDROID', 'success', 2, NULL, 1, 3, 1, NOW()),
-(7, '小程序', 'XCX', 'warning', 3, NULL, 1, 3, 1, NOW());
+(7, '小程序', 'XCX', 'warning', 3, NULL, 1, 3, 1, NOW()),
+(8, '阿里云', 'alibaba', 'warning', 1, NULL, 1, 4, 1, NOW()),
+(9, '腾讯云', 'tencent', 'primary', 2, NULL, 1, 4, 1, NOW()),
+(10, '容联云', 'cloopen', 'success', 3, NULL, 1, 4, 1, NOW());
 
 -- 初始化默认用户和角色关联数据
 INSERT INTO `sys_user_role`
