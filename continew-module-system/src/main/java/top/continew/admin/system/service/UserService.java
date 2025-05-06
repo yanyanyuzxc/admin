@@ -85,9 +85,8 @@ public interface UserService extends BaseService<UserResp, UserDetailResp, UserQ
      * @param avatar 头像文件
      * @param id     ID
      * @return 新头像路径
-     * @throws IOException /
      */
-    String updateAvatar(MultipartFile avatar, Long id) throws IOException;
+    String updateAvatar(MultipartFile avatar, Long id);
 
     /**
      * 修改基础信息
