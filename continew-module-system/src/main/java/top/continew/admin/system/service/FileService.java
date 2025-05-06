@@ -28,6 +28,7 @@ import top.continew.starter.data.mp.service.IService;
 import top.continew.starter.extension.crud.model.resp.IdResp;
 import top.continew.starter.extension.crud.service.BaseService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,8 +45,9 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      *
      * @param file 文件信息
      * @return 文件信息
+     * @throws IOException /
      */
-    default FileInfo upload(MultipartFile file) {
+    default FileInfo upload(MultipartFile file) throws IOException {
         return upload(file, getDefaultFilePath(), null);
     }
 
@@ -55,8 +57,9 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @param file 文件信息
      * @param path 文件路径
      * @return 文件信息
+     * @throws IOException /
      */
-    default FileInfo upload(MultipartFile file, String path) {
+    default FileInfo upload(MultipartFile file, String path) throws IOException {
         return upload(file, path, null);
     }
 
@@ -67,8 +70,9 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @param path        文件路径
      * @param storageCode 存储编码
      * @return 文件信息
+     * @throws IOException /
      */
-    FileInfo upload(MultipartFile file, String path, String storageCode);
+    FileInfo upload(MultipartFile file, String path, String storageCode) throws IOException;
 
     /**
      * 根据存储 ID 列表查询

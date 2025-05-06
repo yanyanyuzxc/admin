@@ -47,6 +47,7 @@ import top.continew.starter.core.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.resp.IdResp;
 import top.continew.starter.extension.crud.service.BaseServiceImpl;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,7 +81,13 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
     }
 
     @Override
-    public FileInfo upload(MultipartFile file, String path, String storageCode) {
+    public FileInfo upload(MultipartFile file, String path, String storageCode) throws IOException {
+        // 校验文件格式
+        String extName = FileNameUtil.extName(file.getOriginalFilename());
+        List<String> allExtensions = FileTypeEnum.getAllExtensions();
+        CheckUtils.throwIf(!allExtensions.contains(extName), "不支持的文件类型，仅支持 {} 格式的文件", String
+            .join(StringConstants.CHINESE_COMMA, allExtensions));
+        // 获取存储信息
         StorageDO storage;
         if (StrUtil.isBlank(storageCode)) {
             storage = storageService.getDefaultStorage();
@@ -89,13 +96,14 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
             storage = storageService.getByCode(storageCode);
             CheckUtils.throwIfNotExists(storage, "StorageDO", "Code", storageCode);
         }
+        // 构建上传预处理对象
         UploadPretreatment uploadPretreatment = fileStorageService.of(file)
             .setPlatform(storage.getCode())
             .setHashCalculatorSha256(true)
             .putAttr(ClassUtil.getClassName(StorageDO.class, false), storage)
             .setPath(path);
         // 图片文件生成缩略图
-        if (FileTypeEnum.IMAGE.getExtensions().contains(FileNameUtil.extName(file.getOriginalFilename()))) {
+        if (FileTypeEnum.IMAGE.getExtensions().contains(extName)) {
             uploadPretreatment.thumbnail(img -> img.size(100, 100));
         }
         uploadPretreatment.setProgressMonitor(new ProgressListener() {
@@ -115,7 +123,6 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
             }
         });
         return uploadPretreatment.upload();
-
     }
 
     @Override

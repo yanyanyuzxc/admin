@@ -36,11 +36,13 @@ import top.continew.admin.system.model.query.*;
 import top.continew.admin.system.model.resp.file.FileUploadResp;
 import top.continew.admin.system.service.*;
 import top.continew.starter.core.constant.StringConstants;
+import top.continew.starter.core.util.StrUtils;
 import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 import top.continew.starter.log.annotation.Log;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -67,11 +69,11 @@ public class CommonController {
 
     @Operation(summary = "上传文件", description = "上传文件")
     @PostMapping("/file")
-    public FileUploadResp upload(@NotNull(message = "文件不能为空") MultipartFile file, String path) {
+    public FileUploadResp upload(@NotNull(message = "文件不能为空") MultipartFile file, String path) throws IOException {
         ValidationUtils.throwIf(file::isEmpty, "文件不能为空");
-        FileInfo fileInfo = fileService.upload(file, StrUtil.isNotBlank(path)
-            ? StrUtil.appendIfMissing(path, StringConstants.SLASH)
-            : "/");
+        String fixedPath = StrUtils.blankToDefault(path, StringConstants.SLASH, p -> StrUtil
+            .appendIfMissing(p, StringConstants.SLASH));
+        FileInfo fileInfo = fileService.upload(file, fixedPath);
         return FileUploadResp.builder()
             .id(fileInfo.getId())
             .url(fileInfo.getUrl())

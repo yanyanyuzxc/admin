@@ -389,7 +389,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     }
 
     @Override
-    public String updateAvatar(MultipartFile avatarFile, Long id) {
+    public String updateAvatar(MultipartFile avatarFile, Long id) throws IOException {
         String avatarImageType = FileNameUtil.extName(avatarFile.getOriginalFilename());
         CheckUtils.throwIf(!StrUtil.equalsAnyIgnoreCase(avatarImageType, avatarSupportSuffix), "头像仅支持 {} 格式的图片", String
             .join(StringConstants.CHINESE_COMMA, avatarSupportSuffix));
