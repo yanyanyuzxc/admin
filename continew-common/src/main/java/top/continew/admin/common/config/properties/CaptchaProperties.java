@@ -85,18 +85,6 @@ public class CaptchaProperties {
         private long expirationInMinutes;
 
         /**
-         * 模板 ID
-         */
-        private String templateId;
-
-        /**
-         * 短信厂商
-         *
-         * @see top.continew.admin.system.model.resp.SmsConfigResp#supplier
-         */
-        private String supplier;
-
-        /**
          * 验证码字段模板键名
          */
         private String codeKey = "code";

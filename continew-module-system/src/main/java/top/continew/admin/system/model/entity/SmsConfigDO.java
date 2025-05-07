@@ -95,6 +95,11 @@ public class SmsConfigDO extends BaseDO {
     private String supplierConfig;
 
     /**
+     * 是否为默认存储
+     */
+    private Boolean isDefault;
+
+    /**
      * 状态
      */
     private DisEnableStatusEnum status;

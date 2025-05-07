@@ -553,6 +553,7 @@ CREATE TABLE IF NOT EXISTS "sys_sms_config" (
     "max_retries"     int4         DEFAULT NULL,
     "maximum"         int4         DEFAULT NULL,
     "supplier_config" text         DEFAULT NULL ,
+    "is_default"      bool         NOT NULL DEFAULT false,
     "status"          int2         NOT NULL DEFAULT 1,
     "create_user"     int8         NOT NULL,
     "create_time"     timestamp    NOT NULL,
@@ -574,6 +575,7 @@ COMMENT ON COLUMN "sys_sms_config"."retry_interval"  IS '重试间隔（单位�
 COMMENT ON COLUMN "sys_sms_config"."max_retries"     IS '重试次数';
 COMMENT ON COLUMN "sys_sms_config"."maximum"         IS '发送上限';
 COMMENT ON COLUMN "sys_sms_config"."supplier_config" IS '各个厂商独立配置';
+COMMENT ON COLUMN "sys_sms_config"."is_default"      IS '是否为默认配置';
 COMMENT ON COLUMN "sys_sms_config"."status"          IS '状态（1：启用；2：禁用）';
 COMMENT ON COLUMN "sys_sms_config"."create_user"     IS '创建人';
 COMMENT ON COLUMN "sys_sms_config"."create_time"     IS '创建时间';

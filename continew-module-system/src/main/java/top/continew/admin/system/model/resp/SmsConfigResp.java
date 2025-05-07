@@ -126,6 +126,13 @@ public class SmsConfigResp extends BaseDetailResp {
     private String supplierConfig;
 
     /**
+     * 是否为默认存储
+     */
+    @Schema(description = "是否为默认存储", example = "true")
+    @ExcelProperty(value = "是否为默认存储")
+    private Boolean isDefault;
+
+    /**
      * 状态
      */
     @Schema(description = "状态", example = "1")

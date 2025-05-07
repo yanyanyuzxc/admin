@@ -45,7 +45,7 @@ public interface StorageService extends BaseService<StorageResp, StorageResp, St
      *
      * @param id ID
      */
-    void setDefault(Long id);
+    void setDefaultStorage(Long id);
 
     /**
      * 查询默认存储

@@ -139,7 +139,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void setDefault(Long id) {
+    public void setDefaultStorage(Long id) {
         StorageDO storage = super.getById(id);
         if (Boolean.TRUE.equals(storage.getIsDefault())) {
             return;
@@ -152,7 +152,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
 
     @Override
     public StorageDO getDefaultStorage() {
-        return baseMapper.lambdaQuery().eq(StorageDO::getIsDefault, true).one();
+        return baseMapper.lambdaQuery().eq(StorageDO::getIsDefault, true).eq(StorageDO::getStatus, DisEnableStatusEnum.ENABLE).one();
     }
 
     @Override

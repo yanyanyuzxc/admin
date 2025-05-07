@@ -93,6 +93,7 @@ VALUES
 (1214, '修改', 1210, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'system:smsConfig:update', 4, 1, 1, NOW()),
 (1215, '删除', 1210, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'system:smsConfig:delete', 5, 1, 1, NOW()),
 (1216, '导出', 1210, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'system:smsConfig:export', 6, 1, 1, NOW()),
+(1217, '设为默认配置', 1210, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'system:smsConfig:setDefault', 7, 1, 1, NOW()),
 (1230, '存储配置', 1150, 2, '/system/config?tab=storage', 'SystemStorage', 'system/config/storage/index', NULL, 'storage', false, false, true, NULL, 6, 1, 1, NOW()),
 (1231, '列表', 1230, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:storage:list', 1, 1, 1, NOW()),
 (1232, '详情', 1230, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'system:storage:get', 2, 1, 1, NOW()),

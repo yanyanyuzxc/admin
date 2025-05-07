@@ -335,6 +335,7 @@ CREATE TABLE IF NOT EXISTS `sys_sms_config`  (
     `max_retries`     int          DEFAULT NULL                COMMENT '重试次数',
     `maximum`         int          DEFAULT NULL                COMMENT '发送上限',
     `supplier_config` text         DEFAULT NULL                COMMENT '各个厂商独立配置',
+    `is_default`      bit(1)       NOT NULL DEFAULT b'0'       COMMENT '是否为默认配置',
     `status`          tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态（1：启用；2：禁用）',
     `create_user`     bigint(20)   NOT NULL                    COMMENT '创建人',
     `create_time`     datetime     NOT NULL                    COMMENT '创建时间',

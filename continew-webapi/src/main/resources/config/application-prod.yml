@@ -132,8 +132,6 @@ captcha:
     length: 6
     # 过期时间
     expirationInMinutes: 5
-    # 模板 ID
-    templateId: 1
 
 --- ### 日志配置
 ## API 请求/响应日志配置
