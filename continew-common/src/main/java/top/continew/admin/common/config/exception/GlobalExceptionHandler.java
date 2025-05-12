@@ -32,6 +32,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import top.continew.starter.core.exception.BadRequestException;
+import top.continew.starter.core.exception.BaseException;
 import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.web.model.R;
 
@@ -46,6 +47,16 @@ import top.continew.starter.web.model.R;
 @Order(99)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+
+    /**
+     * 自定义基类异常
+     */
+    @ExceptionHandler(BaseException.class)
+    public R handleBaseException(BaseException e, HttpServletRequest request) {
+        log.error("[{}] {}", request.getMethod(), request.getRequestURI(), e);
+        return R.fail(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), e.getMessage());
+    }
 
     /**
      * 业务异常
