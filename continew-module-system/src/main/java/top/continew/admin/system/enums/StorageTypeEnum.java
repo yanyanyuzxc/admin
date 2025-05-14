@@ -16,9 +16,15 @@
 
 package top.continew.admin.system.enums;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import top.continew.admin.system.model.req.StorageReq;
+import top.continew.admin.system.validation.ValidationGroup;
+import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.enums.BaseEnum;
+import top.continew.starter.core.util.URLUtils;
+import top.continew.starter.core.validation.ValidationUtils;
 
 /**
  * 存储类型枚举
@@ -33,13 +39,48 @@ public enum StorageTypeEnum implements BaseEnum<Integer> {
     /**
      * 本地存储
      */
-    LOCAL(1, "本地存储"),
+    LOCAL(1, "本地存储") {
+        @Override
+        public void validate(StorageReq req) {
+            ValidationUtils.validate(req, ValidationGroup.Storage.Local.class);
+            ValidationUtils.throwIf(!URLUtils.isHttpUrl(req.getDomain()), "访问路径格式不正确");
+        }
+
+        @Override
+        public void pretreatment(StorageReq req) {
+            super.pretreatment(req);
+            req.setBucketName(StrUtil.appendIfMissing(req.getBucketName()
+                .replace(StringConstants.BACKSLASH, StringConstants.SLASH), StringConstants.SLASH));
+        }
+    },
 
     /**
      * 对象存储
      */
-    OSS(2, "对象存储");
+    OSS(2, "对象存储") {
+        @Override
+        public void validate(StorageReq req) {
+            ValidationUtils.validate(req, ValidationGroup.Storage.OSS.class);
+            ValidationUtils.throwIf(!URLUtils.isHttpUrl(req.getDomain()), "域名格式不正确");
+        }
+    };
 
     private final Integer value;
     private final String description;
+
+    /**
+     * 校验
+     *
+     * @param req 请求参数
+     */
+    public abstract void validate(StorageReq req);
+
+    /**
+     * 处理参数
+     *
+     * @param req 请求参数
+     */
+    public void pretreatment(StorageReq req) {
+        req.setDomain(StrUtil.removeSuffix(req.getDomain(), StringConstants.SLASH));
+    }
 }

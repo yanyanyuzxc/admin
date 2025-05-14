@@ -30,6 +30,7 @@ import org.dromara.x.file.storage.core.ProgressListener;
 import org.dromara.x.file.storage.core.upload.UploadPretreatment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.system.enums.FileTypeEnum;
 import top.continew.admin.system.mapper.FileMapper;
 import top.continew.admin.system.model.entity.FileDO;
@@ -68,7 +69,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
     private StorageService storageService;
 
     @Override
-    protected void beforeDelete(List<Long> ids) {
+    public void beforeDelete(List<Long> ids) {
         List<FileDO> fileList = baseMapper.lambdaQuery().in(FileDO::getId, ids).list();
         Map<Long, List<FileDO>> fileListGroup = fileList.stream().collect(Collectors.groupingBy(FileDO::getStorageId));
         for (Map.Entry<Long, List<FileDO>> entry : fileListGroup.entrySet()) {
@@ -87,23 +88,17 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
         List<String> allExtensions = FileTypeEnum.getAllExtensions();
         CheckUtils.throwIf(!allExtensions.contains(extName), "不支持的文件类型，仅支持 {} 格式的文件", String
             .join(StringConstants.CHINESE_COMMA, allExtensions));
-        // 获取存储信息
-        StorageDO storage;
-        if (StrUtil.isBlank(storageCode)) {
-            storage = storageService.getDefaultStorage();
-            CheckUtils.throwIfNull(storage, "请先指定默认存储");
-        } else {
-            storage = storageService.getByCode(storageCode);
-            CheckUtils.throwIfNotExists(storage, "StorageDO", "Code", storageCode);
-        }
         // 构建上传预处理对象
+        StorageDO storage = storageService.getByCode(storageCode);
+        CheckUtils.throwIf(DisEnableStatusEnum.DISABLE.equals(storage.getStatus()), "请先启用存储 [{}]", storage.getCode());
         UploadPretreatment uploadPretreatment = fileStorageService.of(file)
             .setPlatform(storage.getCode())
             .setHashCalculatorSha256(true)
             .putAttr(ClassUtil.getClassName(StorageDO.class, false), storage)
-            .setPath(path);
+            .setPath(this.pretreatmentPath(path));
         // 图片文件生成缩略图
         if (FileTypeEnum.IMAGE.getExtensions().contains(extName)) {
+            uploadPretreatment.setIgnoreThumbnailException(true, true);
             uploadPretreatment.thumbnail(img -> img.size(100, 100));
         }
         uploadPretreatment.setProgressMonitor(new ProgressListener() {
@@ -122,6 +117,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
                 log.info("上传结束");
             }
         });
+        // 上传
         return uploadPretreatment.upload();
     }
 
@@ -193,5 +189,29 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
             fileResp.setThumbnailUrl(thumbnailUrl);
             fileResp.setStorageName("%s (%s)".formatted(storage.getName(), storage.getCode()));
         }
+    }
+
+    /**
+     * 处理路径
+     *
+     * <p>
+     * 1.如果 path 为空，则使用 {@link FileService#getDefaultFilePath()} 作为默认值 <br />
+     * 2.如果 path 为 {@code /}，则设置为空 <br />
+     * 3.如果 path 不以 {@code /} 结尾，则添加后缀 {@code /} <br />
+     * 4.如果 path 以 {@code /} 开头，则移除前缀 {@code /} <br />
+     * 示例：yyyy/MM/dd/
+     * </p>
+     *
+     * @param path 路径
+     * @return 处理路径
+     */
+    private String pretreatmentPath(String path) {
+        if (StrUtil.isBlank(path)) {
+            return this.getDefaultFilePath();
+        }
+        if (StringConstants.SLASH.equals(path)) {
+            return StringConstants.EMPTY;
+        }
+        return StrUtil.appendIfMissing(StrUtil.removePrefix(path, StringConstants.SLASH), StringConstants.SLASH);
     }
 }

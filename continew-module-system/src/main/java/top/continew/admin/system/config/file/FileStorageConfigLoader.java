@@ -24,8 +24,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.system.model.entity.StorageDO;
 import top.continew.admin.system.model.query.StorageQuery;
-import top.continew.admin.system.model.req.StorageReq;
 import top.continew.admin.system.model.resp.StorageResp;
 import top.continew.admin.system.service.StorageService;
 
@@ -52,6 +52,6 @@ public class FileStorageConfigLoader implements ApplicationRunner {
         if (CollUtil.isEmpty(storageList)) {
             return;
         }
-        storageList.forEach(s -> storageService.load(BeanUtil.copyProperties(s, StorageReq.class)));
+        storageList.forEach(storage -> storageService.load(BeanUtil.copyProperties(storage, StorageDO.class)));
     }
 }

@@ -35,8 +35,6 @@ import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.model.query.*;
 import top.continew.admin.system.model.resp.file.FileUploadResp;
 import top.continew.admin.system.service.*;
-import top.continew.starter.core.constant.StringConstants;
-import top.continew.starter.core.util.StrUtils;
 import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
@@ -71,9 +69,7 @@ public class CommonController {
     @PostMapping("/file")
     public FileUploadResp upload(@NotNull(message = "文件不能为空") MultipartFile file, String path) throws IOException {
         ValidationUtils.throwIf(file::isEmpty, "文件不能为空");
-        String fixedPath = StrUtils.blankToDefault(path, StringConstants.SLASH, p -> StrUtil
-            .appendIfMissing(p, StringConstants.SLASH));
-        FileInfo fileInfo = fileService.upload(file, fixedPath);
+        FileInfo fileInfo = fileService.upload(file, path);
         return FileUploadResp.builder()
             .id(fileInfo.getId())
             .url(fileInfo.getUrl())
