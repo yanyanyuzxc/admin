@@ -61,9 +61,8 @@ public class FileController extends BaseController<FileService, FileResp, FileRe
     }
 
     @Operation(summary = "创建文件夹", description = "创建文件夹")
-    @ResponseBody
-    @PostMapping("/createDir")
+    @PostMapping("/dir")
     public IdResp<Long> createDir(@RequestBody FileReq req) {
-        return baseService.createDir(req);
+        return new IdResp<>(baseService.createDir(req));
     }
 }

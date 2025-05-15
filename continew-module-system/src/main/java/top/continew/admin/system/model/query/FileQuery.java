@@ -41,16 +41,15 @@ public class FileQuery implements Serializable {
     /**
      * 名称
      */
-    @Schema(description = "名称", example = "图片")
+    @Schema(description = "名称", example = "example")
     @Query(type = QueryType.LIKE)
-    private String name;
+    private String originalName;
 
     /**
-     * 绝对路径
+     * 存储路径
      */
-    @Schema(description = "绝对路径", example = "/2025")
-    @Query(type = QueryType.EQ)
-    private String absPath;
+    @Schema(description = "存储路径", example = "/")
+    private String path;
 
     /**
      * 类型

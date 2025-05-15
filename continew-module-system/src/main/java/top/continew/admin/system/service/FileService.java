@@ -25,7 +25,6 @@ import top.continew.admin.system.model.resp.file.FileResp;
 import top.continew.admin.system.model.resp.file.FileStatisticsResp;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.data.mp.service.IService;
-import top.continew.starter.extension.crud.model.resp.IdResp;
 import top.continew.starter.extension.crud.service.BaseService;
 
 import java.io.IOException;
@@ -103,7 +102,7 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @param req 请求参数
      * @return ID
      */
-    IdResp<Long> createDir(FileReq req);
+    Long createDir(FileReq req);
 
     /**
      * 获取默认文件路径

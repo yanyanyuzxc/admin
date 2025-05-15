@@ -17,8 +17,6 @@
 package top.continew.admin.system.model.entity;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.file.FileNameUtil;
-import cn.hutool.core.util.EscapeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -28,7 +26,6 @@ import org.dromara.x.file.storage.core.FileInfo;
 import top.continew.admin.common.model.entity.BaseDO;
 import top.continew.admin.system.enums.FileTypeEnum;
 import top.continew.starter.core.constant.StringConstants;
-import top.continew.starter.core.util.StrUtils;
 
 import java.io.Serial;
 import java.util.Map;
@@ -53,24 +50,19 @@ public class FileDO extends BaseDO {
     private String name;
 
     /**
+     * 原始名称
+     */
+    private String originalName;
+
+    /**
      * 大小（字节）
      */
     private Long size;
 
     /**
-     * URL
+     * 存储路径
      */
-    private String url;
-
-    /**
-     * 上级目录
-     */
-    private String parentPath;
-
-    /**
-     * 绝对路径
-     */
-    private String absPath;
+    private String path;
 
     /**
      * 扩展名
@@ -88,7 +80,7 @@ public class FileDO extends BaseDO {
     private FileTypeEnum type;
 
     /**
-     * SHA256值
+     * SHA256 值
      */
     private String sha256;
 
@@ -98,14 +90,14 @@ public class FileDO extends BaseDO {
     private String metadata;
 
     /**
+     * 缩略图名称
+     */
+    private String thumbnailName;
+
+    /**
      * 缩略图大小（字节)
      */
     private Long thumbnailSize;
-
-    /**
-     * 缩略图 URL
-     */
-    private String thumbnailUrl;
 
     /**
      * 缩略图元数据
@@ -123,21 +115,21 @@ public class FileDO extends BaseDO {
      * @param fileInfo {@link FileInfo} 文件信息
      */
     public FileDO(FileInfo fileInfo) {
-        this.name = FileNameUtil.getPrefix(EscapeUtil.unescape(fileInfo.getOriginalFilename()));
+        this.name = fileInfo.getFilename();
+        this.originalName = fileInfo.getOriginalFilename();
         this.size = fileInfo.getSize();
-        this.url = fileInfo.getUrl();
-        this.absPath = StrUtil.isEmpty(fileInfo.getPath())
+        // 如果为空，则为 /；如果不为空，则调整格式为：/xxx
+        this.path = StrUtil.isEmpty(fileInfo.getPath())
             ? StringConstants.SLASH
-            : StrUtil.prependIfMissing(fileInfo.getPath(), StringConstants.SLASH);
-        String[] pathAttr = this.absPath.split(StringConstants.SLASH);
-        this.parentPath = pathAttr.length > 1 ? pathAttr[pathAttr.length - 1] : StringConstants.SLASH;
+            : StrUtil.removeSuffix(StrUtil.prependIfMissing(fileInfo
+                .getPath(), StringConstants.SLASH), StringConstants.SLASH);
         this.extension = fileInfo.getExt();
         this.contentType = fileInfo.getContentType();
         this.type = FileTypeEnum.getByExtension(this.extension);
         this.sha256 = fileInfo.getHashInfo().getSha256();
         this.metadata = JSONUtil.toJsonStr(fileInfo.getMetadata());
+        this.thumbnailName = fileInfo.getThFilename();
         this.thumbnailSize = fileInfo.getThSize();
-        this.thumbnailUrl = fileInfo.getThUrl();
         this.thumbnailMetadata = JSONUtil.toJsonStr(fileInfo.getThMetadata());
         this.setCreateTime(DateUtil.toLocalDateTime(fileInfo.getCreateTime()));
     }
@@ -151,27 +143,24 @@ public class FileDO extends BaseDO {
     public FileInfo toFileInfo(StorageDO storage) {
         FileInfo fileInfo = new FileInfo();
         fileInfo.setPlatform(storage.getCode());
-        fileInfo.setFilename(StrUtil.contains(this.url, StringConstants.SLASH)
-            ? StrUtil.subAfter(this.url, StringConstants.SLASH, true)
-            : this.url);
-        fileInfo.setOriginalFilename(StrUtils
-            .blankToDefault(this.extension, this.name, ex -> this.name + StringConstants.DOT + ex));
+        fileInfo.setFilename(this.name);
+        fileInfo.setOriginalFilename(this.originalName);
+        // 暂不使用，所以保持空
         fileInfo.setBasePath(StringConstants.EMPTY);
         fileInfo.setSize(this.size);
-        fileInfo.setUrl(this.url);
-        fileInfo.setPath(StringConstants.SLASH.equals(this.absPath)
+        fileInfo.setPath(StringConstants.SLASH.equals(this.path)
             ? StringConstants.EMPTY
-            : StrUtil.removePrefix(this.absPath, StringConstants.SLASH));
+            : StrUtil.appendIfMissing(StrUtil.removePrefix(this.path, StringConstants.SLASH), StringConstants.SLASH));
         fileInfo.setExt(this.extension);
+        fileInfo.setContentType(this.contentType);
         if (StrUtil.isNotBlank(this.metadata)) {
             fileInfo.setMetadata(JSONUtil.toBean(this.metadata, Map.class));
         }
+        fileInfo.setUrl(fileInfo.getPath() + fileInfo.getFilename());
         // 缩略图信息
-        fileInfo.setThFilename(StrUtil.contains(this.thumbnailUrl, StringConstants.SLASH)
-            ? StrUtil.subAfter(this.thumbnailUrl, StringConstants.SLASH, true)
-            : this.thumbnailUrl);
+        fileInfo.setThFilename(this.thumbnailName);
         fileInfo.setThSize(this.thumbnailSize);
-        fileInfo.setThUrl(this.thumbnailUrl);
+        fileInfo.setThUrl(fileInfo.getPath() + fileInfo.getThFilename());
         if (StrUtil.isNotBlank(this.thumbnailMetadata)) {
             fileInfo.setThMetadata(JSONUtil.toBean(this.thumbnailMetadata, Map.class));
         }

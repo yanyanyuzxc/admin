@@ -16,9 +16,11 @@
 
 package top.continew.admin.system.config.file;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.x.file.storage.core.FileInfo;
@@ -32,7 +34,9 @@ import top.continew.admin.system.model.entity.StorageDO;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.URLUtils;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 文件记录实现类
@@ -58,11 +62,11 @@ public class FileRecorderImpl implements FileRecorder {
         // 方便文件上传完成后获取文件信息
         fileInfo.setId(String.valueOf(file.getId()));
         if (!URLUtils.isHttpUrl(fileInfo.getUrl())) {
-            String prefix = StrUtil.appendIfMissing(storage.getDomain(), StringConstants.SLASH);
-            String url = URLUtil.normalize(prefix + fileInfo.getUrl());
+            String prefix = StrUtil.blankToDefault(storage.getDomain(), storage.getEndpoint());
+            String url = URLUtil.completeUrl(prefix, fileInfo.getUrl());
             fileInfo.setUrl(url);
             if (StrUtil.isNotBlank(fileInfo.getThUrl())) {
-                fileInfo.setThUrl(URLUtil.normalize(prefix + fileInfo.getThUrl()));
+                fileInfo.setThUrl(URLUtil.completeUrl(prefix, fileInfo.getThUrl()));
             }
         }
         return true;
@@ -81,7 +85,10 @@ public class FileRecorderImpl implements FileRecorder {
     @Override
     public boolean delete(String url) {
         FileDO file = this.getFileByUrl(url);
-        return fileMapper.lambdaUpdate().eq(FileDO::getUrl, file.getUrl()).remove();
+        if (null == file) {
+            return false;
+        }
+        return fileMapper.lambdaUpdate().eq(FileDO::getId, file.getId()).remove();
     }
 
     @Override
@@ -106,10 +113,32 @@ public class FileRecorderImpl implements FileRecorder {
      * @return 文件信息
      */
     private FileDO getFileByUrl(String url) {
-        Optional<FileDO> fileOptional = fileMapper.lambdaQuery().eq(FileDO::getUrl, url).oneOpt();
-        return fileOptional.orElseGet(() -> fileMapper.lambdaQuery()
-            .likeLeft(FileDO::getUrl, StrUtil.subAfter(url, StringConstants.SLASH, true))
-            .oneOpt()
-            .orElse(null));
+        LambdaQueryChainWrapper<FileDO> queryWrapper = fileMapper.lambdaQuery()
+            .eq(FileDO::getName, StrUtil.subAfter(url, StringConstants.SLASH, true));
+        // 非 HTTP URL 场景
+        if (!URLUtils.isHttpUrl(url)) {
+            return queryWrapper.eq(FileDO::getPath, StrUtil.prependIfMissing(StrUtil
+                .subBefore(url, StringConstants.SLASH, true), StringConstants.SLASH)).one();
+        }
+        // HTTP URL 场景
+        List<FileDO> list = queryWrapper.list();
+        if (CollUtil.isEmpty(list)) {
+            return null;
+        }
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+        // 结合存储配置进行匹配
+        List<StorageDO> storageList = storageMapper.selectByIds(list.stream().map(FileDO::getStorageId).toList());
+        Map<Long, StorageDO> storageMap = storageList.stream()
+            .collect(Collectors.toMap(StorageDO::getId, storage -> storage));
+        return list.stream().filter(file -> {
+            // http://localhost:8000/file/user/avatar/6825e687db4174e7a297a5f8.png => http://localhost:8000/file/user/avatar
+            String urlPrefix = StrUtil.subBefore(url, StringConstants.SLASH, true);
+            // http://localhost:8000/file/ + /user/avatar => http://localhost:8000/file/user/avatar
+            StorageDO storage = storageMap.get(file.getStorageId());
+            String prefix = StrUtil.blankToDefault(storage.getDomain(), storage.getEndpoint());
+            return urlPrefix.equals(URLUtil.normalize(prefix + file.getPath(), false, true));
+        }).findFirst().orElse(null);
     }
 }

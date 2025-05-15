@@ -273,8 +273,8 @@ INSERT INTO `sys_role_dept` (`role_id`, `dept_id`) VALUES (547888897925840927, 5
 INSERT INTO `sys_storage`
 (`id`, `name`, `code`, `type`, `access_key`, `secret_key`, `endpoint`, `bucket_name`, `domain`, `description`, `is_default`, `sort`, `status`, `create_user`, `create_time`)
 VALUES
-(1, '开发环境', 'local_dev', 1, NULL, NULL, NULL, 'C:/continew-admin/data/file/', 'http://localhost:8000/file', '本地存储', b'1', 1, 1, 1, NOW()),
-(2, '生产环境', 'local_prod', 1, NULL, NULL, NULL, '../data/file/', 'http://api.continew.top/file', '本地存储', b'0', 2, 2, 1, NOW());
+(1, '开发环境', 'local_dev', 1, NULL, NULL, NULL, 'C:/continew-admin/data/file/', 'http://localhost:8000/file/', '本地存储', b'1', 1, 1, 1, NOW()),
+(2, '生产环境', 'local_prod', 1, NULL, NULL, NULL, '../data/file/', 'http://api.continew.top/file/', '本地存储', b'0', 2, 2, 1, NOW());
 
 -- 初始化客户端数据
 INSERT INTO `sys_client`

@@ -179,7 +179,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
             return this.getDefaultStorage();
         }
         StorageDO storage = baseMapper.lambdaQuery().eq(StorageDO::getCode, code).one();
-        CheckUtils.throwIfNotExists(storage, "StorageDO", "Code", code);
+        CheckUtils.throwIfNotExists(storage, "存储", "code", code);
         return storage;
     }
 
@@ -193,8 +193,9 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
                 config.setStoragePath(storage.getBucketName());
                 fileStorageList.addAll(FileStorageServiceBuilder.buildLocalPlusFileStorage(Collections
                     .singletonList(config)));
-                SpringWebUtils.registerResourceHandler(MapUtil.of(URLUtil.url(storage.getDomain()).getPath(), storage
-                    .getBucketName()));
+                // 注册资源映射
+                SpringWebUtils.registerResourceHandler(MapUtil.of(URLUtil.url(StrUtil.removeSuffix(storage
+                    .getDomain(), StringConstants.SLASH)).getPath(), storage.getBucketName()));
             }
             case OSS -> {
                 FileStorageProperties.AmazonS3Config config = new FileStorageProperties.AmazonS3Config();

@@ -40,14 +40,14 @@ public class FileReq implements Serializable {
     /**
      * 名称
      */
-    @Schema(description = "名称", example = "test123")
+    @Schema(description = "名称", example = "example")
     @NotBlank(message = "文件名称不能为空")
     @Length(max = 255, message = "文件名称长度不能超过 {max} 个字符")
-    private String name;
+    private String originalName;
 
     /**
-     * 上级目录
+     * 存储路径
      */
-    @Schema(description = "上级目录", example = "25")
-    private String parentPath;
+    @Schema(description = "存储路径", example = "/")
+    private String path;
 }

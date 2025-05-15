@@ -43,14 +43,15 @@ public enum StorageTypeEnum implements BaseEnum<Integer> {
         @Override
         public void validate(StorageReq req) {
             ValidationUtils.validate(req, ValidationGroup.Storage.Local.class);
-            ValidationUtils.throwIf(!URLUtils.isHttpUrl(req.getDomain()), "访问路径格式不正确");
+            ValidationUtils.throwIf(StrUtil.isNotBlank(req.getDomain()) && !URLUtils.isHttpUrl(req
+                .getDomain()), "访问路径格式不正确");
         }
 
         @Override
         public void pretreatment(StorageReq req) {
             super.pretreatment(req);
-            req.setBucketName(StrUtil.appendIfMissing(req.getBucketName()
-                .replace(StringConstants.BACKSLASH, StringConstants.SLASH), StringConstants.SLASH));
+            // 本地存储路径需要以 “/” 结尾
+            req.setBucketName(StrUtil.appendIfMissing(req.getBucketName(), StringConstants.SLASH));
         }
     },
 
@@ -61,7 +62,8 @@ public enum StorageTypeEnum implements BaseEnum<Integer> {
         @Override
         public void validate(StorageReq req) {
             ValidationUtils.validate(req, ValidationGroup.Storage.OSS.class);
-            ValidationUtils.throwIf(!URLUtils.isHttpUrl(req.getDomain()), "域名格式不正确");
+            ValidationUtils.throwIf(StrUtil.isNotBlank(req.getDomain()) && !URLUtils.isHttpUrl(req
+                .getDomain()), "域名格式不正确");
         }
     };
 
@@ -81,6 +83,9 @@ public enum StorageTypeEnum implements BaseEnum<Integer> {
      * @param req 请求参数
      */
     public void pretreatment(StorageReq req) {
-        req.setDomain(StrUtil.removeSuffix(req.getDomain(), StringConstants.SLASH));
+        // 域名需要以 “/” 结尾
+        if (StrUtil.isNotBlank(req.getDomain())) {
+            req.setDomain(StrUtil.appendIfMissing(req.getDomain(), StringConstants.SLASH));
+        }
     }
 }
