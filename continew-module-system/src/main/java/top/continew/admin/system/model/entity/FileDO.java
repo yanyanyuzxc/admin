@@ -60,7 +60,12 @@ public class FileDO extends BaseDO {
     private Long size;
 
     /**
-     * 存储路径
+     * 上级目录
+     */
+    private String parentPath;
+
+    /**
+     * 路径
      */
     private String path;
 
@@ -119,10 +124,11 @@ public class FileDO extends BaseDO {
         this.originalName = fileInfo.getOriginalFilename();
         this.size = fileInfo.getSize();
         // 如果为空，则为 /；如果不为空，则调整格式为：/xxx
-        this.path = StrUtil.isEmpty(fileInfo.getPath())
+        this.parentPath = StrUtil.isEmpty(fileInfo.getPath())
             ? StringConstants.SLASH
             : StrUtil.removeSuffix(StrUtil.prependIfMissing(fileInfo
                 .getPath(), StringConstants.SLASH), StringConstants.SLASH);
+        this.path = StrUtil.prependIfMissing(fileInfo.getUrl(), StringConstants.SLASH);
         this.extension = fileInfo.getExt();
         this.contentType = fileInfo.getContentType();
         this.type = FileTypeEnum.getByExtension(this.extension);
@@ -148,15 +154,16 @@ public class FileDO extends BaseDO {
         // 暂不使用，所以保持空
         fileInfo.setBasePath(StringConstants.EMPTY);
         fileInfo.setSize(this.size);
-        fileInfo.setPath(StringConstants.SLASH.equals(this.path)
+        fileInfo.setPath(StringConstants.SLASH.equals(this.parentPath)
             ? StringConstants.EMPTY
-            : StrUtil.appendIfMissing(StrUtil.removePrefix(this.path, StringConstants.SLASH), StringConstants.SLASH));
+            : StrUtil.appendIfMissing(StrUtil
+                .removePrefix(this.parentPath, StringConstants.SLASH), StringConstants.SLASH));
         fileInfo.setExt(this.extension);
         fileInfo.setContentType(this.contentType);
         if (StrUtil.isNotBlank(this.metadata)) {
             fileInfo.setMetadata(JSONUtil.toBean(this.metadata, Map.class));
         }
-        fileInfo.setUrl(fileInfo.getPath() + fileInfo.getFilename());
+        fileInfo.setUrl(StrUtil.removePrefix(this.path, StringConstants.SLASH));
         // 缩略图信息
         fileInfo.setThFilename(this.thumbnailName);
         fileInfo.setThSize(this.thumbnailSize);
@@ -165,5 +172,12 @@ public class FileDO extends BaseDO {
             fileInfo.setThMetadata(JSONUtil.toBean(this.thumbnailMetadata, Map.class));
         }
         return fileInfo;
+    }
+
+    public void setParentPath(String parentPath) {
+        this.parentPath = parentPath;
+        this.path = StringConstants.SLASH.equals(parentPath)
+            ? parentPath + this.name
+            : parentPath + StringConstants.SLASH + this.name;
     }
 }

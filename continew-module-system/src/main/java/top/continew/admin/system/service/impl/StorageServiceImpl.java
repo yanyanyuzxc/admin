@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -78,13 +79,9 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
         CheckUtils.throwIf(this.isCodeExists(code, null), "新增失败，[{}] 已存在", code);
         // 需要独立操作来指定默认存储
         req.setIsDefault(false);
-    }
-
-    @Override
-    public void afterCreate(StorageReq req, StorageDO entity) {
         // 加载存储引擎
-        if (DisEnableStatusEnum.ENABLE.equals(entity.getStatus())) {
-            this.load(entity);
+        if (DisEnableStatusEnum.ENABLE.equals(req.getStatus())) {
+            this.load(BeanUtil.copyProperties(req, StorageDO.class));
         }
     }
 
@@ -107,19 +104,16 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
         storageType.pretreatment(req);
         // 卸载存储引擎
         this.unload(oldStorage);
-    }
-
-    @Override
-    public void afterUpdate(StorageReq req, StorageDO entity) {
         // 加载存储引擎
-        if (DisEnableStatusEnum.ENABLE.equals(entity.getStatus())) {
-            this.load(entity);
+        if (DisEnableStatusEnum.ENABLE.equals(newStatus)) {
+            BeanUtil.copyProperties(req, oldStorage);
+            this.load(oldStorage);
         }
     }
 
     @Override
     public void beforeDelete(List<Long> ids) {
-        CheckUtils.throwIf(fileService.countByStorageIds(ids) > 0, "所选存储存在文件关联，请删除文件后重试");
+        CheckUtils.throwIf(fileService.countByStorageIds(ids) > 0, "所选存储存在文件或文件夹关联，请删除后重试");
         List<StorageDO> storageList = baseMapper.lambdaQuery().in(StorageDO::getId, ids).list();
         storageList.forEach(storage -> {
             CheckUtils.throwIfEqual(Boolean.TRUE, storage.getIsDefault(), "[{}] 是默认存储，不允许删除", storage.getName());
@@ -204,7 +198,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
                 config.setSecretKey(storage.getSecretKey());
                 config.setEndPoint(storage.getEndpoint());
                 config.setBucketName(storage.getBucketName());
-                config.setDomain(storage.getDomain());
+                config.setDomain(StrUtil.emptyIfNull(storage.getDomain()));
                 fileStorageList.addAll(FileStorageServiceBuilder.buildAmazonS3FileStorage(Collections
                     .singletonList(config), null));
             }

@@ -62,11 +62,11 @@ public class FileRecorderImpl implements FileRecorder {
         // 方便文件上传完成后获取文件信息
         fileInfo.setId(String.valueOf(file.getId()));
         if (!URLUtils.isHttpUrl(fileInfo.getUrl())) {
-            String prefix = StrUtil.blankToDefault(storage.getDomain(), storage.getEndpoint());
-            String url = URLUtil.completeUrl(prefix, fileInfo.getUrl());
+            String prefix = storage.getUrlPrefix();
+            String url = URLUtil.normalize(prefix + fileInfo.getUrl(), false, true);
             fileInfo.setUrl(url);
             if (StrUtil.isNotBlank(fileInfo.getThUrl())) {
-                fileInfo.setThUrl(URLUtil.completeUrl(prefix, fileInfo.getThUrl()));
+                fileInfo.setThUrl(URLUtil.normalize(prefix + fileInfo.getThUrl(), false, true));
             }
         }
         return true;
@@ -117,8 +117,7 @@ public class FileRecorderImpl implements FileRecorder {
             .eq(FileDO::getName, StrUtil.subAfter(url, StringConstants.SLASH, true));
         // 非 HTTP URL 场景
         if (!URLUtils.isHttpUrl(url)) {
-            return queryWrapper.eq(FileDO::getPath, StrUtil.prependIfMissing(StrUtil
-                .subBefore(url, StringConstants.SLASH, true), StringConstants.SLASH)).one();
+            return queryWrapper.eq(FileDO::getPath, StrUtil.prependIfMissing(url, StringConstants.SLASH)).one();
         }
         // HTTP URL 场景
         List<FileDO> list = queryWrapper.list();
@@ -137,8 +136,7 @@ public class FileRecorderImpl implements FileRecorder {
             String urlPrefix = StrUtil.subBefore(url, StringConstants.SLASH, true);
             // http://localhost:8000/file/ + /user/avatar => http://localhost:8000/file/user/avatar
             StorageDO storage = storageMap.get(file.getStorageId());
-            String prefix = StrUtil.blankToDefault(storage.getDomain(), storage.getEndpoint());
-            return urlPrefix.equals(URLUtil.normalize(prefix + file.getPath(), false, true));
+            return urlPrefix.equals(URLUtil.normalize(storage.getUrlPrefix() + file.getParentPath(), false, true));
         }).findFirst().orElse(null);
     }
 }

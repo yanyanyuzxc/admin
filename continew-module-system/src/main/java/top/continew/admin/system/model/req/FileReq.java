@@ -46,8 +46,8 @@ public class FileReq implements Serializable {
     private String originalName;
 
     /**
-     * 存储路径
+     * 上级目录
      */
-    @Schema(description = "存储路径", example = "/")
-    private String path;
+    @Schema(description = "上级目录", example = "/")
+    private String parentPath;
 }

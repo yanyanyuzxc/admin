@@ -47,39 +47,39 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @throws IOException /
      */
     default FileInfo upload(MultipartFile file) throws IOException {
-        return upload(file, getDefaultFilePath(), null);
+        return upload(file, getDefaultParentPath(), null);
     }
 
     /**
      * 上传到默认存储
      *
-     * @param file 文件信息
-     * @param path 文件路径
+     * @param file       文件信息
+     * @param parentPath 上级目录
      * @return 文件信息
      * @throws IOException /
      */
-    default FileInfo upload(MultipartFile file, String path) throws IOException {
-        return upload(file, path, null);
+    default FileInfo upload(MultipartFile file, String parentPath) throws IOException {
+        return upload(file, parentPath, null);
     }
 
     /**
      * 上传到指定存储
      *
      * @param file        文件信息
-     * @param path        文件路径
+     * @param parentPath  上级目录
      * @param storageCode 存储编码
      * @return 文件信息
      * @throws IOException /
      */
-    FileInfo upload(MultipartFile file, String path, String storageCode) throws IOException;
+    FileInfo upload(MultipartFile file, String parentPath, String storageCode) throws IOException;
 
     /**
-     * 根据存储 ID 列表查询
+     * 创建目录
      *
-     * @param storageIds 存储 ID 列表
-     * @return 文件数量
+     * @param req 请求参数
+     * @return ID
      */
-    Long countByStorageIds(List<Long> storageIds);
+    Long createDir(FileReq req);
 
     /**
      * 查询文件资源统计信息
@@ -97,23 +97,31 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
     FileResp check(String fileHash);
 
     /**
-     * 创建目录
+     * 计算文件夹大小
      *
-     * @param req 请求参数
-     * @return ID
+     * @param id ID
+     * @return 文件夹大小（字节）
      */
-    Long createDir(FileReq req);
+    Long calcDirSize(Long id);
 
     /**
-     * 获取默认文件路径
+     * 根据存储 ID 列表查询
+     *
+     * @param storageIds 存储 ID 列表
+     * @return 文件数量
+     */
+    Long countByStorageIds(List<Long> storageIds);
+
+    /**
+     * 获取默认上级目录
      *
      * <p>
-     * 默认文件路径：yyyy/MM/dd/
+     * 默认上级目录：yyyy/MM/dd/
      * </p>
      *
-     * @return 默认文件路径
+     * @return 默认上级目录
      */
-    default String getDefaultFilePath() {
+    default String getDefaultParentPath() {
         LocalDate today = LocalDate.now();
         return today.getYear() + StringConstants.SLASH + today.getMonthValue() + StringConstants.SLASH + today
             .getDayOfMonth() + StringConstants.SLASH;

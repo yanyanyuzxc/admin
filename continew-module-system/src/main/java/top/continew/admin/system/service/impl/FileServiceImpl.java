@@ -18,7 +18,6 @@ package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.file.FileNameUtil;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -45,10 +44,10 @@ import top.continew.admin.system.service.StorageService;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.StrUtils;
 import top.continew.starter.core.validation.CheckUtils;
+import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.extension.crud.service.BaseServiceImpl;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,11 +79,9 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
                     fileStorageService.delete(fileInfo);
                 } else {
                     // 不允许删除非空文件夹
-                    String separator = StringConstants.SLASH.equals(file.getPath())
-                        ? StringConstants.EMPTY
-                        : StringConstants.SLASH;
                     boolean exists = baseMapper.lambdaQuery()
-                        .eq(FileDO::getPath, file.getPath() + separator + file.getName())
+                        .eq(FileDO::getParentPath, file.getPath())
+                        .eq(FileDO::getStorageId, entry.getKey())
                         .exists();
                     CheckUtils.throwIf(exists, "文件夹 [{}] 不为空，请先删除文件夹下的内容", file.getName());
                 }
@@ -93,7 +90,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
     }
 
     @Override
-    public FileInfo upload(MultipartFile file, String path, String storageCode) throws IOException {
+    public FileInfo upload(MultipartFile file, String parentPath, String storageCode) throws IOException {
         // 校验文件格式
         String extName = FileNameUtil.extName(file.getOriginalFilename());
         List<String> allExtensions = FileTypeEnum.getAllExtensions();
@@ -106,7 +103,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
             .setPlatform(storage.getCode())
             .setHashCalculatorSha256(true)
             .putAttr(ClassUtil.getClassName(StorageDO.class, false), storage)
-            .setPath(this.pretreatmentPath(path));
+            .setPath(this.pretreatmentPath(parentPath));
         // 图片文件生成缩略图
         if (FileTypeEnum.IMAGE.getExtensions().contains(extName)) {
             uploadPretreatment.setIgnoreThumbnailException(true, true);
@@ -129,17 +126,40 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
             }
         });
         // 创建父级目录
-        this.createDir(path, storage);
+        this.createParentDir(parentPath, storage);
         // 上传
         return uploadPretreatment.upload();
     }
 
     @Override
-    public Long countByStorageIds(List<Long> storageIds) {
-        if (CollUtil.isEmpty(storageIds)) {
-            return 0L;
+    public Long createDir(FileReq req) {
+        String parentPath = req.getParentPath();
+        FileDO file = baseMapper.lambdaQuery()
+            .eq(FileDO::getParentPath, parentPath)
+            .eq(FileDO::getName, req.getOriginalName())
+            .eq(FileDO::getType, FileTypeEnum.DIR)
+            .one();
+        CheckUtils.throwIfNotNull(file, "文件夹已存在");
+        // 存储引擎需要一致
+        StorageDO storage = storageService.getDefaultStorage();
+        if (!StringConstants.SLASH.equals(parentPath)) {
+            FileDO parentFile = baseMapper.lambdaQuery()
+                .eq(FileDO::getPath, parentPath)
+                .eq(FileDO::getType, FileTypeEnum.DIR)
+                .one();
+            CheckUtils.throwIfNull(parentFile, "父级文件夹不存在");
+            CheckUtils.throwIfNotEqual(parentFile.getStorageId(), storage.getId(), "文件夹和父级文件夹存储引擎不一致");
         }
-        return baseMapper.lambdaQuery().in(FileDO::getStorageId, storageIds).count();
+        // 创建文件夹
+        FileDO dirFile = new FileDO();
+        String originalName = req.getOriginalName();
+        dirFile.setName(originalName);
+        dirFile.setOriginalName(originalName);
+        dirFile.setParentPath(parentPath);
+        dirFile.setType(FileTypeEnum.DIR);
+        dirFile.setStorageId(storage.getId());
+        baseMapper.insert(dirFile);
+        return dirFile.getId();
     }
 
     @Override
@@ -165,17 +185,31 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
     }
 
     @Override
-    public Long createDir(FileReq req) {
-        StorageDO storage = storageService.getDefaultStorage();
-        FileDO file = new FileDO();
-        file.setName(req.getOriginalName());
-        file.setOriginalName(req.getOriginalName());
-        file.setSize(0L);
-        file.setPath(req.getPath());
-        file.setType(FileTypeEnum.DIR);
-        file.setStorageId(storage.getId());
-        baseMapper.insert(file);
-        return file.getId();
+    public Long calcDirSize(Long id) {
+        FileDO dirFile = super.getById(id);
+        ValidationUtils.throwIfNotEqual(dirFile.getType(), FileTypeEnum.DIR, "ID 为 [{}] 的不是文件夹，不支持计算大小", id);
+        // 查询当前文件夹下的所有子文件和子文件夹
+        List<FileDO> children = baseMapper.lambdaQuery().eq(FileDO::getParentPath, dirFile.getPath()).list();
+        if (CollUtil.isEmpty(children)) {
+            return 0L;
+        }
+        // 累加子文件大小和递归计算子文件夹大小
+        return children.stream().mapToLong(child -> {
+            if (FileTypeEnum.DIR.equals(child.getType())) {
+                // 递归计算子文件夹大小
+                return calcDirSize(child.getId());
+            } else {
+                return child.getSize();
+            }
+        }).sum();
+    }
+
+    @Override
+    public Long countByStorageIds(List<Long> storageIds) {
+        if (CollUtil.isEmpty(storageIds)) {
+            return 0L;
+        }
+        return baseMapper.lambdaQuery().in(FileDO::getStorageId, storageIds).count();
     }
 
     @Override
@@ -183,12 +217,14 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
         super.fill(obj);
         if (obj instanceof FileResp fileResp) {
             StorageDO storage = storageService.getById(fileResp.getStorageId());
-            String prefix = StrUtil.blankToDefault(storage.getDomain(), storage.getEndpoint());
-            String path = fileResp.getPath();
-            String url = URLUtil.normalize(prefix + path + StringConstants.SLASH + fileResp.getName(), false, true);
+            String prefix = storage.getUrlPrefix();
+            String url = URLUtil.normalize(prefix + fileResp.getPath(), false, true);
             fileResp.setUrl(url);
+            String parentPath = StringConstants.SLASH.equals(fileResp.getParentPath())
+                ? StringConstants.EMPTY
+                : fileResp.getParentPath();
             String thumbnailUrl = StrUtils.blankToDefault(fileResp.getThumbnailName(), url, thName -> URLUtil
-                .normalize(prefix + path + StringConstants.SLASH + thName, false, true));
+                .normalize(prefix + parentPath + StringConstants.SLASH + thName, false, true));
             fileResp.setThumbnailUrl(thumbnailUrl);
             fileResp.setStorageName("%s (%s)".formatted(storage.getName(), storage.getCode()));
         }
@@ -198,7 +234,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
      * 处理路径
      *
      * <p>
-     * 1.如果 path 为空，则使用 {@link FileService#getDefaultFilePath()} 作为默认值 <br />
+     * 1.如果 path 为空，则使用 {@link FileService#getDefaultParentPath()} 作为默认值 <br />
      * 2.如果 path 为 {@code /}，则设置为空 <br />
      * 3.如果 path 不以 {@code /} 结尾，则添加后缀 {@code /} <br />
      * 4.如果 path 以 {@code /} 开头，则移除前缀 {@code /} <br />
@@ -210,7 +246,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
      */
     private String pretreatmentPath(String path) {
         if (StrUtil.isBlank(path)) {
-            return this.getDefaultFilePath();
+            return this.getDefaultParentPath();
         }
         if (StringConstants.SLASH.equals(path)) {
             return StringConstants.EMPTY;
@@ -219,47 +255,48 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
     }
 
     /**
-     * 创建文件夹（支持多级）
+     * 创建上级文件夹（支持多级）
      *
      * <p>
-     * user/avatar/ => user（path：/）、avatar（path：/user）
+     * user/avatar/ => user（path：/user）、avatar（path：/user/avatar）
      * </p>
      *
-     * @param dirPath 路径
-     * @param storage 存储配置
+     * @param parentPath 上级目录
+     * @param storage    存储配置
      */
-    private void createDir(String dirPath, StorageDO storage) {
-        if (StrUtil.isBlank(dirPath) || StringConstants.SLASH.equals(dirPath)) {
+    private void createParentDir(String parentPath, StorageDO storage) {
+        if (StrUtil.isBlank(parentPath) || StringConstants.SLASH.equals(parentPath)) {
             return;
         }
-        // user/avatar/ => user：/、avatar：path：/user
-        String[] paths = StrUtil.split(dirPath, StringConstants.SLASH, false, true).toArray(String[]::new);
-        Map<String, String> pathMap = MapUtil.newHashMap(paths.length, true);
-        for (int i = 0; i < paths.length; i++) {
-            String key = paths[i];
-            String path = (i == 0)
-                ? StringConstants.SLASH
-                : StringConstants.SLASH + String.join(StringConstants.SLASH, Arrays.copyOfRange(paths, 0, i));
-            pathMap.put(key, path);
-        }
-        // 创建文件夹
-        for (Map.Entry<String, String> entry : pathMap.entrySet()) {
-            String key = entry.getKey();
-            String path = entry.getValue();
-            if (!baseMapper.lambdaQuery()
-                .eq(FileDO::getPath, path)
-                .eq(FileDO::getName, key)
-                .eq(FileDO::getType, FileTypeEnum.DIR)
-                .exists()) {
-                FileDO file = new FileDO();
-                file.setName(key);
-                file.setOriginalName(key);
-                file.setSize(0L);
-                file.setPath(path);
-                file.setType(FileTypeEnum.DIR);
-                file.setStorageId(storage.getId());
-                baseMapper.insert(file);
+        // user/avatar/ => user、avatar
+        String[] parentPathParts = StrUtil.split(parentPath, StringConstants.SLASH, false, true).toArray(String[]::new);
+        String lastPath = StringConstants.SLASH;
+        StringBuilder currentPathBuilder = new StringBuilder();
+        for (int i = 0; i < parentPathParts.length; i++) {
+            String parentPathPart = parentPathParts[i];
+            if (i > 0) {
+                lastPath = currentPathBuilder.toString();
             }
+            // /user、/user/avatar
+            currentPathBuilder.append(StringConstants.SLASH).append(parentPathPart);
+            String currentPath = currentPathBuilder.toString();
+            // 文件夹和文件存储引擎需要一致
+            FileDO dirFile = baseMapper.lambdaQuery()
+                .eq(FileDO::getPath, currentPath)
+                .eq(FileDO::getType, FileTypeEnum.DIR)
+                .one();
+            if (dirFile != null) {
+                CheckUtils.throwIfNotEqual(dirFile.getStorageId(), storage.getId(), "文件夹和上传文件存储引擎不一致");
+                continue;
+            }
+            FileDO file = new FileDO();
+            file.setName(parentPathPart);
+            file.setOriginalName(parentPathPart);
+            file.setPath(currentPath);
+            file.setParentPath(lastPath);
+            file.setType(FileTypeEnum.DIR);
+            file.setStorageId(storage.getId());
+            baseMapper.insert(file);
         }
     }
 }

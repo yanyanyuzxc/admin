@@ -63,9 +63,15 @@ public class FileResp extends BaseDetailResp {
     private String url;
 
     /**
-     * 存储路径
+     * 上级目录
      */
     @Schema(description = "上级目录", example = "/2025/2/25")
+    private String parentPath;
+
+    /**
+     * 路径
+     */
+    @Schema(description = "路径", example = "/2025/2/25/6824afe8408da079832dcfb6.jpg")
     private String path;
 
     /**

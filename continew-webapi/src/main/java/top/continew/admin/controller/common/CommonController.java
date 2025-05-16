@@ -67,9 +67,10 @@ public class CommonController {
 
     @Operation(summary = "上传文件", description = "上传文件")
     @PostMapping("/file")
-    public FileUploadResp upload(@NotNull(message = "文件不能为空") MultipartFile file, String path) throws IOException {
+    public FileUploadResp upload(@NotNull(message = "文件不能为空") MultipartFile file,
+                                 String parentPath) throws IOException {
         ValidationUtils.throwIf(file::isEmpty, "文件不能为空");
-        FileInfo fileInfo = fileService.upload(file, path);
+        FileInfo fileInfo = fileService.upload(file, parentPath);
         return FileUploadResp.builder()
             .id(fileInfo.getId())
             .url(fileInfo.getUrl())

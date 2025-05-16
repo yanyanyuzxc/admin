@@ -466,7 +466,8 @@ CREATE TABLE IF NOT EXISTS "sys_file" (
     "id"                 int8         NOT NULL,
     "name"               varchar(255) NOT NULL,
     "original_name"      varchar(255) NOT NULL,
-    "size"               int8         NOT NULL,
+    "size"               int8         DEFAULT NULL,
+    "parent_path"        varchar(512) NOT NULL DEFAULT '/',
     "path"               varchar(512) NOT NULL,
     "extension"          varchar(100) DEFAULT NULL,
     "content_type"       varchar(255) DEFAULT NULL,
@@ -491,7 +492,8 @@ COMMENT ON COLUMN "sys_file"."id"                 IS 'ID';
 COMMENT ON COLUMN "sys_file"."name"               IS '名称';
 COMMENT ON COLUMN "sys_file"."original_name"      IS '原始名称';
 COMMENT ON COLUMN "sys_file"."size"               IS '大小（字节）';
-COMMENT ON COLUMN "sys_file"."path"               IS '存储路径';
+COMMENT ON COLUMN "sys_file"."parent_path"        IS '上级目录';
+COMMENT ON COLUMN "sys_file"."path"               IS '路径';
 COMMENT ON COLUMN "sys_file"."extension"          IS '扩展名';
 COMMENT ON COLUMN "sys_file"."content_type"       IS '内容类型';
 COMMENT ON COLUMN "sys_file"."type"               IS '类型（0: 目录；1：其他；2：图片；3：文档；4：视频；5：音频）';
