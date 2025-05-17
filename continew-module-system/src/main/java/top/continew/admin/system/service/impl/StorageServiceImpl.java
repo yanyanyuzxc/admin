@@ -188,8 +188,8 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
                 fileStorageList.addAll(FileStorageServiceBuilder.buildLocalPlusFileStorage(Collections
                     .singletonList(config)));
                 // 注册资源映射
-                SpringWebUtils.registerResourceHandler(MapUtil.of(URLUtil.url(StrUtil.removeSuffix(storage
-                    .getDomain(), StringConstants.SLASH)).getPath(), storage.getBucketName()));
+                SpringWebUtils.registerResourceHandler(MapUtil.of(URLUtil.url(storage.getDomain()).getPath(), storage
+                    .getBucketName()));
             }
             case OSS -> {
                 FileStorageProperties.AmazonS3Config config = new FileStorageProperties.AmazonS3Config();
