@@ -19,6 +19,7 @@ package top.continew.admin.controller.system;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.dromara.x.file.storage.core.FileInfo;
@@ -81,7 +82,8 @@ public class FileController extends BaseController<FileService, FileResp, FileRe
     @Operation(summary = "创建文件夹", description = "创建文件夹")
     @SaCheckPermission("system:file:createDir")
     @PostMapping("/dir")
-    public IdResp<Long> createDir(@RequestBody FileReq req) {
+    public IdResp<Long> createDir(@Valid @RequestBody FileReq req) {
+        ValidationUtils.throwIfBlank(req.getParentPath(), "上级目录不能为空");
         return new IdResp<>(baseService.createDir(req));
     }
 
