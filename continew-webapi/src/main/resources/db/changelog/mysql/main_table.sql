@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `sys_notice` (
     `type`           varchar(30)  NOT NULL                    COMMENT '分类',
     `notice_scope`   tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '通知范围（1：所有人；2：指定用户）',
     `notice_users`   json         DEFAULT NULL                COMMENT '通知用户',
-    `notice_methods` json         DEFAULT NULL                COMMENT '通知方式（1：登录弹窗；2：系统消息）',
+    `notice_methods` json         DEFAULT NULL                COMMENT '通知方式（1：系统消息；2：登录弹窗）',
     `is_timing`      bit(1)       NOT NULL DEFAULT b'0'       COMMENT '是否定时',
     `publish_time`   datetime     DEFAULT NULL                COMMENT '发布时间',
     `is_top`         bit(1)       NOT NULL DEFAULT b'0'       COMMENT '是否置顶',

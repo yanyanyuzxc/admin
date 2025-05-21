@@ -415,7 +415,7 @@ COMMENT ON COLUMN "sys_notice"."content"        IS '内容';
 COMMENT ON COLUMN "sys_notice"."type"           IS '分类';
 COMMENT ON COLUMN "sys_notice"."notice_scope"   IS '通知范围（1：所有人；2：指定用户）';
 COMMENT ON COLUMN "sys_notice"."notice_users"   IS '通知用户';
-COMMENT ON COLUMN "sys_notice"."notice_methods" IS '通知方式（1：登录弹窗；2：系统消息）';
+COMMENT ON COLUMN "sys_notice"."notice_methods" IS '通知方式（1：系统消息；2：登录弹窗）';
 COMMENT ON COLUMN "sys_notice"."is_timing"      IS '是否定时';
 COMMENT ON COLUMN "sys_notice"."publish_time"   IS '发布时间';
 COMMENT ON COLUMN "sys_notice"."is_top"         IS '是否置顶';

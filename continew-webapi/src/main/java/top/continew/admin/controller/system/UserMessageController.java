@@ -57,6 +57,14 @@ public class UserMessageController {
     private final NoticeService noticeService;
     private final MessageService messageService;
 
+    @Log(ignore = true)
+    @Operation(summary = "查询未读消息数量", description = "查询当前用户的未读消息数量")
+    @Parameter(name = "isDetail", description = "是否查询详情", example = "true", in = ParameterIn.QUERY)
+    @GetMapping("/unread")
+    public MessageUnreadResp countUnreadMessage(@RequestParam(required = false) Boolean detail) {
+        return messageService.countUnreadByUserId(UserContextHolder.getUserId(), detail);
+    }
+
     @Operation(summary = "分页查询消息列表", description = "分页查询消息列表")
     @GetMapping
     public PageResp<MessageResp> page(MessageQuery query, @Validated PageQuery pageQuery) {
@@ -83,11 +91,10 @@ public class UserMessageController {
     }
 
     @Log(ignore = true)
-    @Operation(summary = "查询未读消息数量", description = "查询当前用户的未读消息数量")
-    @Parameter(name = "isDetail", description = "是否查询详情", example = "true", in = ParameterIn.QUERY)
-    @GetMapping("/unread")
-    public MessageUnreadResp countUnreadMessage(@RequestParam(required = false) Boolean detail) {
-        return messageService.countUnreadByUserId(UserContextHolder.getUserId(), detail);
+    @Operation(summary = "查询未读公告数量", description = "查询当前用户的未读公告数量")
+    @GetMapping("/notice/unread")
+    public NoticeUnreadResp countUnreadNotice() {
+        return noticeService.countUnreadByUserId(UserContextHolder.getUserId());
     }
 
     @Operation(summary = "分页查询公告列表", description = "分页查询公告列表")
@@ -107,12 +114,5 @@ public class UserMessageController {
             .contains(UserContextHolder.getUserId().toString())), "公告不存在或无权限访问");
         noticeService.readNotice(id, UserContextHolder.getUserId());
         return detail;
-    }
-
-    @Log(ignore = true)
-    @Operation(summary = "查询未读公告数量", description = "查询当前用户的未读公告数量")
-    @GetMapping("/notice/unread")
-    public NoticeUnreadResp countUnreadNotice() {
-        return noticeService.countUnreadByUserId(UserContextHolder.getUserId());
     }
 }
