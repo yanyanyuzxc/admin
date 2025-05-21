@@ -56,7 +56,6 @@ import top.continew.starter.core.validation.ValidationUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Objects;
 
 /**
  * 第三方账号登录处理器
@@ -95,7 +94,7 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
             String nickname = authUser.getNickname();
             UserDO existsUser = userService.getByUsername(username);
             String randomStr = RandomUtil.randomString(RandomUtil.BASE_CHAR, 5);
-            if (null != existsUser || !ReUtil.isMatch(RegexConstants.USERNAME, username)) {
+            if (existsUser != null || !ReUtil.isMatch(RegexConstants.USERNAME, username)) {
                 username = randomStr + IdUtil.fastSimpleUUID();
             }
             if (!ReUtil.isMatch(RegexConstants.GENERAL_NAME, nickname)) {
@@ -104,7 +103,7 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
             user = new UserDO();
             user.setUsername(username);
             user.setNickname(nickname);
-            if (Objects.nonNull(authUser.getGender())) {
+            if (authUser.getGender() != null) {
                 user.setGender(GenderEnum.valueOf(authUser.getGender().name()));
             }
             user.setAvatar(authUser.getAvatar());
