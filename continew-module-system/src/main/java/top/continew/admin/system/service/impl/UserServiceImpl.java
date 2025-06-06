@@ -200,7 +200,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     public void delete(List<Long> ids) {
         CheckUtils.throwIf(CollUtil.contains(ids, UserContextHolder.getUserId()), "不允许删除当前用户");
         List<UserDO> list = baseMapper.lambdaQuery()
-            .select(UserDO::getNickname, UserDO::getIsSystem)
+            .select(UserDO::getId, UserDO::getNickname, UserDO::getIsSystem)
             .in(UserDO::getId, ids)
             .list();
         List<Long> idList = list.stream().map(UserDO::getId).toList();
