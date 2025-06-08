@@ -31,7 +31,6 @@ import top.continew.admin.system.model.req.NoticeReq;
 import top.continew.admin.system.model.resp.dashboard.DashboardNoticeResp;
 import top.continew.admin.system.model.resp.notice.NoticeDetailResp;
 import top.continew.admin.system.model.resp.notice.NoticeResp;
-import top.continew.admin.system.model.resp.notice.NoticeUnreadResp;
 import top.continew.admin.system.service.MessageService;
 import top.continew.admin.system.service.NoticeLogService;
 import top.continew.admin.system.service.NoticeService;
@@ -169,8 +168,8 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, NoticeDO, N
     }
 
     @Override
-    public NoticeUnreadResp countUnreadByUserId(Long userId) {
-        return new NoticeUnreadResp(baseMapper.selectUnreadCountByUserId(userId));
+    public List<Long> listUnreadIdsByUserId(NoticeMethodEnum method, Long userId) {
+        return baseMapper.selectUnreadIdsByUserId(method != null ? method.getValue() : null, userId);
     }
 
     @Override

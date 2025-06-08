@@ -16,13 +16,13 @@
 
 package top.continew.admin.system.service;
 
+import top.continew.admin.system.enums.NoticeMethodEnum;
 import top.continew.admin.system.model.entity.NoticeDO;
 import top.continew.admin.system.model.query.NoticeQuery;
 import top.continew.admin.system.model.req.NoticeReq;
 import top.continew.admin.system.model.resp.dashboard.DashboardNoticeResp;
 import top.continew.admin.system.model.resp.notice.NoticeDetailResp;
 import top.continew.admin.system.model.resp.notice.NoticeResp;
-import top.continew.admin.system.model.resp.notice.NoticeUnreadResp;
 import top.continew.starter.data.mp.service.IService;
 import top.continew.starter.extension.crud.service.BaseService;
 
@@ -44,12 +44,13 @@ public interface NoticeService extends BaseService<NoticeResp, NoticeDetailResp,
     void publish(NoticeDO notice);
 
     /**
-     * 查询未读公告数量
-     * 
+     * 查询未读公告 ID 列表
+     *
+     * @param method 通知方式
      * @param userId 用户 ID
-     * @return 未读公告响应参数
+     * @return 未读公告 ID 响应参数
      */
-    NoticeUnreadResp countUnreadByUserId(Long userId);
+    List<Long> listUnreadIdsByUserId(NoticeMethodEnum method, Long userId);
 
     /**
      * 阅读公告

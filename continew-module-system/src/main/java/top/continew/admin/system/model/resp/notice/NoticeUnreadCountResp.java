@@ -24,15 +24,15 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 未读公告响应参数
+ * 未读公告数量响应参数
  *
  * @author Charles7c
- * @since 2025/5/20 22:00
+ * @since 2025/5/22 22:15
  */
 @Data
 @NoArgsConstructor
-@Schema(description = "未读公告响应参数")
-public class NoticeUnreadResp implements Serializable {
+@Schema(description = "未读公告数量响应参数")
+public class NoticeUnreadCountResp implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -41,9 +41,9 @@ public class NoticeUnreadResp implements Serializable {
      * 未读公告数量
      */
     @Schema(description = "未读公告数量", example = "1")
-    private Long total;
+    private Integer total;
 
-    public NoticeUnreadResp(Long total) {
+    public NoticeUnreadCountResp(Integer total) {
         this.total = total;
     }
 }

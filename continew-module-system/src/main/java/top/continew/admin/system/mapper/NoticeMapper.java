@@ -45,12 +45,13 @@ public interface NoticeMapper extends BaseMapper<NoticeDO> {
     IPage<NoticeResp> selectNoticePage(@Param("page") Page<NoticeDO> page, @Param("query") NoticeQuery query);
 
     /**
-     * 查询未读公告数量
+     * 查询未读公告 ID 列表
      *
-     * @param userId 用户 ID
-     * @return 未读公告数量
+     * @param noticeMethod 通知方式
+     * @param userId       用户 ID
+     * @return 未读公告 ID 列表
      */
-    Long selectUnreadCountByUserId(@Param("userId") Long userId);
+    List<Long> selectUnreadIdsByUserId(@Param("noticeMethod") Integer noticeMethod, @Param("userId") Long userId);
 
     /**
      * 查询仪表盘公告列表

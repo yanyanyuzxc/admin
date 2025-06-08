@@ -24,7 +24,7 @@
         LEFT JOIN sys_notice_log AS t2 ON t2.notice_id = t1.id
         <where>
             <if test="query.userId != null">
-                (t1.notice_scope = 1 OR (t1.notice_scope = 2 AND JSON_EXTRACT(t1.notice_users, "$[0]") = CAST(#{query.userId} AS CHAR)))
+                (t1.notice_scope = 1 OR (t1.notice_scope = 2 AND JSON_CONTAINS(t1.notice_users, CONCAT('"', #{userId}, '"'))))
             </if>
             <if test="query.title != null and query.title != ''">
                 AND t1.title LIKE CONCAT('%', #{query.title}, '%')
@@ -41,12 +41,15 @@
         </if>
     </select>
 
-    <select id="selectUnreadCountByUserId" resultType="java.lang.Long">
+    <select id="selectUnreadIdsByUserId" resultType="java.lang.Long">
         SELECT
-            COUNT(1)
+            t1.id
         FROM sys_notice AS t1
-            LEFT JOIN sys_notice_log AS t2 ON t2.notice_id = t1.id
+        LEFT JOIN sys_notice_log AS t2 ON t2.notice_id = t1.id
         WHERE (t1.notice_scope = 1 OR (t1.notice_scope = 2 AND JSON_CONTAINS(t1.notice_users, CONCAT('"', #{userId}, '"'))))
+        <if test="noticeMethod != null">
+            AND JSON_CONTAINS(t1.notice_methods, CAST(#{noticeMethod} AS CHAR))
+        </if>
         AND t2.read_time IS NULL
     </select>
 

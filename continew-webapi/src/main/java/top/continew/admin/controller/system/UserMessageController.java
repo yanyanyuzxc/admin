@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.common.context.UserContextHolder;
+import top.continew.admin.system.enums.NoticeMethodEnum;
 import top.continew.admin.system.enums.NoticeScopeEnum;
 import top.continew.admin.system.model.query.MessageQuery;
 import top.continew.admin.system.model.query.NoticeQuery;
@@ -31,7 +32,7 @@ import top.continew.admin.system.model.resp.message.MessageResp;
 import top.continew.admin.system.model.resp.message.MessageUnreadResp;
 import top.continew.admin.system.model.resp.notice.NoticeDetailResp;
 import top.continew.admin.system.model.resp.notice.NoticeResp;
-import top.continew.admin.system.model.resp.notice.NoticeUnreadResp;
+import top.continew.admin.system.model.resp.notice.NoticeUnreadCountResp;
 import top.continew.admin.system.service.MessageService;
 import top.continew.admin.system.service.NoticeService;
 import top.continew.starter.core.validation.CheckUtils;
@@ -40,6 +41,8 @@ import top.continew.starter.extension.crud.model.req.IdsReq;
 import top.continew.starter.extension.crud.model.resp.BasePageResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.log.annotation.Log;
+
+import java.util.List;
 
 /**
  * 个人消息 API
@@ -93,8 +96,17 @@ public class UserMessageController {
     @Log(ignore = true)
     @Operation(summary = "查询未读公告数量", description = "查询当前用户的未读公告数量")
     @GetMapping("/notice/unread")
-    public NoticeUnreadResp countUnreadNotice() {
-        return noticeService.countUnreadByUserId(UserContextHolder.getUserId());
+    public NoticeUnreadCountResp countUnreadNotice() {
+        List<Long> list = noticeService.listUnreadIdsByUserId(null, UserContextHolder.getUserId());
+        return new NoticeUnreadCountResp(list.size());
+    }
+
+    @Log(ignore = true)
+    @Operation(summary = "查询未读公告", description = "查询当前用户的未读公告")
+    @Parameter(name = "method", description = "通知方式", example = "LOGIN_POPUP", in = ParameterIn.PATH)
+    @GetMapping("/notice/unread/{method}")
+    public List<Long> listUnreadNotice(@PathVariable String method) {
+        return noticeService.listUnreadIdsByUserId(NoticeMethodEnum.valueOf(method), UserContextHolder.getUserId());
     }
 
     @Operation(summary = "分页查询公告列表", description = "分页查询公告列表")
