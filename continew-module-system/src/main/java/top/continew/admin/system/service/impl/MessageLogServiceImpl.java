@@ -40,23 +40,12 @@ public class MessageLogServiceImpl implements MessageLogService {
     private final MessageLogMapper baseMapper;
 
     @Override
-    public void addWithMessageId(List<Long> userIdList, Long messageId) {
-        if (CollUtil.isEmpty(userIdList)) {
-            return;
-        }
-        List<MessageLogDO> list = userIdList.stream()
-            .map(userId -> new MessageLogDO(userId, messageId, LocalDateTime.now()))
-            .toList();
-        baseMapper.insert(list);
-    }
-
-    @Override
     public void addWithUserId(List<Long> messageIds, Long userId) {
         if (CollUtil.isEmpty(messageIds)) {
             return;
         }
         List<MessageLogDO> list = messageIds.stream()
-            .map(messageId -> new MessageLogDO(userId, messageId, LocalDateTime.now()))
+            .map(messageId -> new MessageLogDO(messageId, userId, LocalDateTime.now()))
             .toList();
         baseMapper.insert(list);
     }

@@ -30,14 +30,6 @@ public interface MessageLogService {
     /**
      * 新增
      *
-     * @param userIds   用户 ID 列表
-     * @param messageId 消息 ID
-     */
-    void addWithMessageId(List<Long> userIds, Long messageId);
-
-    /**
-     * 新增
-     *
      * @param messageIds 消息 ID 列表
      * @param userId     用户 ID
      */

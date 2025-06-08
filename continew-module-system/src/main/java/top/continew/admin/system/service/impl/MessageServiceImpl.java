@@ -67,12 +67,10 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void readMessage(List<Long> ids, Long userId) {
-        if (CollUtil.isEmpty(ids)) {
-            // 查询当前用户的未读消息
-            List<MessageDO> list = baseMapper.selectUnreadListByUserId(userId);
-            ids = list.stream().map(MessageDO::getId).toList();
-        }
-        messageLogService.addWithMessageId(ids, userId);
+        // 查询当前用户的未读消息
+        List<MessageDO> list = baseMapper.selectUnreadListByUserId(userId);
+        List<Long> unreadIds = list.stream().map(MessageDO::getId).toList();
+        messageLogService.addWithUserId(CollUtil.intersection(unreadIds, ids).stream().toList(), userId);
     }
 
     @Override
