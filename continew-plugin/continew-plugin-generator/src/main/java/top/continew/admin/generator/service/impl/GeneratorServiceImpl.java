@@ -62,7 +62,7 @@ import top.continew.starter.data.core.enums.DatabaseType;
 import top.continew.starter.data.core.util.MetaUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
-import top.continew.starter.web.util.FileUploadUtils;
+import top.continew.starter.core.util.FileUploadUtils;
 
 import javax.sql.DataSource;
 import java.io.File;

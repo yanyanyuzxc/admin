@@ -44,7 +44,7 @@ import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.validation.CheckUtils;
 import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.extension.crud.service.BaseServiceImpl;
-import top.continew.starter.web.util.SpringWebUtils;
+import top.continew.starter.core.util.SpringWebUtils;
 
 import java.util.Collections;
 import java.util.List;

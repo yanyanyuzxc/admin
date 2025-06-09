@@ -53,7 +53,7 @@ import java.util.Objects;
 public class GlobalExceptionHandler {
 
     /**
-     * 自定义基类异常
+     * 自定义异常
      */
     @ExceptionHandler(BaseException.class)
     public R handleBaseException(BaseException e, HttpServletRequest request) {

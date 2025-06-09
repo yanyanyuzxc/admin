@@ -114,7 +114,7 @@ public class MessageServiceImpl implements MessageService {
             return;
         }
         // 发送消息给所有在线用户
-        // TODO WebSocketUtils.sendMessage("1");
+        WebSocketUtils.sendMessage("1");
     }
 
     @Override
