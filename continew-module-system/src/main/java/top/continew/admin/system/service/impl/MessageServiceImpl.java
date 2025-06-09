@@ -71,6 +71,9 @@ public class MessageServiceImpl implements MessageService {
         List<MessageDO> list = baseMapper.selectUnreadListByUserId(userId);
         List<Long> unreadIds = list.stream().map(MessageDO::getId).toList();
         messageLogService.addWithUserId(CollUtil.intersection(unreadIds, ids).stream().toList(), userId);
+        WebSocketUtils.sendMessage(StpUtil.getTokenValueByLoginId(userId), String.valueOf(baseMapper
+            .selectUnreadListByUserId(userId)
+            .size()));
     }
 
     @Override
