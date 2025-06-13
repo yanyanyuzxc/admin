@@ -19,20 +19,22 @@ package top.continew.admin.system.model.resp.message;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.continew.admin.system.enums.MessageTypeEnum;
+import top.continew.admin.system.enums.NoticeScopeEnum;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * 消息响应参数
+ * 消息详情响应参数
  *
- * @author Bull-BCLS
- * @since 2023/10/15 19:05
+ * @author Charles7c
+ * @since 2025/6/13 21:22
  */
 @Data
-@Schema(description = "消息响应参数")
-public class MessageResp implements Serializable {
+@Schema(description = "消息详情响应参数")
+public class MessageDetailResp implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -50,6 +52,12 @@ public class MessageResp implements Serializable {
     private String title;
 
     /**
+     * 内容
+     */
+    @Schema(description = "内容", example = "尊敬的 xx，欢迎注册使用，请及时配置您的密码。")
+    private String content;
+
+    /**
      * 类型
      */
     @Schema(description = "类型", example = "1")
@@ -60,6 +68,18 @@ public class MessageResp implements Serializable {
      */
     @Schema(description = "跳转路径", example = "/user/profile")
     private String path;
+
+    /**
+     * 通知范围
+     */
+    @Schema(description = "通知范围", example = "2")
+    private NoticeScopeEnum scope;
+
+    /**
+     * 通知用户
+     */
+    @Schema(description = "通知用户", example = "[1,2]")
+    private List<String> users;
 
     /**
      * 是否已读

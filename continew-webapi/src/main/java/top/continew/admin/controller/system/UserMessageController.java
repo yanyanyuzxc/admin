@@ -28,6 +28,7 @@ import top.continew.admin.system.enums.NoticeMethodEnum;
 import top.continew.admin.system.enums.NoticeScopeEnum;
 import top.continew.admin.system.model.query.MessageQuery;
 import top.continew.admin.system.model.query.NoticeQuery;
+import top.continew.admin.system.model.resp.message.MessageDetailResp;
 import top.continew.admin.system.model.resp.message.MessageResp;
 import top.continew.admin.system.model.resp.message.MessageUnreadResp;
 import top.continew.admin.system.model.resp.notice.NoticeDetailResp;
@@ -42,6 +43,7 @@ import top.continew.starter.extension.crud.model.resp.BasePageResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.log.annotation.Log;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -73,6 +75,18 @@ public class UserMessageController {
     public PageResp<MessageResp> page(MessageQuery query, @Validated PageQuery pageQuery) {
         query.setUserId(UserContextHolder.getUserId());
         return messageService.page(query, pageQuery);
+    }
+
+    @Operation(summary = "查询消息", description = "查询消息详情")
+    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @GetMapping("/{id}")
+    public MessageDetailResp getMessage(@PathVariable Long id) {
+        MessageDetailResp detail = messageService.get(id);
+        CheckUtils.throwIf(detail == null || (NoticeScopeEnum.USER.equals(detail.getScope()) && !detail.getUsers()
+            .contains(UserContextHolder.getUserId().toString())), "消息不存在或无权限访问");
+        messageService.readMessage(Collections.singletonList(id), UserContextHolder.getUserId());
+        detail.setIsRead(true);
+        return detail;
     }
 
     @Operation(summary = "删除消息", description = "删除消息")
@@ -116,7 +130,7 @@ public class UserMessageController {
         return noticeService.page(query, pageQuery);
     }
 
-    @Operation(summary = "查询公告详情", description = "查询公告")
+    @Operation(summary = "查询公告", description = "查询公告详情")
     @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
     @GetMapping("/notice/{id}")
     public NoticeDetailResp getNotice(@PathVariable Long id) {

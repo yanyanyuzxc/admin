@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import top.continew.admin.system.model.entity.MessageDO;
 import top.continew.admin.system.model.query.MessageQuery;
+import top.continew.admin.system.model.resp.message.MessageDetailResp;
 import top.continew.admin.system.model.resp.message.MessageResp;
 import top.continew.starter.data.mp.base.BaseMapper;
 
@@ -42,6 +43,14 @@ public interface MessageMapper extends BaseMapper<MessageDO> {
      * @return 消息列表
      */
     IPage<MessageResp> selectMessagePage(@Param("page") Page<MessageDO> page, @Param("query") MessageQuery query);
+
+    /**
+     * 查询消息详情
+     *
+     * @param id ID
+     * @return 消息详情
+     */
+    MessageDetailResp selectMessageById(@Param("id") Long id);
 
     /**
      * 查询未读消息列表

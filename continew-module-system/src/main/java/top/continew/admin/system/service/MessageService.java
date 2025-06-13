@@ -18,6 +18,7 @@ package top.continew.admin.system.service;
 
 import top.continew.admin.system.model.query.MessageQuery;
 import top.continew.admin.system.model.req.MessageReq;
+import top.continew.admin.system.model.resp.message.MessageDetailResp;
 import top.continew.admin.system.model.resp.message.MessageResp;
 import top.continew.admin.system.model.resp.message.MessageUnreadResp;
 import top.continew.starter.extension.crud.model.query.PageQuery;
@@ -42,6 +43,14 @@ public interface MessageService {
      * @return 分页列表信息
      */
     PageResp<MessageResp> page(MessageQuery query, PageQuery pageQuery);
+
+    /**
+     * 查询详情
+     *
+     * @param id ID
+     * @return 详情信息
+     */
+    MessageDetailResp get(Long id);
 
     /**
      * 将消息标记已读

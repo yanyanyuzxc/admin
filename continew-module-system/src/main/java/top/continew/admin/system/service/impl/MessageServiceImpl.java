@@ -31,6 +31,7 @@ import top.continew.admin.system.mapper.MessageMapper;
 import top.continew.admin.system.model.entity.MessageDO;
 import top.continew.admin.system.model.query.MessageQuery;
 import top.continew.admin.system.model.req.MessageReq;
+import top.continew.admin.system.model.resp.message.MessageDetailResp;
 import top.continew.admin.system.model.resp.message.MessageResp;
 import top.continew.admin.system.model.resp.message.MessageTypeUnreadResp;
 import top.continew.admin.system.model.resp.message.MessageUnreadResp;
@@ -63,6 +64,11 @@ public class MessageServiceImpl implements MessageService {
         IPage<MessageResp> page = baseMapper.selectMessagePage(new Page<>(pageQuery.getPage(), pageQuery
             .getSize()), query);
         return PageResp.build(page);
+    }
+
+    @Override
+    public MessageDetailResp get(Long id) {
+        return baseMapper.selectMessageById(id);
     }
 
     @Override

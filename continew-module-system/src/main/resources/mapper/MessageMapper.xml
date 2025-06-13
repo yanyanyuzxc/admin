@@ -6,7 +6,6 @@
         SELECT
             t1.id,
             t1.title,
-            t1.content,
             t1.type,
             t1.path,
             t1.scope,
@@ -31,6 +30,23 @@
             </if>
         </where>
         ORDER BY t1.create_time DESC
+    </select>
+
+    <select id="selectMessageById" resultType="top.continew.admin.system.model.resp.message.MessageDetailResp">
+        SELECT
+            t1.id,
+            t1.title,
+            t1.content,
+            t1.type,
+            t1.path,
+            t1.scope,
+            t1.users,
+            t1.create_time,
+            t2.read_time IS NOT NULL AS isRead,
+            t2.read_time AS readTime
+        FROM sys_message AS t1
+            LEFT JOIN sys_message_log AS t2 ON t2.message_id = t1.id
+        WHERE t1.id = #{id}
     </select>
 
     <select id="selectUnreadListByUserId" resultType="top.continew.admin.system.model.entity.MessageDO">
