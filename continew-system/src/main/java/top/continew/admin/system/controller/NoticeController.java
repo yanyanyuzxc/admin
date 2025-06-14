@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.system;
+package top.continew.admin.system.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;

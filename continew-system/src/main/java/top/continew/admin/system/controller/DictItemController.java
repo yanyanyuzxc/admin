@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.system;
+package top.continew.admin.system.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.controller.BaseController;
-import top.continew.admin.system.model.query.DeptQuery;
-import top.continew.admin.system.model.req.DeptReq;
-import top.continew.admin.system.model.resp.DeptResp;
-import top.continew.admin.system.service.DeptService;
+import top.continew.admin.system.model.query.DictItemQuery;
+import top.continew.admin.system.model.req.DictItemReq;
+import top.continew.admin.system.model.resp.DictItemResp;
+import top.continew.admin.system.service.DictItemService;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
+import top.continew.starter.log.annotation.Log;
 
 /**
- * 部门管理 API
+ * 字典项管理 API
  *
  * @author Charles7c
- * @since 2023/1/22 17:50
+ * @since 2023/9/11 21:29
  */
-@Tag(name = "部门管理 API")
+@Log(module = "字典管理")
+@Tag(name = "字典项管理 API")
 @RestController
-@CrudRequestMapping(value = "/system/dept", api = {Api.TREE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE, Api.EXPORT})
-public class DeptController extends BaseController<DeptService, DeptResp, DeptResp, DeptQuery, DeptReq> {
+@CrudRequestMapping(value = "/system/dict/item", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
+public class DictItemController extends BaseController<DictItemService, DictItemResp, DictItemResp, DictItemQuery, DictItemReq> {
 }

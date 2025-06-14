@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.system;
+package top.continew.admin.system.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.controller.BaseController;
-import top.continew.admin.system.model.query.SmsLogQuery;
-import top.continew.admin.system.model.req.SmsLogReq;
-import top.continew.admin.system.model.resp.SmsLogResp;
-import top.continew.admin.system.service.SmsLogService;
+import top.continew.admin.system.model.query.ClientQuery;
+import top.continew.admin.system.model.req.ClientReq;
+import top.continew.admin.system.model.resp.ClientResp;
+import top.continew.admin.system.service.ClientService;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
 
 /**
- * 短信日志管理 API
+ * 客户端管理 API
  *
- * @author luoqiz
- * @author Charles7c
- * @since 2025/03/15 22:15
+ * @author KAI
+ * @since 2024/12/03 16:04
  */
-@Tag(name = "短信日志管理 API")
-@Validated
+@Tag(name = "客户端管理 API")
 @RestController
-@CrudRequestMapping(value = "/system/smsLog", api = {Api.PAGE, Api.GET, Api.DELETE, Api.EXPORT})
-public class SmsLogController extends BaseController<SmsLogService, SmsLogResp, SmsLogResp, SmsLogQuery, SmsLogReq> {
+@CrudRequestMapping(value = "/system/client", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
+public class ClientController extends BaseController<ClientService, ClientResp, ClientResp, ClientQuery, ClientReq> {
 }

@@ -280,11 +280,9 @@ continew-admin
 │  │  │  ├─ java/top/continew/admin
 │  │  │  │  ├─ config （配置）
 │  │  │  │  ├─ controller
-│  │  │  │  │  ├─ auth（系统认证相关 API）
 │  │  │  │  │  ├─ common（通用相关 API）
-│  │  │  │  │  ├─ monitor（系统监控相关 API）
-│  │  │  │  │  ├─ system（系统管理相关 API）
-│  │  │  │  │  └─ tool（系统工具相关 API）
+│  │  │  │  │  └─ monitor（系统监控相关 API）
+│  │  │  │  ├─ job （定时任务）
 │  │  │  │  └─ ContiNewAdminApplication.java（ContiNew Admin 启动程序）
 │  │  │  └─ resources
 │  │  │     ├─ config（核心配置目录）
@@ -305,22 +303,28 @@ continew-admin
 │  │  ├─ main
 │  │  │  ├─ java/top/continew/admin
 │  │  │  │  ├─ auth（系统认证相关业务）
+│  │  │  │  │  ├─ controller（系统认证相关 API）
+│  │  │  │  │  ├─ service（系统认证相关业务接口及实现类）
 │  │  │  │  │  ├─ model（系统认证相关模型）
 │  │  │  │  │  │  ├─ query（系统认证相关查询条件）
 │  │  │  │  │  │  ├─ req（系统认证相关请求对象（Request））
 │  │  │  │  │  │  └─ resp（系统认证相关响应对象（Response））
-│  │  │  │  │  └─ service（系统认证相关业务接口及实现类）
+│  │  │  │  │  ├─ enums（系统认证相关枚举）
+│  │  │  │  │  ├─ handler（系统认证相关处理器）
+│  │  │  │  │  └─ config（系统认证相关配置）
 │  │  │  │  └─ system（系统管理相关业务）
-│  │  │  │     ├─ config（系统管理相关配置）
-│  │  │  │     ├─ enums（系统管理相关枚举）
+│  │  │  │     ├─ controller（系统管理相关 API）
+│  │  │  │     ├─ service（系统管理相关业务接口及实现类）
 │  │  │  │     ├─ mapper（系统管理相关 Mapper）
 │  │  │  │     ├─ model（系统管理相关模型）
 │  │  │  │     │  ├─ entity（系统管理相关实体对象）
 │  │  │  │     │  ├─ query（系统管理相关查询条件）
 │  │  │  │     │  ├─ req（系统管理相关请求对象（Request））
 │  │  │  │     │  └─ resp（系统管理相关响应对象（Response））
-│  │  │  │     ├─ service（系统管理相关业务接口及实现类）
-│  │  │  │     └─ util（系统管理相关工具类）
+│  │  │  │     ├─ enums（系统管理相关枚举）
+│  │  │  │     ├─ util（系统管理相关工具类）
+│  │  │  │     ├─ validation（系统管理相关参数校验工具类）
+│  │  │  │     └─ config（系统管理相关配置）
 │  │  │  └─ resources
 │  │  │     └─ mapper（系统管理相关 Mapper XML 文件目录）
 │  │  └─ test（测试相关代码目录）
@@ -329,60 +333,74 @@ continew-admin
 │  ├─ continew-plugin-schedule（任务调度插件模块）
 │  │  ├─ src
 │  │  │  ├─ main/java/top/continew/admin/schedule
+│  │  │  │  ├─ controller（任务调度相关 API）
+│  │  │  │  ├─ service（代码生成器相关业务接口及实现类）
 │  │  │  │  ├─ api（任务调度中心相关 API）
-│  │  │  │  ├─ config（任务调度相关配置）
-│  │  │  │  ├─ constant（任务调度相关常量）
-│  │  │  │  ├─ enums（任务调度相关枚举）
 │  │  │  │  ├─ model（任务调度相关模型）
 │  │  │  │  │  ├─ query（任务调度相关查询条件）
 │  │  │  │  │  ├─ req（任务调度相关请求对象（Request））
 │  │  │  │  │  └─ resp（任务调度相关响应对象（Response））
-│  │  │  │  └─ service（代码生成器相关业务接口及实现类）
+│  │  │  │  ├─ constant（任务调度相关常量）
+│  │  │  │  ├─ enums（任务调度相关枚举）
+│  │  │  │  ├─ exception（任务调度相关异常）
+│  │  │  │  └─ config（任务调度相关配置）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
 │  ├─ continew-plugin-open（能力开放插件模块）
 │  │  ├─ src
 │  │  │  ├─ main/java/top/continew/admin/open
-│  │  │  │  ├─ mapper（代码生成器相关 Mapper）
+│  │  │  │  ├─ controller（能力开放相关 API）
+│  │  │  │  ├─ service（能力开放相关业务接口及实现类）
+│  │  │  │  ├─ mapper（能力开放相关 Mapper）
 │  │  │  │  ├─ model（能力开放相关模型）
 │  │  │  │  │  ├─ entity（能力开放相关实体对象）
 │  │  │  │  │  ├─ query（能力开放相关查询条件）
 │  │  │  │  │  ├─ req（能力开放相关请求对象（Request））
 │  │  │  │  │  └─ resp（能力开放相关响应对象（Response））
-│  │  │  │  └─ service（能力开放相关业务接口及实现类）
+│  │  │  │  ├─ util（能力开放相关工具类）
+│  │  │  │  └─ config（能力开放相关配置）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
 │  ├─ continew-plugin-generator（代码生成器插件模块）
 │  │  ├─ src
 │  │  │  ├─ main
 │  │  │  │  ├─ java/top/continew/admin/generator
-│  │  │  │  │  ├─ config（代码生成器相关配置）
-│  │  │  │  │  ├─ enums（代码生成器相关枚举）
+│  │  │  │  │  ├─ controller（代码生成器相关 API）
+│  │  │  │  │  ├─ service（代码生成器相关业务接口及实现类）
 │  │  │  │  │  ├─ mapper（代码生成器相关 Mapper）
 │  │  │  │  │  ├─ model（代码生成器相关模型）
 │  │  │  │  │  │  ├─ entity（代码生成器相关实体对象）
 │  │  │  │  │  │  ├─ query（代码生成器相关查询条件）
 │  │  │  │  │  │  ├─ req（代码生成器相关请求对象（Request））
 │  │  │  │  │  │  └─ resp（代码生成器相关响应对象（Response））
-│  │  │  │  │  └─ service（代码生成器相关业务接口及实现类）
+│  │  │  │  │  ├─ enums（代码生成器相关枚举）
+│  │  │  │  │  └─ config（代码生成器相关配置）
 │  │  │  │  └─ resources
-│  │  │  │     ├─ templates/generator（代码生成相关模板目录）
-│  │  │  │     ├─ application.yml（代码生成配置文件）
-│  │  │  │     └─ generator.properties（代码生成类型映射配置文件）
+│  │  │  │     └─ templates（代码生成相关模板目录）
+│  │  │  │       ├─ backend（后端模板目录）
+│  │  │  │       └─ frontend（前端模板目录）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
 │  └─ pom.xml
 ├─ continew-common（公共模块，存放公共工具类，公共配置等）
 │  ├─ src
 │  │  ├─ main/java/top/continew/admin/common
-│  │  │  ├─ config（公共配置）
-│  │  │  ├─ constant（公共常量）
-│  │  │  ├─ enums（公共枚举）
+│  │  │  ├─ controller（控制器基类）
+│  │  │  ├─ service（公共服务接口）
 │  │  │  ├─ model（公共模型）
 │  │  │  │  ├─ dto（公共 DTO（Data Transfer Object））
 │  │  │  │  ├─ req（公共请求对象（Request））
 │  │  │  │  └─ resp（公共响应对象（Response））
-│  │  │  └─ util（公共工具类）
+│  │  │  ├─ context（公共上下文）
+│  │  │  ├─ constant（公共常量）
+│  │  │  ├─ enums（公共枚举）
+│  │  │  ├─ util（公共工具类）
+│  │  │  └─ config（公共配置）
+│  │  │    ├─ mybatis（MyBatis Plus 配置）
+│  │  │    ├─ websocket（Websocket 配置）
+│  │  │    ├─ doc（接口文档配置）
+│  │  │    ├─ excel（Excel 配置）
+│  │  │    └─ exception（全局异常处理）
 │  │  └─ test（测试相关代码目录）
 │  └─ pom.xml
 ├─ continew-extension（扩展模块）
@@ -408,7 +426,7 @@ continew-admin
 ├─ .idea
 │  └─ icon.png（IDEA 项目图标，实际开发时直接删除）
 ├─ .image（截图目录，实际开发时直接删除）
-├─ .style（代码格式、License文件头相关配置目录，实际开发时根据需要取舍，删除时注意删除 spotless 插件配置）
+├─ .style（代码格式、License文件头相关配置目录，实际开发时根据需要取舍，删除时注意删除 /pom.xml 中的 spotless 插件配置）
 ├─ .gitignore（Git 忽略文件相关配置文件）
 ├─ docker（项目部署相关配置目录，实际开发时可备份后直接删除）
 ├─ LICENSE（开源协议文件）

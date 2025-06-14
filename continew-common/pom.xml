@@ -150,5 +150,11 @@
             <groupId>top.continew</groupId>
             <artifactId>continew-starter-json-jackson</artifactId>
         </dependency>
+
+        <!-- ContiNew Starter 日志模块 - 拦截器版（Spring Boot Actuator HttpTrace 增强版） -->
+        <dependency>
+            <groupId>top.continew</groupId>
+            <artifactId>continew-starter-log-interceptor</artifactId>
+        </dependency>
     </dependencies>
 </project>

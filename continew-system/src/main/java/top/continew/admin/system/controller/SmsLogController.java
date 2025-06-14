@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.system;
+package top.continew.admin.system.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.controller.BaseController;
-import top.continew.admin.system.model.query.DictItemQuery;
-import top.continew.admin.system.model.req.DictItemReq;
-import top.continew.admin.system.model.resp.DictItemResp;
-import top.continew.admin.system.service.DictItemService;
+import top.continew.admin.system.model.query.SmsLogQuery;
+import top.continew.admin.system.model.req.SmsLogReq;
+import top.continew.admin.system.model.resp.SmsLogResp;
+import top.continew.admin.system.service.SmsLogService;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
-import top.continew.starter.log.annotation.Log;
 
 /**
- * 字典项管理 API
+ * 短信日志管理 API
  *
+ * @author luoqiz
  * @author Charles7c
- * @since 2023/9/11 21:29
+ * @since 2025/03/15 22:15
  */
-@Log(module = "字典管理")
-@Tag(name = "字典项管理 API")
+@Tag(name = "短信日志管理 API")
+@Validated
 @RestController
-@CrudRequestMapping(value = "/system/dict/item", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
-public class DictItemController extends BaseController<DictItemService, DictItemResp, DictItemResp, DictItemQuery, DictItemReq> {
+@CrudRequestMapping(value = "/system/smsLog", api = {Api.PAGE, Api.GET, Api.DELETE, Api.EXPORT})
+public class SmsLogController extends BaseController<SmsLogService, SmsLogResp, SmsLogResp, SmsLogQuery, SmsLogReq> {
 }

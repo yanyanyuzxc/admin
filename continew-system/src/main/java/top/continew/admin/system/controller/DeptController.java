@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.system;
+package top.continew.admin.system.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.controller.BaseController;
-import top.continew.admin.system.model.query.ClientQuery;
-import top.continew.admin.system.model.req.ClientReq;
-import top.continew.admin.system.model.resp.ClientResp;
-import top.continew.admin.system.service.ClientService;
+import top.continew.admin.system.model.query.DeptQuery;
+import top.continew.admin.system.model.req.DeptReq;
+import top.continew.admin.system.model.resp.DeptResp;
+import top.continew.admin.system.service.DeptService;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
 
 /**
- * 客户端管理 API
+ * 部门管理 API
  *
- * @author KAI
- * @since 2024/12/03 16:04
+ * @author Charles7c
+ * @since 2023/1/22 17:50
  */
-@Tag(name = "客户端管理 API")
+@Tag(name = "部门管理 API")
 @RestController
-@CrudRequestMapping(value = "/system/client", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
-public class ClientController extends BaseController<ClientService, ClientResp, ClientResp, ClientQuery, ClientReq> {
+@CrudRequestMapping(value = "/system/dept", api = {Api.TREE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE, Api.EXPORT})
+public class DeptController extends BaseController<DeptService, DeptResp, DeptResp, DeptQuery, DeptReq> {
 }

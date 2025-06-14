@@ -114,33 +114,6 @@ springdoc:
   # 设置对象型参数的展示形式（设为 true 表示将对象型参数平展开，即对象内的属性直接作为参数展示而不是嵌套在对象内，默认 false）
   # 如果不添加该全局配置，可以在需要如此处理的对象参数类上使用 @ParameterObject
   default-flat-param-object: true
-  # 分组配置
-  group-configs:
-    - group: all
-      paths-to-match: /**
-      paths-to-exclude:
-        - /error
-    - group: auth
-      display-name: 系统认证
-      packages-to-scan: ${project.base-package}.controller.auth
-    - group: common
-      display-name: 通用接口
-      packages-to-scan: ${project.base-package}.controller.common
-    - group: system
-      display-name: 系统管理
-      packages-to-scan: ${project.base-package}.controller.system
-    - group: monitor
-      display-name: 系统监控
-      packages-to-scan: ${project.base-package}.controller.monitor
-    - group: schedule
-      display-name: 任务调度
-      packages-to-scan: ${project.base-package}.controller.schedule
-    - group: open
-      display-name: 能力开放
-      packages-to-scan: ${project.base-package}.controller.open
-    - group: code
-      display-name: 代码生成
-      packages-to-scan: ${project.base-package}.controller.code
   ## 组件配置
   components:
     # 鉴权配置
