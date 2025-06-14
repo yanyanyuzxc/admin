@@ -283,7 +283,7 @@ git clone https://github.com/continew-org/continew-admin.git
 
 ```
 continew-admin
-├─ continew-webapi（API 及打包部署模块）
+├─ continew-server（API 及打包部署模块）
 │  ├─ src
 │  │  ├─ main
 │  │  │  ├─ java/top/continew/admin
@@ -309,7 +309,7 @@ continew-admin
 │  │  │     └─ logback-spring.xml（日志配置文件）
 │  │  └─ test（测试相关代码目录）
 │  └─ pom.xml（包含打包相关配置）
-├─ continew-module-system（系统管理模块，存放系统管理相关业务功能，例如：部门管理、角色管理、用户管理等）
+├─ continew-system（系统管理模块，存放系统管理相关业务功能，例如：部门管理、角色管理、用户管理等）
 │  ├─ src
 │  │  ├─ main
 │  │  │  ├─ java/top/continew/admin

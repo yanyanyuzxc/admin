@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>continew-webapi</artifactId>
+    <artifactId>continew-server</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -31,7 +31,7 @@
         <!-- 系统管理模块 -->
         <dependency>
             <groupId>top.continew</groupId>
-            <artifactId>continew-module-system</artifactId>
+            <artifactId>continew-system</artifactId>
         </dependency>
 
         <!-- 任务调度插件 -->

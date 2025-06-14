@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>continew-module-system</artifactId>
+    <artifactId>continew-system</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
