@@ -226,13 +226,13 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 | <a href="https://baomidou.com/" target="_blank">MyBatis Plus</a> | 3.5.8        | MyBatis 的增强工具，在 MyBatis 的基础上只做增强不做改变，简化开发、提高效率。 |
 | <a href="https://www.kancloud.cn/tracy5546/dynamic-datasource/2264611" target="_blank">dynamic-datasource-spring-boot-starter</a> | 4.3.1        | 基于 Spring Boot 的快速集成多数据源的启动器。                |
 | Hikari                                                       | 5.1.0        | JDBC 连接池，号称 “史上最快连接池”，SpringBoot 在 2.0 之后，采用的默认数据库连接池就是 Hikari。 |
-| <a href="https://dev.mysql.com/downloads/mysql/" target="_blank">MySQL</a> | 8.0.33       | 体积小、速度快、总体拥有成本低，是最流行的关系型数据库管理系统之一。 |
+| <a href="https://dev.mysql.com/downloads/mysql/" target="_blank">MySQL</a> | 8.0.42       | 体积小、速度快、总体拥有成本低，是最流行的关系型数据库管理系统之一。 |
 | <a href="https://dev.mysql.com/doc/connector-j/8.0/en/" target="_blank">mysql-connector-j</a> | 8.3.0        | MySQL Java 驱动。                                            |
 | <a href="https://github.com/p6spy/p6spy" target="_blank">P6Spy</a> | 3.9.1        | SQL 性能分析组件。                                           |
 | <a href="https://github.com/liquibase/liquibase" target="_blank">Liquibase</a> | 4.27.0       | 用于管理数据库版本，跟踪、管理和应用数据库变化。             |
 | [JetCache](https://github.com/alibaba/jetcache/blob/master/docs/CN/Readme.md) | 2.7.8        | 一个基于 Java 的缓存系统封装，提供统一的 API 和注解来简化缓存的使用。提供了比 SpringCache 更加强大的注解，可以原生的支持 TTL、两级缓存、分布式自动刷新，还提供了 Cache 接口用于手工缓存操作。 |
 | <a href="https://github.com/redisson/redisson/wiki/Redisson%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D" target="_blank">Redisson</a> | 3.46.0       | 不仅仅是一个 Redis Java 客户端，Redisson 充分的利用了 Redis 键值数据库提供的一系列优势，为使用者提供了一系列具有分布式特性的常用工具：分布式锁、限流器等。 |
-| <a href="https://redis.io/" target="_blank">Redis</a>        | 7.2.3        | 高性能的 key-value 数据库。                                  |
+| <a href="https://redis.io/" target="_blank">Redis</a>        | 7.2.8        | 高性能的 key-value 数据库。                                  |
 | [Snail Job](https://snailjob.opensnail.com/)                 | 1.4.0        | 灵活，可靠和快速的分布式任务重试和分布式任务调度平台。       |
 | [X File Storage](https://x-file-storage.xuyanwu.cn/#/)       | 2.2.1        | 一行代码将文件存储到本地、FTP、SFTP、WebDAV、阿里云 OSS、华为云 OBS...等其它兼容 S3 协议的存储平台。 |
 | <a href="https://sms4j.com/" target="_blank">SMS4J</a>       | 3.3.4        | 短信聚合框架，轻松集成多家短信服务，解决接入多个短信 SDK 的繁琐流程。 |
@@ -265,15 +265,6 @@ git clone https://github.com/continew-org/continew-admin.git
 # 4.启动程序
 # 4.1 启动成功：访问 http://localhost:8000/，页面输出：Xxx started successfully.
 # 4.2 接口文档：http://localhost:8000/doc.html
-
-# 5.部署
-# 5.1 Docker 部署
-#   5.1.1 服务器安装好 docker 及 docker-compose（参考：https://blog.charles7c.top/categories/fragments/2022/10/31/CentOS%E5%AE%89%E8%A3%85Docker）
-#   5.1.2 执行 mvn package 进行项目打包，将 target/app 目录下的所有内容放到 /docker/continew-admin 目录下
-#   5.1.3 将 docker 目录上传到服务器 / 目录下，并授权（chmod -R 777 /docker）
-#   5.1.4 修改 docker-compose.yml 中的 MySQL 配置、Redis 配置、continew-admin-server 配置、Nginx 配置
-#   5.1.5 执行 docker-compose up -d 创建并后台运行所有容器
-# 5.2 其他方式部署
 ```
 
 ## 项目结构
