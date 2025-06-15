@@ -263,8 +263,8 @@ git clone https://github.com/continew-org/continew-admin.git
 # [3.也可以在 IntelliJ IDEA 中直接配置程序启动环境变量（DB_HOST、DB_PORT、DB_USER、DB_PWD、DB_NAME；REDIS_HOST、REDIS_PORT、REDIS_PWD、REDIS_DB）]
 
 # 4.启动程序
-# 4.1 启动成功：访问 http://localhost:8000/，页面输出：Xxx started successfully.
-# 4.2 接口文档：http://localhost:8000/doc.html
+# 启动成功，在控制台末尾会输出 ContiNew Admin service started successfully.
+# 并输出 API 地址及 API 接口文档地址
 ```
 
 ## 项目结构
@@ -274,7 +274,7 @@ git clone https://github.com/continew-org/continew-admin.git
 
 ```
 continew-admin
-├─ continew-server（API 及打包部署模块）
+├─ continew-server（打包部署模块）
 │  ├─ src
 │  │  ├─ main
 │  │  │  ├─ java/top/continew/admin
