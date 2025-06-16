@@ -182,4 +182,8 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, NoticeDO, N
         Long userId = UserContextHolder.getUserId();
         return baseMapper.selectDashboardList(userId);
     }
+    @Override
+    public void deleteReadLog(List<Long> ids) {
+        noticeLogService.deleteByNoticeIds(ids);
+    }
 }

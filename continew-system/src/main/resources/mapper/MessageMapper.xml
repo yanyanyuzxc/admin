@@ -53,7 +53,7 @@
         SELECT
             t1.*
         FROM sys_message AS t1
-            LEFT JOIN sys_message_log AS t2 ON t2.message_id = t1.id
+            LEFT JOIN sys_message_log AS t2 ON t2.message_id = t1.id AND t2.user_id = #{userId}
         WHERE (t1.scope = 1 OR (t1.scope = 2 AND JSON_CONTAINS(t1.users, CONCAT('"', #{userId}, '"'))))
         AND t2.read_time IS NULL
     </select>
@@ -62,7 +62,7 @@
         SELECT
             COUNT(1)
         FROM sys_message AS t1
-            LEFT JOIN sys_message_log AS t2 ON t2.message_id = t1.id
+            LEFT JOIN sys_message_log AS t2 ON t2.message_id = t1.id AND t2.user_id = #{userId}
         WHERE (t1.scope = 1 OR (t1.scope = 2 AND JSON_CONTAINS(t1.users, CONCAT('"', #{userId}, '"'))))
         AND t2.read_time IS NULL
           <if test="type != null">

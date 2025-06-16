@@ -17,8 +17,11 @@
 package top.continew.admin.system.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import top.continew.admin.common.controller.BaseController;
 import top.continew.admin.system.enums.NoticeMethodEnum;
 import top.continew.admin.system.enums.NoticeScopeEnum;
@@ -31,6 +34,7 @@ import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.extension.crud.annotation.CrudApi;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
+import top.continew.starter.extension.crud.validation.CrudValidationGroup;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -68,5 +72,14 @@ public class NoticeController extends BaseController<NoticeService, NoticeResp, 
             noticeMethods.forEach(method -> ValidationUtils.throwIf(!validMethods
                 .contains(method), "通知方式 [{}] 不正确", method));
         }
+    }
+    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @ResponseBody
+    @PutMapping({"/{id}"})
+    public void update(@Validated({CrudValidationGroup.Update.class}) @RequestBody NoticeReq req,
+                       @PathVariable("id") Long id) {
+        //更新公告并删除阅读记录
+        this.baseService.update(req, id);
+        this.baseService.deleteReadLog(List.of(id));
     }
 }
