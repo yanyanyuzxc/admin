@@ -66,9 +66,4 @@ public interface NoticeService extends BaseService<NoticeResp, NoticeDetailResp,
      * @return 仪表盘公告列表
      */
     List<DashboardNoticeResp> listDashboard();
-    /**
-     * 删除阅读记录
-     *
-     */
-    void deleteReadLog(List<Long> ids);
 }
