@@ -41,7 +41,11 @@ public class GlobalSpringDocConfiguration {
 
     @Bean
     public GroupedOpenApi commonApi() {
-        return GroupedOpenApi.builder().group("common").displayName("通用接口").pathsToMatch("/common/**").build();
+        return GroupedOpenApi.builder()
+            .group("common")
+            .displayName("通用接口")
+            .pathsToMatch("/common/**", "/captcha/**", "/dashboard/**")
+            .build();
     }
 
     @Bean
