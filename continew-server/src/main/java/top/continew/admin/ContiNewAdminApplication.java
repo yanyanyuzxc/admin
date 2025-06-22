@@ -79,7 +79,8 @@ public class ContiNewAdminApplication implements ApplicationRunner {
         log.info("----------------------------------------------");
         log.info("{} service started successfully.", projectProperties.getName());
         log.info("Profile: {}", SpringUtil.getProperty("spring.profiles.active"));
-        log.info("项目版本: v{} (ContiNew Starter: v{})", projectProperties.getVersion(), SpringUtil.getProperty("project.starter"));
+        log.info("项目版本: v{} (ContiNew Starter: v{})", projectProperties.getVersion(), SpringUtil
+            .getProperty("project.starter"));
         log.info("API 地址: {}", baseUrl);
         Knife4jProperties knife4jProperties = SpringUtil.getBean(Knife4jProperties.class);
         if (!knife4jProperties.isProduction()) {
