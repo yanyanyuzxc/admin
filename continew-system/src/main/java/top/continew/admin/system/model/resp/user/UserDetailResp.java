@@ -22,6 +22,7 @@ import cn.crane4j.annotation.ContainerMethod;
 import cn.crane4j.annotation.Mapping;
 import cn.crane4j.annotation.condition.ConditionOnExpression;
 import cn.crane4j.core.executor.handler.ManyToManyAssembleOperationHandler;
+import cn.crane4j.core.executor.handler.OneToManyAssembleOperationHandler;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,7 +52,7 @@ import java.util.Objects;
 @Data
 @ExcelIgnoreUnannotated
 @Schema(description = "用户详情响应参数")
-@Assemble(key = "id", prop = ":roleIds", sort = 0, container = ContainerConstants.USER_ROLE_ID_LIST)
+@Assemble(key = "id", props = @Mapping(src = "roleId", ref = "roleIds"), sort = 0, container = ContainerConstants.USER_ROLE_ID_LIST, handlerType = OneToManyAssembleOperationHandler.class)
 public class UserDetailResp extends BaseDetailResp {
 
     @Serial
@@ -105,7 +106,7 @@ public class UserDetailResp extends BaseDetailResp {
      * 角色 ID 列表
      */
     @Schema(description = "角色 ID 列表", example = "2")
-    @Assemble(prop = ":roleNames", container = ContainerConstants.USER_ROLE_NAME_LIST, handlerType = ManyToManyAssembleOperationHandler.class)
+    @Assemble(props = @Mapping(src = "name", ref = "roleNames"), container = ContainerConstants.USER_ROLE_NAME_LIST, handlerType = ManyToManyAssembleOperationHandler.class)
     @ExcelProperty(value = "角色 ID 列表", converter = ExcelListConverter.class, order = 8)
     private List<Long> roleIds;
 

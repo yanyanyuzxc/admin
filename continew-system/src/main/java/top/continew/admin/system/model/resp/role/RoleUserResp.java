@@ -19,6 +19,7 @@ package top.continew.admin.system.model.resp.role;
 import cn.crane4j.annotation.Assemble;
 import cn.crane4j.annotation.Mapping;
 import cn.crane4j.core.executor.handler.ManyToManyAssembleOperationHandler;
+import cn.crane4j.core.executor.handler.OneToManyAssembleOperationHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.continew.admin.common.constant.ContainerConstants;
@@ -60,7 +61,7 @@ public class RoleUserResp implements Serializable {
      * 用户 ID
      */
     @Schema(description = "用户 ID", example = "1")
-    @Assemble(prop = ":roleIds", sort = 0, container = ContainerConstants.USER_ROLE_ID_LIST)
+    @Assemble(props = @Mapping(src = "roleId", ref = "roleIds"), sort = 0, container = ContainerConstants.USER_ROLE_ID_LIST, handlerType = OneToManyAssembleOperationHandler.class)
     private Long userId;
 
     /**

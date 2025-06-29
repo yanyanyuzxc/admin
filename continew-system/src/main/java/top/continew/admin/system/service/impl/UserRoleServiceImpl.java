@@ -17,8 +17,6 @@
 package top.continew.admin.system.service.impl;
 
 import cn.crane4j.annotation.AutoOperate;
-import cn.crane4j.annotation.ContainerMethod;
-import cn.crane4j.annotation.MappingType;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -27,7 +25,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.common.constant.ContainerConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.system.mapper.UserRoleMapper;
 import top.continew.admin.system.model.entity.UserRoleDO;
@@ -117,7 +114,6 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    @ContainerMethod(namespace = ContainerConstants.USER_ROLE_ID_LIST, type = MappingType.ORDER_OF_KEYS)
     public List<Long> listRoleIdByUserId(Long userId) {
         return baseMapper.lambdaQuery()
             .select(UserRoleDO::getRoleId)

@@ -16,7 +16,6 @@
 
 package top.continew.admin.system.service.impl;
 
-import cn.crane4j.annotation.ContainerMethod;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alicp.jetcache.anno.CacheInvalidate;
@@ -25,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.common.constant.ContainerConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.context.RoleContext;
 import top.continew.admin.common.context.UserContext;
@@ -163,15 +161,6 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
             return CollUtil.newHashSet(SysConstants.ALL_PERMISSION);
         }
         return menuService.listPermissionByUserId(userId);
-    }
-
-    @Override
-    @ContainerMethod(namespace = ContainerConstants.USER_ROLE_NAME_LIST, resultType = RoleDO.class)
-    public List<RoleDO> listNameByIds(List<Long> ids) {
-        if (CollUtil.isEmpty(ids)) {
-            return Collections.emptyList();
-        }
-        return baseMapper.lambdaQuery().select(RoleDO::getName, RoleDO::getId).in(RoleDO::getId, ids).list();
     }
 
     @Override
