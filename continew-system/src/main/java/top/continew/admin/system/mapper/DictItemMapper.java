@@ -17,6 +17,7 @@
 package top.continew.admin.system.mapper;
 
 import com.alicp.jetcache.anno.Cached;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.system.model.entity.DictItemDO;
@@ -31,6 +32,7 @@ import java.util.List;
  * @author Charles7c
  * @since 2023/9/11 21:29
  */
+@Mapper
 public interface DictItemMapper extends BaseMapper<DictItemDO> {
 
     /**

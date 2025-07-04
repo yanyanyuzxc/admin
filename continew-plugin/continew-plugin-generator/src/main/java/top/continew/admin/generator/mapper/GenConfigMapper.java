@@ -16,6 +16,7 @@
 
 package top.continew.admin.generator.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import top.continew.admin.generator.model.entity.GenConfigDO;
 import top.continew.starter.data.mp.base.BaseMapper;
 
@@ -25,5 +26,6 @@ import top.continew.starter.data.mp.base.BaseMapper;
  * @author Charles7c
  * @since 2023/4/12 23:56
  */
+@Mapper
 public interface GenConfigMapper extends BaseMapper<GenConfigDO> {
 }

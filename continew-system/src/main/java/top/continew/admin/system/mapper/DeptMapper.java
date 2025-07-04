@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import top.continew.admin.system.model.entity.DeptDO;
 import top.continew.starter.data.mp.base.BaseMapper;
 
@@ -25,5 +26,6 @@ import top.continew.starter.data.mp.base.BaseMapper;
  * @author Charles7c
  * @since 2023/1/22 17:56
  */
+@Mapper
 public interface DeptMapper extends BaseMapper<DeptDO> {
 }
