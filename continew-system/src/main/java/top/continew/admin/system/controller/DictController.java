@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.common.controller.BaseController;
+import top.continew.admin.common.base.controller.BaseController;
 import top.continew.admin.system.model.query.DictQuery;
 import top.continew.admin.system.model.req.DictReq;
 import top.continew.admin.system.model.resp.DictResp;

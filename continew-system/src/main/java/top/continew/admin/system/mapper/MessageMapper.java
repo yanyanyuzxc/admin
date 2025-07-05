@@ -24,7 +24,7 @@ import top.continew.admin.system.model.entity.MessageDO;
 import top.continew.admin.system.model.query.MessageQuery;
 import top.continew.admin.system.model.resp.message.MessageDetailResp;
 import top.continew.admin.system.model.resp.message.MessageResp;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 import java.util.List;
 

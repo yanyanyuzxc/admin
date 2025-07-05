@@ -2,7 +2,7 @@ package ${packageName}.${subPackageName};
 
 import org.apache.ibatis.annotations.Mapper;
 import ${packageName}.model.entity.${classNamePrefix}DO;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 /**
 * ${businessName} Mapper

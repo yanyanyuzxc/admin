@@ -20,7 +20,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import top.continew.admin.open.model.entity.AppDO;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 import top.continew.starter.security.crypto.annotation.FieldEncrypt;
 
 /**

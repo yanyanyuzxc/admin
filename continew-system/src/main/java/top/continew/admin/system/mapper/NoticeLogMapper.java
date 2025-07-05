@@ -18,7 +18,7 @@ package top.continew.admin.system.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import top.continew.admin.system.model.entity.NoticeLogDO;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 /**
  * 公告日志 Mapper

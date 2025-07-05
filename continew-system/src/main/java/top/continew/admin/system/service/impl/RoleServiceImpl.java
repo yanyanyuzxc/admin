@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.context.RoleContext;
@@ -38,8 +39,7 @@ import top.continew.admin.system.model.resp.MenuResp;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
 import top.continew.admin.system.service.*;
-import top.continew.starter.core.validation.CheckUtils;
-import top.continew.starter.extension.crud.service.BaseServiceImpl;
+import top.continew.starter.core.util.validation.CheckUtils;
 
 import java.util.Collections;
 import java.util.List;

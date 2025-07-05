@@ -18,7 +18,7 @@ package top.continew.admin.system.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import top.continew.admin.system.model.entity.RoleDO;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 /**
  * 角色 Mapper

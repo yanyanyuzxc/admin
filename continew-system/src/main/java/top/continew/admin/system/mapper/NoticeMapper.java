@@ -24,7 +24,7 @@ import top.continew.admin.system.model.entity.NoticeDO;
 import top.continew.admin.system.model.query.NoticeQuery;
 import top.continew.admin.system.model.resp.dashboard.DashboardNoticeResp;
 import top.continew.admin.system.model.resp.notice.NoticeResp;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 import java.util.List;
 

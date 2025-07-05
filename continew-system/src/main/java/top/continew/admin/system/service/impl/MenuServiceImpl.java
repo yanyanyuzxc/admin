@@ -22,6 +22,7 @@ import com.alicp.jetcache.anno.Cached;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
@@ -34,8 +35,7 @@ import top.continew.admin.system.model.resp.MenuResp;
 import top.continew.admin.system.service.MenuService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
-import top.continew.starter.core.validation.CheckUtils;
-import top.continew.starter.extension.crud.service.BaseServiceImpl;
+import top.continew.starter.core.util.validation.CheckUtils;
 
 import java.util.List;
 import java.util.Set;

@@ -18,7 +18,7 @@ package top.continew.admin.generator.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import top.continew.admin.generator.model.entity.GenConfigDO;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 /**
  * 生成配置 Mapper

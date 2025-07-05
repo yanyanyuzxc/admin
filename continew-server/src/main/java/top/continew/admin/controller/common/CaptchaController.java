@@ -52,16 +52,16 @@ import top.continew.admin.system.service.OptionService;
 import top.continew.admin.system.service.SmsConfigService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.captcha.graphic.core.GraphicCaptchaService;
-import top.continew.starter.core.autoconfigure.project.ProjectProperties;
+import top.continew.starter.core.autoconfigure.application.ApplicationProperties;
 import top.continew.starter.core.util.TemplateUtils;
-import top.continew.starter.core.validation.CheckUtils;
-import top.continew.starter.core.validation.ValidationUtils;
-import top.continew.starter.core.validation.constraints.Mobile;
+import top.continew.starter.core.util.validation.CheckUtils;
+import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.log.annotation.Log;
 import top.continew.starter.messaging.mail.util.MailUtils;
 import top.continew.starter.ratelimiter.annotation.RateLimiter;
 import top.continew.starter.ratelimiter.annotation.RateLimiters;
 import top.continew.starter.ratelimiter.enums.LimitType;
+import top.continew.starter.validation.constraints.Mobile;
 import top.continew.starter.web.model.R;
 
 import java.time.Duration;
@@ -84,7 +84,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/captcha")
 public class CaptchaController {
 
-    private final ProjectProperties projectProperties;
+    private final ApplicationProperties applicationProperties;
     private final CaptchaProperties captchaProperties;
     private final CaptchaService behaviorCaptchaService;
     private final GraphicCaptchaService graphicCaptchaService;
@@ -162,12 +162,12 @@ public class CaptchaController {
         Long expirationInMinutes = captchaMail.getExpirationInMinutes();
         Map<String, String> siteConfig = optionService.getByCategory(OptionCategoryEnum.SITE);
         String content = TemplateUtils.render(captchaMail.getTemplatePath(), Dict.create()
-            .set("siteUrl", projectProperties.getUrl())
+            .set("siteUrl", applicationProperties.getUrl())
             .set("siteTitle", siteConfig.get("SITE_TITLE"))
             .set("siteCopyright", siteConfig.get("SITE_COPYRIGHT"))
             .set("captcha", captcha)
             .set("expiration", expirationInMinutes));
-        MailUtils.sendHtml(email, "【%s】邮箱验证码".formatted(projectProperties.getName()), content);
+        MailUtils.sendHtml(email, "【%s】邮箱验证码".formatted(applicationProperties.getName()), content);
         // 保存验证码
         String captchaKey = CacheConstants.CAPTCHA_KEY_PREFIX + email;
         RedisUtils.set(captchaKey, captcha, Duration.ofMinutes(expirationInMinutes));

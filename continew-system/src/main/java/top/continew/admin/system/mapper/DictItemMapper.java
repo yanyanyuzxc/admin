@@ -21,7 +21,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.system.model.entity.DictItemDO;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 
 import java.util.List;

@@ -29,7 +29,7 @@ import top.continew.admin.system.model.resp.dashboard.DashboardAccessTrendResp;
 import top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp;
 import top.continew.admin.system.model.resp.dashboard.DashboardOverviewCommonResp;
 import top.continew.admin.system.model.resp.log.LogResp;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 import java.util.Date;
 import java.util.List;

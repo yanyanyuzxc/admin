@@ -14,41 +14,29 @@
  * limitations under the License.
  */
 
-package top.continew.admin.common.model.entity;
+package top.continew.admin.common.base.model.req;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import top.continew.starter.extension.crud.model.entity.BaseIdDO;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
 
-import java.io.Serial;
-import java.time.LocalDateTime;
+import java.io.Serializable;
 
 /**
- * 实体类基类
- *
- * <p>
- * 通用字段：ID、修改人、修改时间
- * </p>
+ * 状态修改请求参数
  *
  * @author Charles7c
- * @since 2025/1/12 23:00
+ * @since 2025/3/4 20:09
  */
 @Data
-public class BaseUpdateDO extends BaseIdDO {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+@Schema(description = "状态修改请求参数")
+public class CommonStatusUpdateReq implements Serializable {
 
     /**
-     * 修改人
+     * 状态
      */
-    @TableField(fill = FieldFill.UPDATE)
-    private Long updateUser;
-
-    /**
-     * 修改时间
-     */
-    @TableField(fill = FieldFill.UPDATE)
-    private LocalDateTime updateTime;
+    @Schema(description = "状态", example = "1")
+    @NotNull(message = "状态无效")
+    private DisEnableStatusEnum status;
 }

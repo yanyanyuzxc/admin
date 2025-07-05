@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-package top.continew.admin.common.model.req;
+package top.continew.admin.common.base.service;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import top.continew.admin.common.enums.DisEnableStatusEnum;
-
-import java.io.Serializable;
+import top.continew.starter.extension.crud.service.CrudService;
 
 /**
- * 状态修改请求参数
+ * 业务接口基类
  *
+ * <p>
+ * 根据实际项目需要，自行重写 CRUD 接口或增加自定义通用业务方法
+ * </p>
+ * 
+ * @param <L> 列表类型
+ * @param <D> 详情类型
+ * @param <Q> 查询条件类型
+ * @param <C> 创建或修改请求参数类型
  * @author Charles7c
- * @since 2025/3/4 20:09
+ * @since 2024/12/6 20:30
  */
-@Data
-@Schema(description = "状态修改请求参数")
-public class CommonStatusUpdateReq implements Serializable {
-
-    /**
-     * 状态
-     */
-    @Schema(description = "状态", example = "1")
-    @NotNull(message = "状态无效")
-    private DisEnableStatusEnum status;
+public interface BaseService<L, D, Q, C> extends CrudService<L, D, Q, C> {
 }

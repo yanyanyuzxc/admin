@@ -20,7 +20,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import top.continew.admin.system.model.entity.FileDO;
 import top.continew.admin.system.model.resp.file.FileStatisticsResp;
-import top.continew.starter.data.mp.base.BaseMapper;
+import top.continew.starter.data.mapper.BaseMapper;
 
 import java.util.List;
 

@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.service;
 
+import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.common.context.RoleContext;
 import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.query.RoleQuery;
@@ -23,8 +24,7 @@ import top.continew.admin.system.model.req.RoleReq;
 import top.continew.admin.system.model.req.RoleUpdatePermissionReq;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
-import top.continew.starter.data.mp.service.IService;
-import top.continew.starter.extension.crud.service.BaseService;
+import top.continew.starter.data.service.IService;
 
 import java.util.List;
 import java.util.Set;

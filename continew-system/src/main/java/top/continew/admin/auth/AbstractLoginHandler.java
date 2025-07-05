@@ -36,8 +36,8 @@ import top.continew.admin.system.service.DeptService;
 import top.continew.admin.system.service.OptionService;
 import top.continew.admin.system.service.RoleService;
 import top.continew.admin.system.service.UserService;
-import top.continew.starter.core.validation.CheckUtils;
-import top.continew.starter.core.validation.Validator;
+import top.continew.starter.core.util.validation.CheckUtils;
+import top.continew.starter.core.util.validation.Validator;
 import top.continew.starter.core.util.ServletUtils;
 
 import java.util.Set;
