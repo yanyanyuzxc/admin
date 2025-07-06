@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.base.controller.BaseController;
-import top.continew.admin.common.base.model.req.CommonStatusUpdateReq;
+import top.continew.admin.common.model.req.CommonStatusUpdateReq;
 import top.continew.admin.system.model.query.StorageQuery;
 import top.continew.admin.system.model.req.StorageReq;
 import top.continew.admin.system.model.resp.StorageResp;

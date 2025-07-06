@@ -4,10 +4,10 @@
 <img src="https://img.shields.io/badge/SNAPSHOT-v4.0.0-%23ff3f59.svg" alt="Release" />
 </a>
 <a href="https://github.com/continew-org/continew-starter" title="ContiNew Starter" target="_blank">
-<img src="https://img.shields.io/badge/ContiNew Starter-2.12.2-%236CB52D.svg" alt="ContiNew Starter" />
+<img src="https://img.shields.io/badge/ContiNew Starter-2.13.0-%236CB52D.svg" alt="ContiNew Starter" />
 </a>
 <a href="https://spring.io/projects/spring-boot" title="Spring Boot" target="_blank">
-<img src="https://img.shields.io/badge/Spring Boot-3.3.11-%236CB52D.svg?logo=Spring-Boot" alt="Spring Boot" />
+<img src="https://img.shields.io/badge/Spring Boot-3.3.12-%236CB52D.svg?logo=Spring-Boot" alt="Spring Boot" />
 </a>
 <a href="https://github.com/continew-org/continew-admin" title="Open JDK" target="_blank">
 <img src="https://img.shields.io/badge/Open JDK-17-%236CB52D.svg?logo=OpenJDK&logoColor=FFF" alt="Open JDK" />
@@ -213,17 +213,17 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 
 ## 核心技术栈
 
-| 名称                                                         | 版本           | 简介                                                         |
-| :----------------------------------------------------------- |:-------------| :----------------------------------------------------------- |
+| 名称                                                         | 版本         | 简介                                                         |
+| :----------------------------------------------------------- | :----------- | :----------------------------------------------------------- |
 | <a href="https://vuejs.org/" target="_blank">Vue</a>         | 3.5.4        | 渐进式 JavaScript 框架，易学易用，性能出色，适用场景丰富的 Web 前端框架。 |
 | <a href="https://arco.design/vue/docs/start" target="_blank">Arco Design</a> | 2.57.0       | 字节跳动推出的前端 UI 框架，年轻化的色彩和组件设计。         |
 | <a href="https://www.typescriptlang.org/zh/" target="_blank">TypeScript</a> | 5.0.4        | TypeScript 是微软开发的一个开源的编程语言，通过在 JavaScript 的基础上添加静态类型定义构建而成。 |
 | <a href="https://vite.dev/" target="_blank">Vite</a>         | 5.1.5        | 下一代的前端工具链，为开发提供极速响应。                     |
-| [ContiNew Starter](https://github.com/continew-org/continew-starter) | 2.12.2       | ContiNew Starter 包含了一系列经过企业实践优化的依赖包（如 MyBatis-Plus、SaToken），可轻松集成到应用中，为开发人员减少手动引入依赖及配置的麻烦，为 Spring Boot Web 项目的灵活快速构建提供支持。 |
-| <a href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a> | 3.3.11       | 简化 Spring 应用的初始搭建和开发过程，基于“约定优于配置”的理念，使开发人员不再需要定义样板化的配置。（Spring Boot 3.0 开始，要求 Java 17 作为最低版本） |
+| [ContiNew Starter](https://github.com/continew-org/continew-starter) | 2.13.0       | ContiNew Starter 包含了一系列经过企业实践优化的依赖包（如 MyBatis-Plus、SaToken），可轻松集成到应用中，为开发人员减少手动引入依赖及配置的麻烦，为 Spring Boot Web 项目的灵活快速构建提供支持。 |
+| <a href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a> | 3.3.12       | 简化 Spring 应用的初始搭建和开发过程，基于“约定优于配置”的理念，使开发人员不再需要定义样板化的配置。（Spring Boot 3.0 开始，要求 Java 17 作为最低版本） |
 | <a href="https://undertow.io/" target="_blank">Undertow</a>  | 2.3.18.Final | 采用 Java 开发的灵活的高性能 Web 服务器，提供包括阻塞和基于 NIO 的非堵塞机制。 |
-| <a href="https://sa-token.dev33.cn/" target="_blank">Sa-Token + JWT</a> | 1.42.0       | 轻量级 Java 权限认证框架，让鉴权变得简单、优雅。             |
-| <a href="https://baomidou.com/" target="_blank">MyBatis Plus</a> | 3.5.8        | MyBatis 的增强工具，在 MyBatis 的基础上只做增强不做改变，简化开发、提高效率。 |
+| <a href="https://sa-token.dev33.cn/" target="_blank">Sa-Token + JWT</a> | 1.44.0       | 轻量级 Java 权限认证框架，让鉴权变得简单、优雅。             |
+| <a href="https://baomidou.com/" target="_blank">MyBatis Plus</a> | 3.5.12       | MyBatis 的增强工具，在 MyBatis 的基础上只做增强不做改变，简化开发、提高效率。 |
 | <a href="https://www.kancloud.cn/tracy5546/dynamic-datasource/2264611" target="_blank">dynamic-datasource-spring-boot-starter</a> | 4.3.1        | 基于 Spring Boot 的快速集成多数据源的启动器。                |
 | Hikari                                                       | 5.1.0        | JDBC 连接池，号称 “史上最快连接池”，SpringBoot 在 2.0 之后，采用的默认数据库连接池就是 Hikari。 |
 | <a href="https://dev.mysql.com/downloads/mysql/" target="_blank">MySQL</a> | 8.0.42       | 体积小、速度快、总体拥有成本低，是最流行的关系型数据库管理系统之一。 |
@@ -231,21 +231,21 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 | <a href="https://github.com/p6spy/p6spy" target="_blank">P6Spy</a> | 3.9.1        | SQL 性能分析组件。                                           |
 | <a href="https://github.com/liquibase/liquibase" target="_blank">Liquibase</a> | 4.27.0       | 用于管理数据库版本，跟踪、管理和应用数据库变化。             |
 | [JetCache](https://github.com/alibaba/jetcache/blob/master/docs/CN/Readme.md) | 2.7.8        | 一个基于 Java 的缓存系统封装，提供统一的 API 和注解来简化缓存的使用。提供了比 SpringCache 更加强大的注解，可以原生的支持 TTL、两级缓存、分布式自动刷新，还提供了 Cache 接口用于手工缓存操作。 |
-| <a href="https://github.com/redisson/redisson/wiki/Redisson%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D" target="_blank">Redisson</a> | 3.46.0       | 不仅仅是一个 Redis Java 客户端，Redisson 充分的利用了 Redis 键值数据库提供的一系列优势，为使用者提供了一系列具有分布式特性的常用工具：分布式锁、限流器等。 |
+| <a href="https://github.com/redisson/redisson/wiki/Redisson%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D" target="_blank">Redisson</a> | 3.49.0       | 不仅仅是一个 Redis Java 客户端，Redisson 充分的利用了 Redis 键值数据库提供的一系列优势，为使用者提供了一系列具有分布式特性的常用工具：分布式锁、限流器等。 |
 | <a href="https://redis.io/" target="_blank">Redis</a>        | 7.2.8        | 高性能的 key-value 数据库。                                  |
-| [Snail Job](https://snailjob.opensnail.com/)                 | 1.4.0        | 灵活，可靠和快速的分布式任务重试和分布式任务调度平台。       |
+| [Snail Job](https://snailjob.opensnail.com/)                 | 1.5.0        | 灵活，可靠和快速的分布式任务重试和分布式任务调度平台。       |
 | [X File Storage](https://x-file-storage.xuyanwu.cn/#/)       | 2.2.1        | 一行代码将文件存储到本地、FTP、SFTP、WebDAV、阿里云 OSS、华为云 OBS...等其它兼容 S3 协议的存储平台。 |
 | <a href="https://sms4j.com/" target="_blank">SMS4J</a>       | 3.3.4        | 短信聚合框架，轻松集成多家短信服务，解决接入多个短信 SDK 的繁琐流程。 |
 | <a href="https://justauth.cn/" target="_blank">Just Auth</a> | 1.16.7       | 开箱即用的整合第三方登录的开源组件，脱离繁琐的第三方登录 SDK，让登录变得 So easy！ |
-| <a href="https://easyexcel.opensource.alibaba.com/" target="_blank">Easy Excel</a> | 3.3.4        | 一个基于 Java 的、快速、简洁、解决大文件内存溢出的 Excel 处理工具。 |
+| <a href="https://github.com/fast-excel/fastexcel" target="_blank">Fast Excel</a> | 3.3.4        | （由原 EasyExcel 作者创建的新项目）一个基于 Java 的、快速、简洁、解决大文件内存溢出的 Excel 处理工具。 |
 | [AJ-Captcha](https://ajcaptcha.beliefteam.cn/captcha-doc/)   | 1.3.0        | Java 行为验证码，包含滑动拼图、文字点选两种方式，UI支持弹出和嵌入两种方式。 |
 | Easy Captcha                                                 | 1.6.2        | Java 图形验证码，支持 gif、中文、算术等类型，可用于 Java Web、JavaSE 等项目。 |
 | [Crane4j](https://createsequence.gitee.io/crane4j-doc/#/)    | 2.9.0        | 一个基于注解的，用于完成一切 “根据 A 的 key 值拿到 B，再把 B 的属性映射到 A” 这类需求的字段填充框架。 |
-| [CosID](https://cosid.ahoo.me/guide/getting-started.html)    | 2.12.3       | 旨在提供通用、灵活、高性能的分布式 ID 生成器。               |
+| [CosID](https://cosid.ahoo.me/guide/getting-started.html)    | 2.13.0       | 旨在提供通用、灵活、高性能的分布式 ID 生成器。               |
 | [Graceful Response](https://doc.feiniaojin.com/graceful-response/home.html) | 5.0.4-boot3  | 一个Spring Boot技术栈下的优雅响应处理组件，可以帮助开发者完成响应数据封装、异常处理、错误码填充等过程，提高开发效率，提高代码质量。 |
 | <a href="https://doc.xiaominfo.com/" target="_blank">Knife4j</a> | 4.5.0        | 前身是 swagger-bootstrap-ui，集 Swagger2 和 OpenAPI3 为一体的增强解决方案。 |
 | [OpenFeign](https://springdoc.cn/spring-cloud-openfeign/)    | 13.5         | Spring Cloud OpenFeign 是一种基于 Spring Cloud 的声明式 REST 客户端，它简化了与 HTTP 服务交互的过程。 |
-| <a href="https://www.hutool.cn/" target="_blank">Hutool</a>  | 5.8.37       | 小而全的 Java 工具类库，通过静态方法封装，降低相关 API 的学习成本，提高工作效率，使 Java 拥有函数式语言般的优雅，让 Java 语言也可以“甜甜的”。 |
+| <a href="https://www.hutool.cn/" target="_blank">Hutool</a>  | 5.8.38       | 小而全的 Java 工具类库，通过静态方法封装，降低相关 API 的学习成本，提高工作效率，使 Java 拥有函数式语言般的优雅，让 Java 语言也可以“甜甜的”。 |
 | <a href="https://projectlombok.org/" target="_blank">Lombok</a> | 1.18.36      | 在 Java 开发过程中用注解的方式，简化了 JavaBean 的编写，避免了冗余和样板式代码，让编写的类更加简洁。 |
 
 ## 快速开始
@@ -385,12 +385,16 @@ continew-admin
 ├─ continew-common（公共模块，存放公共工具类，公共配置等）
 │  ├─ src
 │  │  ├─ main/java/top/continew/admin/common
-│  │  │  ├─ controller（控制器基类）
+│  │  │  ├─ base（公共基类）
+│  │  │  │  ├─ controller（控制器基类）
+│  │  │  │  ├─ mapper（Mapper 接口基类）
+│  │  │  │  ├─ model（公共模型）
+│  │  │  │  │  ├─ entity（实体基类）
+│  │  │  │  │  └─ resp（列表、详情响应基类）
+│  │  │  │  └─ service（业务接口及实现基类）
 │  │  │  ├─ service（公共服务接口）
 │  │  │  ├─ model（公共模型）
-│  │  │  │  ├─ dto（公共 DTO（Data Transfer Object））
-│  │  │  │  ├─ req（公共请求对象（Request））
-│  │  │  │  └─ resp（公共响应对象（Response））
+│  │  │  │  └─ req（公共请求对象（Request））
 │  │  │  ├─ context（公共上下文）
 │  │  │  ├─ constant（公共常量）
 │  │  │  ├─ enums（公共枚举）
@@ -457,12 +461,25 @@ ContiNew Admin 的分支目前分为下个大版本的开发分支和上个大�
 
 1. 首先，在 Gitee 或 Github 上将项目 fork 到您自己的仓库
 2. 然后，将 fork 过来的项目（即您的项目）克隆到本地
-3. 切换到当前仍在维护的分支（请务必充分了解分支使用说明，可进群联系维护者确认）
-4. 开始修改代码，修改完成后，将代码 commit 并 push 到您的远程仓库
+3. 基于当前仍在维护的分支（例如：dev），切出来一个新的分支（例如：feat/tenant）（不要修改源分支，源分支仅做同步 continew 最新代码用）
+4. 在新分支开始修改代码，修改完成后，将代码 commit 并 push 到您的远程仓库
 5. 在 Gitee 或 Github 上新建 pull request（pr），选择好源和目标，按模板要求填写说明信息后提交即可（多多参考 [已批准合并的 pr 记录](https://github.com/continew-org/continew-admin/pulls?q=is%3Apr+is%3Amerged)，会大大增加批准合并率）
-6. 最后，耐心等待维护者合并您的请求即可
+6. 提交后，会提示你需要签署 CLA（Contributor License Agreement，贡献者协议），请确保你的 commit 所用邮箱和对应平台绑定邮箱一致（如果不一致，可以在本地通过 `git reset --soft HEAD~1` 回退，然后使用正确邮箱重新提交，最后 `git push -f` 即可，不需要重新创建 PR），然后使用该邮箱签署即可
+7. 最后，耐心等待维护者合并您的请求即可
+8. PR 合并后，下次 PR 时请先同步最新代码，然后再次从步骤 3 开始
 
-请记住，如果您有任何疑问或需要帮助，我们将随时提供支持。
+以下是向 `continew-admin` 项目提交 pull request 为例的简单步骤：
+
+```
+1.continew/continew-admin -> fork -> your/continew-admin
+2.git clone your/continew-admin
+3.dev -> feat/tenant
+4.feat/tenant 本地开发，开发完 push 到 your/continew-admin
+5.your/continew-admin:feat/tenant -> continew/continew-admin:dev
+6.阅读并签署 CLA
+7.PR 合并完成，删除 feat/tenant 分支
+8.强制从 continew/continew-admin 覆盖更新 your/continew-admin，然后重复步骤 3...
+```
 
 > [!IMPORTANT]
 > 欢迎大家为 ContiNew Admin 贡献代码，我们非常感谢您的支持！为了更好地管理项目，维护者有一些要求：

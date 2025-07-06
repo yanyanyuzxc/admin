@@ -16,7 +16,7 @@
 
 package top.continew.admin.system.service;
 
-import top.continew.admin.common.base.model.req.CommonStatusUpdateReq;
+import top.continew.admin.common.model.req.CommonStatusUpdateReq;
 import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.system.model.entity.StorageDO;
 import top.continew.admin.system.model.query.StorageQuery;
