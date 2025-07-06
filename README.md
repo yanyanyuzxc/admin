@@ -42,6 +42,8 @@
 
 ## 简介
 
+**AI 编程纪元已经开启，基于 ContiNew 项目开发，让 AI 助手“学习”更优雅的代码规范，“写出”更优质的代码。**
+
 ContiNew Admin（Continue New Admin）持续迭代优化的前后端分离中后台管理系统框架。开箱即用，重视每一处代码规范，重视每一种解决方案细节，持续提供舒适的前、后端开发体验。
 
 当前采用的技术栈：Spring Boot3（Java17）、Vue3 & Arco Design & TS & Vite、Sa-Token、MyBatis Plus、Redisson、JetCache、JustAuth、Crane4j、EasyExcel、Liquibase、Hutool 等。
@@ -76,6 +78,8 @@ ContiNew Admin（Continue New Admin）持续迭代优化的前后端分离中后
 > [!TIP]
 > 更为完整的图文描述请查阅[《在线文档》](https://continew.top/admin/guide/why-choose-us.html)。
 
+**AI 编程纪元已经开启，基于 ContiNew 项目开发，让 AI 助手“学习”更优雅的代码规范，“写出”更优质的代码。**
+
 1.**甄选技术栈：** ContiNew（Continue New） 项目致力于持续迭代优化，让技术不掉队。在技术选型时，进行深度广泛地调研，从流行度、成熟度和发展潜力等多方面甄选技术栈。
 
 2.**Starter 组件：** 从 v2.1.0 版本开始，抽取并封装后端基础组件及各框架集成配置到 ContiNew Starter 项目，且 **[已发布至 Maven 中央仓库](https://central.sonatype.com/search?q=continew-starter&namespace=top.continew)**，可在你的任意项目中直接引入所需依赖使用。即使你不用脚手架项目，难道能让你搭项目框架更快、更爽、更省力的 Starter 也要 Say No 吗？
@@ -93,8 +97,9 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 
 5.**改善开发体验：** 持续优化及适配能改善开发体验的组件。
 
-- 适配 ContiNew Starter 各组件，针对 Spring 基础配置、通用解决方案以及流行框架进行了深度封装的 starter 集合，改善你在开发每个 Spring Boot Web 项目的体验。（枚举参数处理、默认线程池、跨域、加密、脱敏、限流、日志、异常及响应通用解决方案等等，更多细节可查看 Starter 源码）
+- 适配 ContiNew Starter 各组件，针对 Spring 基础配置、通用解决方案以及流行框架进行了深度封装的 starter 集合，改善你在开发每个 Spring Boot Web 项目的体验。（时间日期及枚举参数自动转换、默认线程池、跨域、加密、脱敏、限流、幂等、License、日志、异常及响应通用解决方案等等，更多细节可查看 Starter 源码）
 - 适配 Crane4j 数据填充组件，减少因为一个用户名而产生的联表回填；
+- 适配 SpEL Validator 基于 SpEL 的 Java 参数校验，使用 SpEL 表达式，强化基础参数校验。例如：当其中一个字段为 xxx 时，另一个字段不能为空等等；
 - 适配 P6Spy SQL 性能分析组件，开发期间方便监控 SQL 执行；
 - 适配 TLog 链路追踪组件，方便在杂乱的日志文件中追踪你某次请求的日志记录；
 - 适配 JetCache 缓存框架（比 Spring Cache 更强大易用），通过注解声明即可快速实现方法级缓存，极大改善编码式缓存体验，且支持灵活的二级缓存配置、分布式自动刷新等能力；
@@ -237,10 +242,11 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 | [X File Storage](https://x-file-storage.xuyanwu.cn/#/)       | 2.2.1        | 一行代码将文件存储到本地、FTP、SFTP、WebDAV、阿里云 OSS、华为云 OBS...等其它兼容 S3 协议的存储平台。 |
 | <a href="https://sms4j.com/" target="_blank">SMS4J</a>       | 3.3.4        | 短信聚合框架，轻松集成多家短信服务，解决接入多个短信 SDK 的繁琐流程。 |
 | <a href="https://justauth.cn/" target="_blank">Just Auth</a> | 1.16.7       | 开箱即用的整合第三方登录的开源组件，脱离繁琐的第三方登录 SDK，让登录变得 So easy！ |
-| <a href="https://github.com/fast-excel/fastexcel" target="_blank">Fast Excel</a> | 3.3.4        | （由原 EasyExcel 作者创建的新项目）一个基于 Java 的、快速、简洁、解决大文件内存溢出的 Excel 处理工具。 |
+| <a href="https://github.com/fast-excel/fastexcel" target="_blank">Fast Excel</a> | 1.2.0        | （由原 EasyExcel 作者创建的新项目）一个基于 Java 的、快速、简洁、解决大文件内存溢出的 Excel 处理工具。 |
 | [AJ-Captcha](https://ajcaptcha.beliefteam.cn/captcha-doc/)   | 1.3.0        | Java 行为验证码，包含滑动拼图、文字点选两种方式，UI支持弹出和嵌入两种方式。 |
 | Easy Captcha                                                 | 1.6.2        | Java 图形验证码，支持 gif、中文、算术等类型，可用于 Java Web、JavaSE 等项目。 |
 | [Crane4j](https://createsequence.gitee.io/crane4j-doc/#/)    | 2.9.0        | 一个基于注解的，用于完成一切 “根据 A 的 key 值拿到 B，再把 B 的属性映射到 A” 这类需求的字段填充框架。 |
+| [SpEL Validator](https://spel-validator.sticki.cn/)          | 0.5.0-beta   | 基于 SpEL 的 jakarta.validation-api 扩展增强包。             |
 | [CosID](https://cosid.ahoo.me/guide/getting-started.html)    | 2.13.0       | 旨在提供通用、灵活、高性能的分布式 ID 生成器。               |
 | [Graceful Response](https://doc.feiniaojin.com/graceful-response/home.html) | 5.0.4-boot3  | 一个Spring Boot技术栈下的优雅响应处理组件，可以帮助开发者完成响应数据封装、异常处理、错误码填充等过程，提高开发效率，提高代码质量。 |
 | <a href="https://doc.xiaominfo.com/" target="_blank">Knife4j</a> | 4.5.0        | 前身是 swagger-bootstrap-ui，集 Swagger2 和 OpenAPI3 为一体的增强解决方案。 |

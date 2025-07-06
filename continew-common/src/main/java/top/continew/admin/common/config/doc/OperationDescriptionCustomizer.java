@@ -175,6 +175,6 @@ public class OperationDescriptionCustomizer {
         String apiName = Api.PAGE.equals(api) || Api.TREE.equals(api) ? Api.LIST.name() : api.name();
         String permission = "%s:%s".formatted(prefix, apiName.toLowerCase());
 
-        return "<font style=\"color:red\" class=\"light-red\">Crud 权限校验：</font></br><font style=\"color:red\" class=\"light-red\">方法：</font><font style=\"color:red\" class=\"light-red\">" + permission + "</font>";
+        return "<font style=\"color:red\" class=\"light-red\">CRUD 权限校验：</font></br><font style=\"color:red\" class=\"light-red\">方法：</font><font style=\"color:red\" class=\"light-red\">" + permission + "</font>";
     }
 }
