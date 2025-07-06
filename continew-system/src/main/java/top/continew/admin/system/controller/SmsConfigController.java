@@ -41,7 +41,7 @@ import top.continew.starter.extension.crud.enums.Api;
  */
 @Tag(name = "短信配置管理 API")
 @RestController
-@CrudRequestMapping(value = "/system/smsConfig", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
+@CrudRequestMapping(value = "/system/smsConfig", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE})
 public class SmsConfigController extends BaseController<SmsConfigService, SmsConfigResp, SmsConfigResp, SmsConfigQuery, SmsConfigReq> {
 
     @Operation(summary = "设为默认配置", description = "设为默认配置")

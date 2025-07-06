@@ -54,7 +54,7 @@ import java.io.IOException;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrudRequestMapping(value = "/system/file", api = {Api.PAGE, Api.UPDATE, Api.DELETE})
+@CrudRequestMapping(value = "/system/file", api = {Api.PAGE, Api.UPDATE, Api.BATCH_DELETE})
 public class FileController extends BaseController<FileService, FileResp, FileResp, FileQuery, FileReq> {
 
     /**

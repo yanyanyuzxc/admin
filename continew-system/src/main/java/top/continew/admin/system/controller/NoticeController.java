@@ -43,7 +43,7 @@ import java.util.List;
  */
 @Tag(name = "公告管理 API")
 @RestController
-@CrudRequestMapping(value = "/system/notice", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
+@CrudRequestMapping(value = "/system/notice", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE})
 public class NoticeController extends BaseController<NoticeService, NoticeResp, NoticeDetailResp, NoticeQuery, NoticeReq> {
 
     @Override

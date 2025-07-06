@@ -67,7 +67,7 @@ public class BaseController<S extends BaseService<L, D, Q, C>, L, D, Q, C> exten
         CrudRequestMapping crudRequestMapping = targetClass.getDeclaredAnnotation(CrudRequestMapping.class);
         String path = crudRequestMapping.value();
         String prefix = String.join(StringConstants.COLON, CharSequenceUtil.splitTrim(path, StringConstants.SLASH));
-        String apiName = this.getApiName(crudApi.value());
+        String apiName = getApiName(crudApi.value());
         StpUtil.checkPermission("%s:%s".formatted(prefix, apiName.toLowerCase()));
     }
 
@@ -77,7 +77,7 @@ public class BaseController<S extends BaseService<L, D, Q, C>, L, D, Q, C> exten
      * @param api API
      * @return API 名称
      */
-    private String getApiName(Api api) {
+    public static String getApiName(Api api) {
         return switch (api) {
             case PAGE, TREE, LIST -> Api.LIST.name();
             case DELETE, BATCH_DELETE -> Api.DELETE.name();
