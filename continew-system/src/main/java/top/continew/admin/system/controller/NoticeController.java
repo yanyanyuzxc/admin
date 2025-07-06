@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.base.controller.BaseController;
 import top.continew.admin.system.enums.NoticeMethodEnum;
-import top.continew.admin.system.enums.NoticeScopeEnum;
 import top.continew.admin.system.model.query.NoticeQuery;
 import top.continew.admin.system.model.req.NoticeReq;
 import top.continew.admin.system.model.resp.notice.NoticeDetailResp;
@@ -55,10 +54,6 @@ public class NoticeController extends BaseController<NoticeService, NoticeResp, 
             return;
         }
         NoticeReq req = (NoticeReq)args[0];
-        // 校验通知范围
-        if (NoticeScopeEnum.USER.equals(req.getNoticeScope())) {
-            ValidationUtils.throwIfEmpty(req.getNoticeUsers(), "通知用户不能为空");
-        }
         // 校验通知方式
         List<Integer> noticeMethods = req.getNoticeMethods();
         if (CollUtil.isNotEmpty(noticeMethods)) {

@@ -36,7 +36,6 @@ import top.continew.admin.system.service.MessageService;
 import top.continew.admin.system.service.NoticeLogService;
 import top.continew.admin.system.service.NoticeService;
 import top.continew.starter.core.util.validation.CheckUtils;
-import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
@@ -67,11 +66,6 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, NoticeDO, N
 
     @Override
     public void beforeCreate(NoticeReq req) {
-        // 校验定时发布
-        if (Boolean.TRUE.equals(req.getIsTiming())) {
-            ValidationUtils.throwIf(req.getPublishTime() == null, "定时发布时间不能为空");
-            ValidationUtils.throwIf(req.getPublishTime().isBefore(LocalDateTime.now()), "定时发布时间不能早于当前时间");
-        }
         if (!NoticeStatusEnum.DRAFT.equals(req.getStatus())) {
             if (Boolean.TRUE.equals(req.getIsTiming())) {
                 // 待发布
@@ -113,11 +107,6 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, NoticeDO, N
                 req.setPublishTime(oldNotice.getPublishTime());
             }
             case DRAFT, PENDING -> {
-                // 校验定时发布
-                if (Boolean.TRUE.equals(req.getIsTiming())) {
-                    ValidationUtils.throwIf(req.getPublishTime() == null, "定时发布时间不能为空");
-                    ValidationUtils.throwIf(req.getPublishTime().isBefore(LocalDateTime.now()), "定时发布时间不能早于当前时间");
-                }
                 // 已发布
                 if (NoticeStatusEnum.PUBLISHED.equals(req.getStatus())) {
                     if (Boolean.TRUE.equals(req.getIsTiming())) {
