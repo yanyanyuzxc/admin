@@ -121,7 +121,7 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 ##  系统功能
 
 > [!TIP]
-> 更多功能和优化正在赶来💦，最新项目计划、进展请进群或关注 [需求墙](https://continew.top/admin/other/feature.html) 和 [更新日志](https://continew.top/admin/other/changelog.html)。
+> 更多功能和优化正在赶来💦，最新项目计划、进展请进群或关注 [需求墙](https://continew.top/admin/other/feature.html) 和 [更新日志](https://continew.top/admin/changelog/)。
 
 - 仪表盘：提供工作台、分析页，工作台提供功能快捷导航入口、最新公告、动态；分析页提供全面数据可视化能力
 - 个人中心：支持基础信息修改、密码修改、邮箱绑定、手机号绑定（并提供行为验证码、短信限流等安全处理）、第三方账号绑定/解绑、头像裁剪上传
@@ -276,7 +276,7 @@ git clone https://github.com/continew-org/continew-admin.git
 ## 项目结构
 
 > [!TIP]
-> 后端采用按功能拆分模块的开发方式，下方项目目录结构是按照模块的层次顺序进行介绍的，实际 IDE 中 `continew-admin-common` 模块会因为字母排序原因排在上方。
+> 后端采用按功能拆分模块的开发方式，下方项目目录结构是按照模块的层次顺序进行介绍的，实际 IDE 中 `continew-common` 模块会因为字母排序原因排在上方。
 
 ```
 continew-admin
@@ -454,7 +454,7 @@ ContiNew Admin 致力于提供开箱即用，持续舒适的开发体验。作�
 
 ### 分支说明
 
-ContiNew Admin 的分支目前分为下个大版本的开发分支和上个大版本的维护分支，PR 前请注意对应分支是否处于维护状态，版本支持情况请查看 [更新日志/版本支持](https://continew.top/admin/other/changelog.html#%E7%89%88%E6%9C%AC%E6%94%AF%E6%8C%81)。
+ContiNew Admin 的分支目前分为下个大版本的开发分支和上个大版本的维护分支，PR 前请注意对应分支是否处于维护状态，版本支持情况请查看 [更新日志/版本支持](https://continew.top/admin/changelog/)。
 
 | 分支  | 说明                                                         |
 | ----- | ------------------------------------------------------------ |
