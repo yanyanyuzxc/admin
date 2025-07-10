@@ -80,7 +80,7 @@ public class UserContext implements Serializable {
      */
     private Set<RoleContext> roles;
 
-    /**
+    /*
      * 客户端类型
      */
     private String clientType;
@@ -89,6 +89,11 @@ public class UserContext implements Serializable {
      * 客户端 ID
      */
     private String clientId;
+
+    /**
+     * 租户 ID
+     */
+    private Long tenantId;
 
     public UserContext(Set<String> permissions, Set<RoleContext> roles, Integer passwordExpirationDays) {
         this.permissions = permissions;
@@ -129,4 +134,5 @@ public class UserContext implements Serializable {
         }
         return this.pwdResetTime.plusDays(this.passwordExpirationDays).isBefore(LocalDateTime.now());
     }
+
 }

@@ -261,7 +261,6 @@ mybatis-plus:
     # 分页插件配置
     pagination:
       enabled: true
-      db-type: MYSQL
 
 --- ### CosId 配置
 cosid:
@@ -299,3 +298,32 @@ auth:
       - /auth/logout
       - /system/user/password
 
+#多租户配置
+continew-starter.tenant:
+  enabled: true
+  # 多租户忽略的表
+  ignore-tables:
+    - gen_config # 代码生成
+    - gen_field_config
+    - sys_dict # 字典表
+    - sys_dict_item
+    - sys_option #参数
+    - sys_storage # 存储配置
+    - sys_tenant # 租户
+    - sys_tenant_package
+    - sys_tenant_db_connect
+    - sys_app #应用
+    - sys_client #客户端管理
+    - sys_sms_config
+    - sys_sms_log
+  #租户不能使用的菜单
+  ignore-menus:
+    - 1130 #字典管理
+    - 1140
+    - 1150 #系统配置
+    - 2050 #短信日志
+    - 3000 #任务调度
+    - 9000 #代码生成
+    - 7000 #能力开放
+    - 7010 #应用管理
+    - 10010 #租户管理

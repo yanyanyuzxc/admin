@@ -16,6 +16,9 @@
 
 package top.continew.admin.system.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import top.continew.admin.system.model.entity.RoleMenuDO;
+
 import java.util.List;
 
 /**
@@ -24,7 +27,7 @@ import java.util.List;
  * @author Charles7c
  * @since 2023/2/19 10:40
  */
-public interface RoleMenuService {
+public interface RoleMenuService extends IService<RoleMenuDO> {
 
     /**
      * 新增

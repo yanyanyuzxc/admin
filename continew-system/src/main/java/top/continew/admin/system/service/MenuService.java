@@ -35,6 +35,13 @@ import java.util.Set;
 public interface MenuService extends BaseService<MenuResp, MenuResp, MenuQuery, MenuReq>, IService<MenuDO> {
 
     /**
+     * 查询全部菜单
+     *
+     * @return 菜单列表
+     */
+    List<MenuResp> listAll(Long tenantId);
+
+    /**
      * 根据用户 ID 查询
      *
      * @param userId 用户 ID
@@ -43,10 +50,35 @@ public interface MenuService extends BaseService<MenuResp, MenuResp, MenuQuery, 
     Set<String> listPermissionByUserId(Long userId);
 
     /**
-     * 根据角色 ID 查询
+     * 根据角色id查询
      *
-     * @param roleId 角色 ID
+     * @param roleId 角色id
      * @return 菜单列表
      */
     List<MenuResp> listByRoleId(Long roleId);
+
+    /**
+     * 递归初始化菜单
+     *
+     * @param menuList    需要初始化的菜单ID
+     * @param oldParentId 原来的父级ID
+     * @param newParentId 新的父级ID
+     */
+    void menuInit(List<MenuDO> menuList, Long oldParentId, Long newParentId);
+
+    /**
+     * 删除租户菜单
+     *
+     * @param menuList
+     */
+    void deleteTenantMenus(List<MenuDO> menuList);
+
+    /**
+     * 新增租户菜单
+     *
+     * @param menu  新增的菜单
+     * @param pMenu 新增菜单的父级别
+     */
+    void addTenantMenu(MenuDO menu, MenuDO pMenu);
+
 }
