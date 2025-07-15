@@ -85,11 +85,6 @@ public class SysConstants {
     public static final String LOGOUT_URI = "/auth/logout";
 
     /**
-     * 租户默认数据源
-     */
-    public static final String DEFAULT_TENANT_DATASOURCE = "master";
-
-    /**
      * 租户管理员角色编码
      */
     public static final String TENANT_ADMIN_ROLE_CODE = "tenant_admin";

@@ -40,9 +40,8 @@ public interface TenantService extends BaseService<TenantResp, TenantDetailResp,
      * 检查租户状态
      *
      * @param id ID
-     * @return 租户信息
      */
-    TenantDO checkStatus(Long id);
+    void checkStatus(Long id);
 
     /**
      * 获取所有可用的租户列表

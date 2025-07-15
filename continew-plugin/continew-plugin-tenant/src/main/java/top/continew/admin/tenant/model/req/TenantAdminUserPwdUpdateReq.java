@@ -33,8 +33,9 @@ import java.io.Serializable;
 public class TenantAdminUserPwdUpdateReq implements Serializable {
 
     /**
-     * 新密码
+     * 新密码（加密）
      */
+    @Schema(description = "新密码（加密）", example = "E7c72TH+LDxKTwavjM99W1MdI9Lljh79aPKiv3XB9MXcplhm7qJ1BJCj28yaflbdVbfc366klMtjLIWQGqb0qw==")
     @NotBlank(message = "新密码不能为空")
     private String password;
 }

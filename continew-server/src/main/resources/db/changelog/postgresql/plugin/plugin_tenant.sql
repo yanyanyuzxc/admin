@@ -4,21 +4,19 @@
 -- comment 初始化租户插件数据表
 -- 初始化表结构
 CREATE TABLE IF NOT EXISTS "tenant" (
-    "id"              int8         NOT NULL, 
-    "name"            varchar(30)  NOT NULL, 
-    "code"            varchar(30)  NOT NULL,
-    "domain"          varchar(255) DEFAULT NULL, 
-    "expire_time"     timestamp    DEFAULT NULL, 
-    "isolation_level" int2         NOT NULL, 
-    "description"     varchar(200) DEFAULT NULL, 
-    "status"          int2         NOT NULL DEFAULT 1, 
-    "admin_user"      int8         DEFAULT NULL,
-    "package_id"      int8         NOT NULL,
-    "datasource_id"   int8         DEFAULT NULL,
-    "create_user"     int8         NOT NULL,
-    "create_time"     timestamp    NOT NULL, 
-    "update_user"     int8         DEFAULT NULL, 
-    "update_time"     timestamp    DEFAULT NULL, 
+    "id"          int8         NOT NULL,
+    "name"        varchar(30)  NOT NULL,
+    "code"        varchar(30)  NOT NULL,
+    "domain"      varchar(255) DEFAULT NULL,
+    "expire_time" timestamp    DEFAULT NULL,
+    "description" varchar(200) DEFAULT NULL,
+    "status"      int2         NOT NULL DEFAULT 1,
+    "admin_user"  int8         DEFAULT NULL,
+    "package_id"  int8         NOT NULL,
+    "create_user" int8         NOT NULL,
+    "create_time" timestamp    NOT NULL,
+    "update_user" int8         DEFAULT NULL,
+    "update_time" timestamp    DEFAULT NULL,
     PRIMARY KEY ("id")
 );
 CREATE UNIQUE INDEX "uk_tenant_code" ON "tenant" ("code");
@@ -32,11 +30,9 @@ COMMENT ON COLUMN "tenant"."name" IS '名称';
 COMMENT ON COLUMN "tenant"."code" IS '编码';
 COMMENT ON COLUMN "tenant"."domain" IS '域名';
 COMMENT ON COLUMN "tenant"."expire_time" IS '过期时间';
-COMMENT ON COLUMN "tenant"."isolation_level" IS '隔离级别';
 COMMENT ON COLUMN "tenant"."description" IS '描述';
 COMMENT ON COLUMN "tenant"."status" IS '状态（1：启用；2：禁用）';
 COMMENT ON COLUMN "tenant"."package_id" IS '套餐ID';
-COMMENT ON COLUMN "tenant"."datasource_id" IS '数据源ID';
 COMMENT ON COLUMN "tenant"."admin_user" IS '租户管理员';
 COMMENT ON COLUMN "tenant"."create_user" IS '创建人';
 COMMENT ON COLUMN "tenant"."create_time" IS '创建时间';
@@ -79,37 +75,6 @@ CREATE TABLE IF NOT EXISTS "tenant_package_menu" (
 COMMENT ON COLUMN "tenant_package_menu"."package_id" IS '套餐ID';
 COMMENT ON COLUMN "tenant_package_menu"."menu_id" IS '菜单ID';
 COMMENT ON TABLE "tenant_package_menu" IS '租户套餐和菜单关联表';
-
-CREATE TABLE IF NOT EXISTS "tenant_datasource" (
-    "id"            int8         NOT NULL,
-    "name"          varchar(30)  NOT NULL,
-    "database_type" int2         NOT NULL,
-    "host"          varchar(128) NOT NULL,
-    "port"          int4         NOT NULL,
-    "username"      varchar(128) NOT NULL,
-    "password"      varchar(128) NOT NULL,
-    "description"   varchar(200) DEFAULT NULL,
-    "create_user"   int8         NOT NULL,
-    "create_time"   timestamp    NOT NULL,
-    "update_user"   int8         DEFAULT NULL,
-    "update_time"   timestamp    DEFAULT NULL,
-    PRIMARY KEY ("id")
-);
-CREATE INDEX "idx_tenant_datasource_create_user" ON "tenant_datasource" ("create_user");
-CREATE INDEX "idx_tenant_datasource_update_user" ON "tenant_datasource" ("update_user");
-COMMENT ON COLUMN "tenant_datasource"."id" IS 'ID';
-COMMENT ON COLUMN "tenant_datasource"."name" IS '名称';
-COMMENT ON COLUMN "tenant_datasource"."database_type" IS '数据库类型（1：MySQL）';
-COMMENT ON COLUMN "tenant_datasource"."host" IS '主机';
-COMMENT ON COLUMN "tenant_datasource"."port" IS '端口';
-COMMENT ON COLUMN "tenant_datasource"."username" IS '用户名';
-COMMENT ON COLUMN "tenant_datasource"."password" IS '密码';
-COMMENT ON COLUMN "tenant_datasource"."description" IS '描述';
-COMMENT ON COLUMN "tenant_datasource"."create_user" IS '创建人';
-COMMENT ON COLUMN "tenant_datasource"."create_time" IS '创建时间';
-COMMENT ON COLUMN "tenant_datasource"."update_user" IS '修改人';
-COMMENT ON COLUMN "tenant_datasource"."update_time" IS '修改时间';
-COMMENT ON TABLE "tenant_datasource" IS '租户数据源表';
 
 -- 为已有表增加租户字段
 ALTER TABLE "sys_menu" ADD COLUMN "tenant_id" int8 NOT NULL DEFAULT 0;
@@ -216,11 +181,4 @@ VALUES
 (3022, '详情', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:get', 2, 1, 1, NOW()),
 (3023, '新增', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:create', 3, 1, 1, NOW()),
 (3024, '修改', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:update', 4, 1, 1, NOW()),
-(3025, '删除', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:delete', 5, 1, 1, NOW()),
-
-(3030, '数据源管理', 3000, 2, '/tenant/datasource', 'TenantDatasource', 'tenant/datasource/index', NULL, 'storage', false, false, false, NULL, 3, 1, 1, NOW()),
-(3031, '列表', 3030, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'tenant:datasource:list', 1, 1, 1, NOW()),
-(3032, '详情', 3030, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'tenant:datasource:get', 2, 1, 1, NOW()),
-(3033, '新增', 3030, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'tenant:datasource:create', 3, 1, 1, NOW()),
-(3034, '修改', 3030, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'tenant:datasource:update', 4, 1, 1, NOW()),
-(3035, '删除', 3030, 3, NULL, NULL, NULL, NULL, NULL, false, false, false, 'tenant:datasource:delete', 5, 1, 1, NOW());
+(3025, '删除', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:delete', 5, 1, 1, NOW());

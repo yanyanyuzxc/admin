@@ -20,13 +20,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alicp.jetcache.anno.Cached;
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import me.ahoo.cosid.provider.IdGeneratorProvider;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.base.service.BaseServiceImpl;
-import top.continew.admin.common.config.TenantProperties;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
@@ -34,13 +32,11 @@ import top.continew.admin.tenant.handler.TenantDataHandler;
 import top.continew.admin.tenant.mapper.TenantMapper;
 import top.continew.admin.tenant.model.entity.PackageDO;
 import top.continew.admin.tenant.model.entity.TenantDO;
-import top.continew.admin.tenant.model.enums.TenantIsolationLevelEnum;
 import top.continew.admin.tenant.model.query.TenantQuery;
 import top.continew.admin.tenant.model.req.TenantReq;
 import top.continew.admin.tenant.model.resp.TenantAvailableResp;
 import top.continew.admin.tenant.model.resp.TenantDetailResp;
 import top.continew.admin.tenant.model.resp.TenantResp;
-import top.continew.admin.tenant.service.DatasourceService;
 import top.continew.admin.tenant.service.PackageMenuService;
 import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
@@ -48,6 +44,7 @@ import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.entity.BaseIdDO;
 import top.continew.starter.extension.tenant.TenantHandler;
+import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -68,11 +65,9 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     private final IdGeneratorProvider idGeneratorProvider;
     private final PackageMenuService packageMenuService;
     private final PackageService packageService;
-    private final DatasourceService datasourceService;
     private final TenantDataHandler tenantDataHandler;
 
     @Override
-    @DSTransactional(rollbackFor = Exception.class)
     public Long create(TenantReq req) {
         this.checkNameRepeat(req.getName(), null);
         // 检查租户套餐
@@ -82,10 +77,6 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
         req.setCode(this.generateCode());
         // 新增信息
         Long id = super.create(req);
-        // 初始化数据库
-        if (TenantIsolationLevelEnum.DATASOURCE.equals(req.getIsolationLevel())) {
-            datasourceService.initDb(TenantConstants.TENANT_DB_PREFIX + req.getCode(), req.getDatasourceId());
-        }
         // 初始化租户数据
         req.setId(id);
         tenantDataHandler.init(req);
@@ -123,25 +114,24 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     }
 
     @Override
-    public TenantDO checkStatus(Long id) {
+    public void checkStatus(Long id) {
         TenantDO tenant = this.getById(id);
         if (!tenantProperties.isEnabled() || id.equals(tenantProperties.getSuperTenantId())) {
-            return tenant;
+            return;
         }
-        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE.getValue(), tenant.getStatus(), "此租户已被禁用");
+        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE, tenant.getStatus(), "此租户已被禁用");
         CheckUtils.throwIf(tenant.getExpireTime() != null && tenant.getExpireTime()
             .isBefore(LocalDateTime.now()), "此租户已过期");
         // 检查套餐
         PackageDO tenantPackage = packageService.getById(tenant.getPackageId());
-        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE.getValue(), tenantPackage.getStatus(), "此租户套餐已被禁用");
-        return tenant;
+        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE, tenantPackage.getStatus(), "此租户套餐已被禁用");
     }
 
     @Override
     public List<TenantAvailableResp> getAvailableList() {
         List<TenantDO> tenantList = baseMapper.selectList(Wrappers.lambdaQuery(TenantDO.class)
             .select(TenantDO::getName, BaseIdDO::getId, TenantDO::getDomain)
-            .eq(TenantDO::getStatus, DisEnableStatusEnum.ENABLE.getValue())
+            .eq(TenantDO::getStatus, DisEnableStatusEnum.ENABLE)
             .and(t -> t.isNull(TenantDO::getExpireTime).or().ge(TenantDO::getExpireTime, DateUtil.date())));
         return BeanUtil.copyToList(tenantList, TenantAvailableResp.class);
     }

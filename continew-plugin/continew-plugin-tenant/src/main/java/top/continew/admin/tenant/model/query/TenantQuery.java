@@ -41,7 +41,7 @@ public class TenantQuery implements Serializable {
     /**
      * 关键词
      */
-    @Schema(description = "关键词", example = "T0001")
+    @Schema(description = "关键词", example = "Xxx租户")
     @Query(columns = {"name", "description"}, type = QueryType.LIKE)
     private String description;
 

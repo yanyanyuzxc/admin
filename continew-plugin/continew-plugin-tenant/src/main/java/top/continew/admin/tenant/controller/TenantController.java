@@ -19,14 +19,12 @@ package top.continew.admin.tenant.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.extra.spring.SpringUtil;
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.common.base.controller.BaseController;
-import top.continew.admin.common.config.TenantProperties;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.model.req.user.UserPasswordResetReq;
@@ -44,6 +42,7 @@ import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
 import top.continew.starter.extension.tenant.TenantHandler;
+import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 
 /**
  * 租户管理 API
@@ -71,7 +70,6 @@ public class TenantController extends BaseController<TenantService, TenantResp, 
         return commonResp;
     }
 
-    @DSTransactional(rollbackFor = Exception.class)
     @Operation(summary = "修改租户管理员密码", description = "修改租户管理员密码")
     @SaCheckPermission("tenant:management:updateAdminUserPwd")
     @PutMapping("/{id}/admin/pwd")

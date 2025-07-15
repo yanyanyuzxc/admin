@@ -16,8 +16,6 @@
 
 package top.continew.admin.tenant.model.req;
 
-import cn.sticki.spel.validator.constrain.SpelNotNull;
-import cn.sticki.spel.validator.jakarta.SpelValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +25,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.tenant.model.enums.TenantIsolationLevelEnum;
 import top.continew.starter.extension.crud.validation.CrudValidationGroup;
 
 import java.io.Serial;
@@ -42,7 +39,6 @@ import java.time.LocalDateTime;
  * @since 2024/11/26 17:20
  */
 @Data
-@SpelValid
 @Schema(description = "租户创建或修改请求参数")
 public class TenantReq implements Serializable {
 
@@ -52,7 +48,7 @@ public class TenantReq implements Serializable {
     /**
      * 名称
      */
-    @Schema(description = "名称", example = "T0001租户")
+    @Schema(description = "名称", example = "Xxx租户")
     @NotBlank(message = "名称不能为空")
     @Length(max = 30, message = "名称长度不能超过 {max} 个字符")
     private String name;
@@ -60,7 +56,7 @@ public class TenantReq implements Serializable {
     /**
      * 域名
      */
-    @Schema(description = "域名", example = "https://t0001.continew.top/")
+    @Schema(description = "域名", example = "https://T0sL6RWv0vFh.continew.top/")
     @Length(max = 255, message = "域名长度不能超过 {max} 个字符")
     private String domain;
 
@@ -72,16 +68,9 @@ public class TenantReq implements Serializable {
     private LocalDateTime expireTime;
 
     /**
-     * 隔离级别
-     */
-    @Schema(description = "隔离级别", example = "2")
-    @NotNull(message = "隔离级别不能为空", groups = CrudValidationGroup.Create.class)
-    private TenantIsolationLevelEnum isolationLevel;
-
-    /**
      * 描述
      */
-    @Schema(description = "描述", example = "T0001租户描述")
+    @Schema(description = "描述", example = "租户描述")
     @Length(max = 200, message = "描述长度不能超过 {max} 个字符")
     private String description;
 
@@ -97,13 +86,6 @@ public class TenantReq implements Serializable {
     @Schema(description = "套餐 ID", example = "1")
     @NotNull(message = "套餐不能为空")
     private Long packageId;
-
-    /**
-     * 数据源 ID
-     */
-    @Schema(description = "数据源 ID")
-    @SpelNotNull(condition = "#this.isolationLevel == T(top.continew.admin.tenant.model.enums.TenantIsolationLevelEnum).DATASOURCE", message = "数据源不能为空")
-    private Long datasourceId;
 
     /**
      * 用户名

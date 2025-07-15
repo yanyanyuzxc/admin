@@ -40,6 +40,6 @@ public class TenantDetailResp extends TenantResp {
      * 租户管理员
      */
     @Schema(description = "租户管理员", example = "666")
-    @ExcelProperty(value = "租户管理员", order = 13)
+    @ExcelProperty(value = "租户管理员", order = 11)
     private Long adminUser;
 }

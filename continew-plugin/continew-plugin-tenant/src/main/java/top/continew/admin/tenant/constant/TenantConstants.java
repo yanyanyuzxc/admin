@@ -25,11 +25,6 @@ package top.continew.admin.tenant.constant;
 public class TenantConstants {
 
     /**
-     * 租户数据库前缀
-     */
-    public static final String TENANT_DB_PREFIX = "tenant_";
-
-    /**
      * 编码生成器 KEY
      */
     public static final String CODE_GENERATOR_KEY = "tenant-code";

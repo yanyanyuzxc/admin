@@ -4,26 +4,23 @@
 -- comment 初始化租户插件数据表
 -- 初始化表结构
 CREATE TABLE IF NOT EXISTS `tenant` (
-    `id`              bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',
-    `name`            varchar(30)  NOT NULL                    COMMENT '名称',
-    `code`            varchar(30)  NOT NULL                    COMMENT '编码',
-    `domain`          varchar(255) DEFAULT NULL                COMMENT '域名',
-    `expire_time`     datetime     DEFAULT NULL                COMMENT '过期时间',
-    `isolation_level` tinyint(1)   UNSIGNED NOT NULL           COMMENT '隔离级别',
-    `description`     varchar(200) DEFAULT NULL                COMMENT '描述',
-    `status`          tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态（1：启用；2：禁用）',
-    `admin_user`      bigint(20)   DEFAULT NULL                COMMENT '租户管理员',
-    `package_id`      bigint(20)   NOT NULL                    COMMENT '套餐ID',
-    `datasource_id`   bigint(20)   DEFAULT NULL                COMMENT '数据源ID',
-    `create_user`     bigint(20)   NOT NULL                    COMMENT '创建人',
-    `create_time`     datetime     NOT NULL                    COMMENT '创建时间',
-    `update_user`     bigint(20)   DEFAULT NULL                COMMENT '修改人',
-    `update_time`     datetime     DEFAULT NULL                COMMENT '修改时间',
+    `id`          bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',
+    `name`        varchar(30)  NOT NULL                    COMMENT '名称',
+    `code`        varchar(30)  NOT NULL                    COMMENT '编码',
+    `domain`      varchar(255) DEFAULT NULL                COMMENT '域名',
+    `expire_time` datetime     DEFAULT NULL                COMMENT '过期时间',
+    `description` varchar(200) DEFAULT NULL                COMMENT '描述',
+    `status`      tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态（1：启用；2：禁用）',
+    `admin_user`  bigint(20)   DEFAULT NULL                COMMENT '租户管理员',
+    `package_id`  bigint(20)   NOT NULL                    COMMENT '套餐ID',
+    `create_user` bigint(20)   NOT NULL                    COMMENT '创建人',
+    `create_time` datetime     NOT NULL                    COMMENT '创建时间',
+    `update_user` bigint(20)   DEFAULT NULL                COMMENT '修改人',
+    `update_time` datetime     DEFAULT NULL                COMMENT '修改时间',
     PRIMARY KEY (`id`),
     UNIQUE INDEX `uk_code`(`code`),
     INDEX `idx_admin_user`(`admin_user`),
     INDEX `idx_package_id`(`package_id`),
-    INDEX `idx_datasource_id`(`datasource_id`),
     INDEX `idx_create_user`(`create_user`),
     INDEX `idx_update_user`(`update_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='租户表';
@@ -49,24 +46,6 @@ CREATE TABLE IF NOT EXISTS `tenant_package_menu` (
     `menu_id`    bigint(20) NOT NULL COMMENT '菜单ID',
     PRIMARY KEY (`package_id`, `menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='租户套餐和菜单关联表';
-
-CREATE TABLE IF NOT EXISTS `tenant_datasource` (
-    `id`            bigint(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `name`          varchar(30)  NOT NULL                COMMENT '名称',
-    `database_type` tinyint(1)   NOT NULL                COMMENT '数据库类型（1：MySQL）',
-    `host`          varchar(128) NOT NULL                COMMENT '主机',
-    `port`          int          NOT NULL                COMMENT '端口',
-    `username`      varchar(128) NOT NULL                COMMENT '用户名',
-    `password`      varchar(128) NOT NULL                COMMENT '密码',
-    `description`   varchar(200) DEFAULT NULL            COMMENT '描述',
-    `create_user`   bigint(20)   NOT NULL                COMMENT '创建人',
-    `create_time`   datetime     NOT NULL                COMMENT '创建时间',
-    `update_user`   bigint(20)   DEFAULT NULL            COMMENT '修改人',
-    `update_time`   datetime     DEFAULT NULL            COMMENT '修改时间',
-    PRIMARY KEY (`id`),
-    INDEX `idx_create_user`(`create_user`),
-    INDEX `idx_update_user`(`update_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='租户数据源表';
 
 -- 为已有表增加租户字段
 ALTER TABLE `sys_menu`
@@ -160,12 +139,4 @@ VALUES
 (3022, '详情', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:get', 2, 1, 1, NOW()),
 (3023, '新增', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:create', 3, 1, 1, NOW()),
 (3024, '修改', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:update', 4, 1, 1, NOW()),
-(3025, '删除', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:delete', 5, 1, 1, NOW()),
-
-(3030, '数据源管理', 3000, 2, '/tenant/datasource', 'TenantDatasource', 'tenant/datasource/index', NULL, 'storage', b'0', b'0', b'0', NULL, 3, 1, 1, NOW()),
-(3031, '列表', 3030, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'tenant:datasource:list', 1, 1, 1, NOW()),
-(3032, '详情', 3030, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'tenant:datasource:get', 2, 1, 1, NOW()),
-(3033, '新增', 3030, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'tenant:datasource:create', 3, 1, 1, NOW()),
-(3034, '修改', 3030, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'tenant:datasource:update', 4, 1, 1, NOW()),
-(3035, '删除', 3030, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'tenant:datasource:delete', 5, 1, 1, NOW()),
-(3036, '测试连接', 3030, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'tenant:datasource:testConnection', 6, 1, 1, NOW());
+(3025, '删除', 3020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'tenant:package:delete', 5, 1, 1, NOW());

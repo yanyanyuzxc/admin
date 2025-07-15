@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.tenant.service;
+package top.continew.admin.tenant.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.tenant.mapper.PackageMenuMapper;
 import top.continew.admin.tenant.model.entity.PackageMenuDO;
+import top.continew.admin.tenant.service.PackageMenuService;
 
 import java.util.List;
 

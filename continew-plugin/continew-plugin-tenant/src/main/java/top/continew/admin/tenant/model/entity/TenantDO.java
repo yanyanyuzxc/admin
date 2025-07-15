@@ -20,7 +20,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.continew.admin.common.base.model.entity.BaseDO;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.tenant.model.enums.TenantIsolationLevelEnum;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -60,11 +59,6 @@ public class TenantDO extends BaseDO {
     private LocalDateTime expireTime;
 
     /**
-     * 隔离级别
-     */
-    private TenantIsolationLevelEnum isolationLevel;
-
-    /**
      * 描述
      */
     private String description;
@@ -83,9 +77,4 @@ public class TenantDO extends BaseDO {
      * 套餐 ID
      */
     private Long packageId;
-
-    /**
-     * 数据源 ID
-     */
-    private Long datasourceId;
 }

@@ -25,8 +25,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.continew.admin.common.base.model.resp.BaseDetailResp;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.tenant.model.enums.TenantIsolationLevelEnum;
-import top.continew.admin.tenant.service.DatasourceService;
 import top.continew.admin.tenant.service.PackageService;
 import top.continew.starter.excel.converter.ExcelBaseEnumConverter;
 
@@ -51,21 +49,21 @@ public class TenantResp extends BaseDetailResp {
     /**
      * 名称
      */
-    @Schema(description = "名称", example = "T0001租户")
+    @Schema(description = "名称", example = "Xxx租户")
     @ExcelProperty(value = "名称", order = 2)
     private String name;
 
     /**
      * 编码
      */
-    @Schema(description = "编码", example = "T0001")
+    @Schema(description = "编码", example = "T0sL6RWv0vFh")
     @ExcelProperty(value = "编码", order = 3)
     private String code;
 
     /**
      * 域名
      */
-    @Schema(description = "域名", example = "https://t0001.continew.top/")
+    @Schema(description = "域名", example = "https://T0sL6RWv0vFh.continew.top/")
     @ExcelProperty(value = "域名", order = 4)
     private String domain;
 
@@ -77,16 +75,9 @@ public class TenantResp extends BaseDetailResp {
     private LocalDateTime expireTime;
 
     /**
-     * 隔离级别
-     */
-    @Schema(description = "隔离级别", example = "2")
-    @ExcelProperty(value = "隔离级别", converter = ExcelBaseEnumConverter.class, order = 6)
-    private TenantIsolationLevelEnum isolationLevel;
-
-    /**
      * 描述
      */
-    @Schema(description = "描述", example = "T0001租户描述")
+    @Schema(description = "描述", example = "租户描述")
     @ExcelProperty(value = "描述", order = 7)
     private String description;
 
@@ -106,24 +97,9 @@ public class TenantResp extends BaseDetailResp {
     private Long packageId;
 
     /**
-     * 数据源 ID
-     */
-    @Schema(description = "数据源 ID", example = "1")
-    @ExcelProperty(value = "数据源 ID", order = 10)
-    @AssembleMethod(props = @Mapping(src = "name", ref = "datasourceName"), targetType = DatasourceService.class, method = @ContainerMethod(bindMethod = "get", resultType = DatasourceResp.class))
-    private Long datasourceId;
-
-    /**
      * 套餐名称
      */
     @Schema(description = "套餐名称", example = "初级套餐")
-    @ExcelProperty(value = "套餐名称", order = 11)
+    @ExcelProperty(value = "套餐名称", order = 10)
     private String packageName;
-
-    /**
-     * 数据源名称
-     */
-    @Schema(description = "数据源名称", example = "T0001数据源")
-    @ExcelProperty(value = "数据源名称", order = 12)
-    private String datasourceName;
 }

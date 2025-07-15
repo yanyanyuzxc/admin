@@ -200,6 +200,8 @@ continew-starter.crud:
 --- ### 租户配置
 continew-starter.tenant:
   enabled: true
+  # 隔离级别（默认：LINE，行级）
+  isolation-level: LINE
   # 超级/默认租户 ID
   super-tenant-id: 0
   # 忽略表（忽略拼接租户条件）
@@ -294,6 +296,7 @@ mybatis-plus:
     # 分页插件配置
     pagination:
       enabled: true
+      db-type: MYSQL
 
 --- ### CosId 配置
 cosid:

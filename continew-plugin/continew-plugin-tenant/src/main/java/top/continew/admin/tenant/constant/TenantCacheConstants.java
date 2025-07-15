@@ -36,11 +36,6 @@ public class TenantCacheConstants {
      */
     public static final String TENANT_KEY_PREFIX = "TENANT" + DELIMITER;
 
-    /**
-     * 租户数据源前缀
-     */
-    public static final String TENANT_DATASOURCE_KEY_PREFIX = TENANT_KEY_PREFIX + "DATASOURCE" + DELIMITER;
-
     private TenantCacheConstants() {
     }
 }

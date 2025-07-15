@@ -14,24 +14,29 @@
  * limitations under the License.
  */
 
-package top.continew.admin.tenant.model.resp;
+package top.continew.admin.common.config;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+import top.continew.starter.core.constant.PropertiesConstants;
 
-import java.io.Serial;
+import java.util.List;
 
 /**
- * 数据源详情响应参数
+ * 租户扩展配置属性
  *
  * @author 小熊
  * @author Charles7c
- * @since 2024/12/12 19:13
+ * @since 2024/11/29 12:05
  */
 @Data
-@Schema(description = "数据源详情响应参数")
-public class DatasourceDetailResp extends DatasourceResp {
+@Component
+@ConfigurationProperties(prefix = PropertiesConstants.TENANT)
+public class TenantExtensionProperties {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    /**
+     * 忽略菜单 ID（租户不能使用的菜单）
+     */
+    private List<Long> ignoreMenus;
 }

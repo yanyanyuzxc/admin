@@ -17,7 +17,7 @@
 package top.continew.admin.tenant.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.base.service.BaseServiceImpl;
@@ -53,10 +53,8 @@ public class PackageServiceImpl extends BaseServiceImpl<PackageMapper, PackageDO
     private final PackageMenuService packageMenuService;
     private final MenuService menuService;
     private final TenantMapper tenantMapper;
-    private final TenantHandler tenantHandler;
 
     @Override
-    @DSTransactional(rollbackFor = Exception.class)
     public Long create(PackageReq req) {
         this.checkNameRepeat(req.getName(), null);
         // 新增信息
@@ -67,7 +65,6 @@ public class PackageServiceImpl extends BaseServiceImpl<PackageMapper, PackageDO
     }
 
     @Override
-    @DSTransactional(rollbackFor = Exception.class)
     public void update(PackageReq req, Long id) {
         this.checkNameRepeat(req.getName(), id);
         // 更新信息
@@ -95,8 +92,8 @@ public class PackageServiceImpl extends BaseServiceImpl<PackageMapper, PackageDO
         deleteMenuIds.removeAll(newMenuIds);
         if (CollUtil.isNotEmpty(deleteMenuIds)) {
             List<MenuDO> deleteMenus = menuService.listByIds(deleteMenuIds);
-            tenantIdList.forEach(tenantId -> tenantHandler.execute(tenantId, () -> menuService
-                .deleteTenantMenus(deleteMenus)));
+            tenantIdList.forEach(tenantId -> SpringUtil.getBean(TenantHandler.class)
+                .execute(tenantId, () -> menuService.deleteTenantMenus(deleteMenus)));
         }
         // 如果有新增的菜单则绑定了套餐的租户对应的菜单也会新增
         List<Long> addMenuIds = new ArrayList<>(newMenuIds);
@@ -105,8 +102,8 @@ public class PackageServiceImpl extends BaseServiceImpl<PackageMapper, PackageDO
             List<MenuDO> addMenus = menuService.listByIds(addMenuIds);
             for (MenuDO addMenu : addMenus) {
                 MenuDO parentMenu = addMenu.getParentId() != 0 ? menuService.getById(addMenu.getParentId()) : null;
-                tenantIdList.forEach(tenantId -> tenantHandler.execute(tenantId, () -> menuService
-                    .addTenantMenu(addMenu, parentMenu)));
+                tenantIdList.forEach(tenantId -> SpringUtil.getBean(TenantHandler.class)
+                    .execute(tenantId, () -> menuService.addTenantMenu(addMenu, parentMenu)));
             }
         }
     }

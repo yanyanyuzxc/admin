@@ -24,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.base.controller.BaseController;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.common.config.TenantProperties;
 import top.continew.admin.system.model.query.MenuQuery;
 import top.continew.admin.system.service.MenuService;
 import top.continew.admin.tenant.model.query.PackageQuery;
@@ -51,7 +51,7 @@ import java.util.List;
 @CrudRequestMapping(value = "/tenant/package", api = {Api.LIST, Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
 public class PackageController extends BaseController<PackageService, PackageResp, PackageDetailResp, PackageQuery, PackageReq> {
 
-    private final TenantProperties tenantProperties;
+    private final TenantExtensionProperties tenantExtensionProperties;
     private final MenuService menuService;
 
     @Operation(summary = "查询租户套餐菜单", description = "查询租户套餐菜单树列表")
@@ -61,7 +61,7 @@ public class PackageController extends BaseController<PackageService, PackageRes
         MenuQuery query = new MenuQuery();
         query.setStatus(DisEnableStatusEnum.ENABLE);
         // 过滤掉租户不能使用的菜单
-        query.setExcludeMenuIdList(tenantProperties.getIgnoreMenus());
+        query.setExcludeMenuIdList(tenantExtensionProperties.getIgnoreMenus());
         return menuService.tree(query, null, true);
     }
 }
