@@ -25,7 +25,7 @@ import top.continew.starter.data.mapper.BaseMapper;
 import java.util.List;
 
 /**
- * 角色和部门 Mapper
+ * 角色和部门关联 Mapper
  *
  * @author Charles7c
  * @since 2023/2/18 21:57

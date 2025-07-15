@@ -1,4 +1,4 @@
-# ContiNew Admin 中后台管理框架
+# ContiNew Admin 多租户中后台管理框架
 
 <a href="https://github.com/continew-org/continew-admin" title="Release" target="_blank">
 <img src="https://img.shields.io/badge/SNAPSHOT-v4.0.0-%23ff3f59.svg" alt="Release" />
@@ -44,9 +44,9 @@
 
 **AI 编程纪元已经开启，基于 ContiNew 项目开发，让 AI 助手“学习”更优雅的代码规范，“写出”更优质的代码。**
 
-ContiNew Admin（Continue New Admin）持续迭代优化的前后端分离中后台管理系统框架。开箱即用，重视每一处代码规范，重视每一种解决方案细节，持续提供舒适的前、后端开发体验。
+ContiNew Admin（Continue New Admin）：持续迭代优化的，前后端分离，多租户中后台管理系统框架。开箱即用，重视每一处代码规范，重视每一种解决方案细节，持续提供舒适的前、后端开发体验。
 
-当前采用的技术栈：Spring Boot3（Java17）、Vue3 & Arco Design & TS & Vite、Sa-Token、MyBatis Plus、Redisson、JetCache、JustAuth、Crane4j、EasyExcel、Liquibase、Hutool 等。
+当前采用的技术栈：Spring Boot3（Java17）、Vue3 & Arco Design & TS & Vite、Sa-Token、MyBatis Plus、FastExcel、Redisson、JetCache、JustAuth、Crane4j、Hutool、Liquibase 等。
 
 ## 项目源码
 
@@ -143,10 +143,13 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
   - 客户端配置：多端（PC端、小程序端等）认证管理，可设置不同的 token 有效期
 - 在线用户：管理当前登录用户，可一键踢除下线
 - 日志管理：管理系统登录日志、操作日志，支持查看日志详情，包含请求头、响应头等报文信息
-- 短信日志：管理系统短信发送日志，支持删除、导出
+- 短信日志：管理系统短信发送日志，支持删除、导出 
+- 应用管理：管理第三方系统应用 AK、SK，包含新增、修改、删除、查看密钥、重置密钥等功能，支持设置密钥有效期
+- 租户管理：管理租户信息，包含新增、修改、删除、分配角色等功能
+- 租户套餐：管理租户套餐信息，包含新增、修改、删除、查看等功能
+- 租户数据源：管理数据源信息，包含新增、修改、删除、查看、测试等功能
 - 任务管理：管理系统定时任务，包含新增、修改、删除、执行功能，支持 Cron（可配置式生成 Cron 表达式） 和固定频率
 - 任务日志：管理定时任务执行日志，包含停止、重试指定批次，查询集群各节点的详细输出日志等功能
-- 应用管理：管理第三方系统应用 AK、SK，包含新增、修改、删除、查看密钥、重置密钥等功能，支持设置密钥有效期
 - 代码生成：提供根据数据库表自动生成相应的前后端 CRUD 代码的功能，支持同步最新表结构及代码生成预览
 
 ## 系统截图
@@ -313,8 +316,8 @@ continew-admin
 │  │  │  │  │  ├─ service（系统认证相关业务接口及实现类）
 │  │  │  │  │  ├─ model（系统认证相关模型）
 │  │  │  │  │  │  ├─ query（系统认证相关查询条件）
-│  │  │  │  │  │  ├─ req（系统认证相关请求对象（Request））
-│  │  │  │  │  │  └─ resp（系统认证相关响应对象（Response））
+│  │  │  │  │  │  ├─ req（系统认证相关请求参数（Request））
+│  │  │  │  │  │  └─ resp（系统认证相关响应参数（Response））
 │  │  │  │  │  ├─ enums（系统认证相关枚举）
 │  │  │  │  │  ├─ handler（系统认证相关处理器）
 │  │  │  │  │  └─ config（系统认证相关配置）
@@ -323,10 +326,10 @@ continew-admin
 │  │  │  │     ├─ service（系统管理相关业务接口及实现类）
 │  │  │  │     ├─ mapper（系统管理相关 Mapper）
 │  │  │  │     ├─ model（系统管理相关模型）
-│  │  │  │     │  ├─ entity（系统管理相关实体对象）
+│  │  │  │     │  ├─ entity（系统管理相关实体）
 │  │  │  │     │  ├─ query（系统管理相关查询条件）
-│  │  │  │     │  ├─ req（系统管理相关请求对象（Request））
-│  │  │  │     │  └─ resp（系统管理相关响应对象（Response））
+│  │  │  │     │  ├─ req（系统管理相关请求参数（Request））
+│  │  │  │     │  └─ resp（系统管理相关响应参数（Response））
 │  │  │  │     ├─ enums（系统管理相关枚举）
 │  │  │  │     ├─ util（系统管理相关工具类）
 │  │  │  │     ├─ validation（系统管理相关参数校验工具类）
@@ -335,7 +338,39 @@ continew-admin
 │  │  │     └─ mapper（系统管理相关 Mapper XML 文件目录）
 │  │  └─ test（测试相关代码目录）
 │  └─ pom.xml
-├─ continew-plugin（插件模块，存放代码生成、任务调度等扩展模块，后续会进行插件化改造）
+├─ continew-plugin（插件模块，存放能力开放、租户等扩展模块，后续会进行插件化改造）
+│  ├─ continew-plugin-open（能力开放插件模块）
+│  │  ├─ src
+│  │  │  ├─ main/java/top/continew/admin/open
+│  │  │  │  ├─ controller（能力开放相关 API）
+│  │  │  │  ├─ service（能力开放相关业务接口及实现类）
+│  │  │  │  ├─ mapper（能力开放相关 Mapper）
+│  │  │  │  ├─ model（能力开放相关模型）
+│  │  │  │  │  ├─ entity（能力开放相关实体）
+│  │  │  │  │  ├─ query（能力开放相关查询条件）
+│  │  │  │  │  ├─ req（能力开放相关请求参数（Request））
+│  │  │  │  │  └─ resp（能力开放相关响应参数（Response））
+│  │  │  │  ├─ util（能力开放相关工具类）
+│  │  │  │  └─ config（能力开放相关配置）
+│  │  │  └─ test（测试相关代码目录）
+│  │  └─ pom.xml
+│  ├─ continew-plugin-tenant（租户插件模块）
+│  │  ├─ src
+│  │  │  ├─ main/java/top/continew/admin/tenant
+│  │  │  │  ├─ controller（租户相关 API）
+│  │  │  │  ├─ service（租户相关业务接口及实现类）
+│  │  │  │  ├─ mapper（租户相关 Mapper）
+│  │  │  │  ├─ model（租户相关模型）
+│  │  │  │  │  ├─ enums（租户相关枚举）
+│  │  │  │  │  ├─ entity（租户相关实体）
+│  │  │  │  │  ├─ query（租户相关查询条件）
+│  │  │  │  │  ├─ req（租户相关请求参数（Request））
+│  │  │  │  │  └─ resp（租户相关响应参数（Response））
+│  │  │  │  ├─ util（租户相关工具类）
+│  │  │  │  ├─ constant（租户相关常量类）
+│  │  │  │  └─ config（租户相关配置）
+│  │  │  └─ test（测试相关代码目录）
+│  │  └─ pom.xml
 │  ├─ continew-plugin-schedule（任务调度插件模块）
 │  │  ├─ src
 │  │  │  ├─ main/java/top/continew/admin/schedule
@@ -344,27 +379,12 @@ continew-admin
 │  │  │  │  ├─ api（任务调度中心相关 API）
 │  │  │  │  ├─ model（任务调度相关模型）
 │  │  │  │  │  ├─ query（任务调度相关查询条件）
-│  │  │  │  │  ├─ req（任务调度相关请求对象（Request））
-│  │  │  │  │  └─ resp（任务调度相关响应对象（Response））
-│  │  │  │  ├─ constant（任务调度相关常量）
+│  │  │  │  │  ├─ req（任务调度相关请求参数（Request））
+│  │  │  │  │  └─ resp（任务调度相关响应参数（Response））
+│  │  │  │  ├─ constant（任务调度相关常量类）
 │  │  │  │  ├─ enums（任务调度相关枚举）
 │  │  │  │  ├─ exception（任务调度相关异常）
 │  │  │  │  └─ config（任务调度相关配置）
-│  │  │  └─ test（测试相关代码目录）
-│  │  └─ pom.xml
-│  ├─ continew-plugin-open（能力开放插件模块）
-│  │  ├─ src
-│  │  │  ├─ main/java/top/continew/admin/open
-│  │  │  │  ├─ controller（能力开放相关 API）
-│  │  │  │  ├─ service（能力开放相关业务接口及实现类）
-│  │  │  │  ├─ mapper（能力开放相关 Mapper）
-│  │  │  │  ├─ model（能力开放相关模型）
-│  │  │  │  │  ├─ entity（能力开放相关实体对象）
-│  │  │  │  │  ├─ query（能力开放相关查询条件）
-│  │  │  │  │  ├─ req（能力开放相关请求对象（Request））
-│  │  │  │  │  └─ resp（能力开放相关响应对象（Response））
-│  │  │  │  ├─ util（能力开放相关工具类）
-│  │  │  │  └─ config（能力开放相关配置）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
 │  ├─ continew-plugin-generator（代码生成器插件模块）
@@ -375,10 +395,10 @@ continew-admin
 │  │  │  │  │  ├─ service（代码生成器相关业务接口及实现类）
 │  │  │  │  │  ├─ mapper（代码生成器相关 Mapper）
 │  │  │  │  │  ├─ model（代码生成器相关模型）
-│  │  │  │  │  │  ├─ entity（代码生成器相关实体对象）
+│  │  │  │  │  │  ├─ entity（代码生成器相关实体）
 │  │  │  │  │  │  ├─ query（代码生成器相关查询条件）
-│  │  │  │  │  │  ├─ req（代码生成器相关请求对象（Request））
-│  │  │  │  │  │  └─ resp（代码生成器相关响应对象（Response））
+│  │  │  │  │  │  ├─ req（代码生成器相关请求参数（Request））
+│  │  │  │  │  │  └─ resp（代码生成器相关响应参数（Response））
 │  │  │  │  │  ├─ enums（代码生成器相关枚举）
 │  │  │  │  │  └─ config（代码生成器相关配置）
 │  │  │  │  └─ resources
@@ -400,9 +420,9 @@ continew-admin
 │  │  │  │  └─ service（业务接口及实现基类）
 │  │  │  ├─ service（公共服务接口）
 │  │  │  ├─ model（公共模型）
-│  │  │  │  └─ req（公共请求对象（Request））
+│  │  │  │  └─ req（公共请求参数（Request））
 │  │  │  ├─ context（公共上下文）
-│  │  │  ├─ constant（公共常量）
+│  │  │  ├─ constant（公共常量类）
 │  │  │  ├─ enums（公共枚举）
 │  │  │  ├─ util（公共工具类）
 │  │  │  └─ config（公共配置）

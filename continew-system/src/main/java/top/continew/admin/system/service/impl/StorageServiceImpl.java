@@ -225,19 +225,19 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
      * 解密 SecretKey
      *
      * @param encryptSecretKey 加密的 SecretKey
-     * @param storage          存储信息
+     * @param oldStorage       旧存储配置
      * @return 解密后的 SecretKey
      */
-    private String decryptSecretKey(String encryptSecretKey, StorageDO storage) {
-        // 修改时，如果 SecretKey 不修改，需要手动修正
-        if (storage != null) {
+    private String decryptSecretKey(String encryptSecretKey, StorageDO oldStorage) {
+        // 修改时，SecretKey 为空或带 *，将不更改
+        if (oldStorage != null) {
             boolean isSecretKeyNotUpdate = StrUtil.isBlank(encryptSecretKey) || encryptSecretKey
                 .contains(StringConstants.ASTERISK);
             if (isSecretKeyNotUpdate) {
-                return storage.getSecretKey();
+                return oldStorage.getSecretKey();
             }
         }
-        // 新增场景，直接解密 SecretKey
+        // 解密
         String secretKey = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(encryptSecretKey));
         ValidationUtils.throwIfNull(secretKey, "私有密钥解密失败");
         ValidationUtils.throwIf(secretKey.length() > 255, "私有密钥长度不能超过 255 个字符");

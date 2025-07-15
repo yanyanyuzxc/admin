@@ -63,7 +63,7 @@ public class ClientServiceImpl extends BaseServiceImpl<ClientMapper, ClientDO, C
         for (Long id : ids) {
             ClientDO client = this.getById(id);
             query.setClientId(client.getClientId());
-            CheckUtils.throwIfNotEmpty(onlineUserService.list(query), "客户端 [{}] 还存在在线用户，不能删除", client.getClientId());
+            CheckUtils.throwIfNotEmpty(onlineUserService.list(query), "客户端 [{}] 还存在在线用户，不允许删除", client.getClientId());
         }
     }
 

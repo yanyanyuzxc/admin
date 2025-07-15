@@ -17,6 +17,7 @@
 package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -100,16 +101,11 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
     }
 
     @Override
-    @Cached(key = "'ALL' + #tenantId", name = CacheConstants.ROLE_MENU_KEY_PREFIX)
-    public List<MenuResp> listAll(Long tenantId) {
-        return super.list(new MenuQuery(DisEnableStatusEnum.ENABLE), null);
-    }
-
-    @Override
     public Set<String> listPermissionByUserId(Long userId) {
         return baseMapper.selectPermissionByUserId(userId);
     }
 
+    @Override
     @Cached(key = "#roleId", name = CacheConstants.ROLE_MENU_KEY_PREFIX)
     public List<MenuResp> listByRoleId(Long roleId) {
         if (SysConstants.SUPER_ROLE_ID.equals(roleId)) {
@@ -122,60 +118,53 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
     }
 
     @Override
-    public void menuInit(List<MenuDO> menuList, Long oldParentId, Long newParentId) {
-        List<MenuDO> children = menuList.stream().filter(menuDO -> menuDO.getParentId().equals(oldParentId)).toList();
-        for (MenuDO menuDO : children) {
-            Long oldId = menuDO.getId();
-            menuDO.setId(null);
-            menuDO.setParentId(newParentId);
-            save(menuDO);
-            menuInit(menuList, oldId, menuDO.getId());
-        }
-    }
-
-    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteTenantMenus(List<MenuDO> menuList) {
-        if (!menuList.isEmpty()) {
-            List<Long> delIds = new ArrayList<>();
-            for (MenuDO menuDO : menuList) {
-                MenuDO tMenu = getOne(Wrappers.query(MenuDO.class)
-                    .eq(menuDO.getType().equals(MenuTypeEnum.BUTTON.getValue()), "CONCAT(title,permission)", menuDO
-                        .getTitle() + menuDO.getPermission())
-                    .eq(!menuDO.getType().equals(MenuTypeEnum.BUTTON.getValue()), "name", menuDO.getName()));
-                if (tMenu != null) {
-                    delIds.add(tMenu.getId());
-                }
-            }
-            if (!delIds.isEmpty()) {
-                //菜单删除
-                delete(delIds);
-                //绑定关系删除
-                roleMenuService.remove(Wrappers.lambdaQuery(RoleMenuDO.class).in(RoleMenuDO::getMenuId, delIds));
+        if (CollUtil.isEmpty(menuList)) {
+            return;
+        }
+        List<Long> delIds = new ArrayList<>();
+        for (MenuDO menu : menuList) {
+            MenuDO parentMenu = baseMapper.query()
+                .eq(menu.getType().equals(MenuTypeEnum.BUTTON), "CONCAT(title,permission)", menu.getTitle() + menu
+                    .getPermission())
+                .eq(!menu.getType().equals(MenuTypeEnum.BUTTON), "name", menu.getName())
+                .one();
+            if (parentMenu != null) {
+                delIds.add(parentMenu.getId());
             }
         }
+        if (!delIds.isEmpty()) {
+            // 菜单删除
+            this.delete(delIds);
+            // 删除绑定关系
+            roleMenuService.remove(Wrappers.lambdaQuery(RoleMenuDO.class).in(RoleMenuDO::getMenuId, delIds));
+        }
+        // 删除缓存
+        RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
     @Override
-    public void addTenantMenu(MenuDO menu, MenuDO pMenu) {
-        Long pId = 0l;
-        if (pMenu != null) {
-            MenuDO tPMenu = getOne(Wrappers.query(MenuDO.class)
-                .eq(pMenu.getType().equals(MenuTypeEnum.BUTTON.getValue()), "CONCAT(title,permission)", pMenu
-                    .getTitle() + pMenu.getPermission())
-                .eq(!pMenu.getType().equals(MenuTypeEnum.BUTTON.getValue()), "name", pMenu.getName()));
-            pId = tPMenu.getId();
+    public void addTenantMenu(MenuDO menu, MenuDO parentMenu) {
+        Long parentId = SysConstants.SUPER_PARENT_ID;
+        if (parentMenu != null) {
+            MenuDO parent = baseMapper.query()
+                .eq(parentMenu.getType().equals(MenuTypeEnum.BUTTON), "CONCAT(title,permission)", parentMenu
+                    .getTitle() + parentMenu.getPermission())
+                .eq(!parentMenu.getType().equals(MenuTypeEnum.BUTTON), "name", parentMenu.getName())
+                .one();
+            parentId = parent.getId();
         }
         menu.setId(null);
-        menu.setParentId(pId);
-        //菜单新增
-        save(menu);
-        //管理员绑定菜单
-        RoleDO roleDO = roleMapper.selectOne(Wrappers.lambdaQuery(RoleDO.class)
-            .eq(RoleDO::getCode, SysConstants.TENANT_ADMIN_CODE));
-        RoleMenuDO roleMenuDO = new RoleMenuDO();
-        roleMenuDO.setRoleId(roleDO.getId());
-        roleMenuDO.setMenuId(menu.getId());
-        roleMenuService.save(roleMenuDO);
+        menu.setParentId(parentId);
+        // 菜单新增
+        baseMapper.insert(menu);
+        // 管理员绑定菜单
+        RoleDO role = roleMapper.selectOne(Wrappers.lambdaQuery(RoleDO.class)
+            .eq(RoleDO::getCode, SysConstants.TENANT_ADMIN_ROLE_CODE));
+        roleMenuService.save(new RoleMenuDO(role.getId(), menu.getId()));
+        // 删除缓存
+        RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
     /**

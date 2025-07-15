@@ -123,5 +123,4 @@ public class AuthServiceImpl implements AuthService {
         });
         return BeanUtil.copyToList(treeList, RouteResp.class);
     }
-
 }

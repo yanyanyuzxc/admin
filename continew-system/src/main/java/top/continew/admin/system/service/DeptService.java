@@ -56,12 +56,4 @@ public interface DeptService extends BaseService<DeptResp, DeptResp, DeptQuery, 
      * @return 部门数量
      */
     int countByNames(List<String> deptNames);
-
-    /**
-     * 初始化租户部门
-     *
-     * @param deptName
-     * @return 部门ID
-     */
-    Long initTenantDept(String deptName);
 }

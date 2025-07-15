@@ -28,6 +28,7 @@ import java.io.Serializable;
  * 租户查询条件
  *
  * @author 小熊
+ * @author Charles7c
  * @since 2024/11/26 17:20
  */
 @Data
@@ -38,17 +39,16 @@ public class TenantQuery implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 租户名称
+     * 关键词
      */
-    @Schema(description = "租户名称")
-    @Query(type = QueryType.LIKE)
-    private String name;
+    @Schema(description = "关键词", example = "T0001")
+    @Query(columns = {"name", "description"}, type = QueryType.LIKE)
+    private String description;
 
     /**
-     * 租户套餐编号
+     * 套餐 ID
      */
-    @Schema(description = "租户套餐编号")
+    @Schema(description = "套餐 ID", example = "1")
     @Query(type = QueryType.EQ)
     private Long packageId;
-
 }

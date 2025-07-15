@@ -144,6 +144,15 @@ public class UserContextHolder {
     }
 
     /**
+     * 获取租户 ID
+     *
+     * @return 租户 ID
+     */
+    public static Long getTenantId() {
+        return ExceptionUtils.exToNull(() -> getContext().getTenantId());
+    }
+
+    /**
      * 获取用户名
      *
      * @return 用户名
@@ -179,12 +188,5 @@ public class UserContextHolder {
     public static boolean isAdmin() {
         StpUtil.checkLogin();
         return getContext().isAdmin();
-    }
-
-    /**
-     * 获取租户ID
-     */
-    public static Long getTenantId() {
-        return ExceptionUtils.exToNull(() -> getContext().getTenantId());
     }
 }

@@ -35,6 +35,10 @@ import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.model.query.*;
 import top.continew.admin.system.model.resp.file.FileUploadResp;
 import top.continew.admin.system.service.*;
+import top.continew.admin.tenant.model.query.DatasourceQuery;
+import top.continew.admin.tenant.model.query.PackageQuery;
+import top.continew.admin.tenant.service.DatasourceService;
+import top.continew.admin.tenant.service.PackageService;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
@@ -62,6 +66,8 @@ public class CommonController {
     private final MenuService menuService;
     private final UserService userService;
     private final RoleService roleService;
+    private final PackageService packageService;
+    private final DatasourceService datasourceService;
     private final DictItemService dictItemService;
     private final OptionService optionService;
 
@@ -102,6 +108,18 @@ public class CommonController {
     @GetMapping("/dict/role")
     public List<LabelValueResp> listRoleDict(RoleQuery query, SortQuery sortQuery) {
         return roleService.listDict(query, sortQuery);
+    }
+
+    @Operation(summary = "查询套餐字典", description = "查询套餐字典列表")
+    @GetMapping("/dict/package")
+    public List<LabelValueResp> listPackageDict(PackageQuery query, SortQuery sortQuery) {
+        return packageService.listDict(query, sortQuery);
+    }
+
+    @Operation(summary = "查询数据源字典", description = "查询数据源字典列表")
+    @GetMapping("/dict/datasource")
+    public List<LabelValueResp> listDatasourceDict(DatasourceQuery query, SortQuery sortQuery) {
+        return datasourceService.listDict(query, sortQuery);
     }
 
     @Operation(summary = "查询字典", description = "查询字典列表")

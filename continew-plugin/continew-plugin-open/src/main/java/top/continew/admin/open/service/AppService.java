@@ -55,5 +55,4 @@ public interface AppService extends BaseService<AppResp, AppDetailResp, AppQuery
      * @return 应用信息
      */
     AppDO getByAccessKey(String accessKey);
-
 }

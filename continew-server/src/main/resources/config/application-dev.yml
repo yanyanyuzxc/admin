@@ -22,11 +22,17 @@ spring.datasource:
     datasource:
       # 主库配置（可配多个，构成多主）
       master:
-        url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:continew_admin}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&autoReconnect=true&maxReconnects=10&failOverReadOnly=false
+        # 请务必提前创建好名为 continew_admin 的数据库，如果使用其他数据库名请注意同步修改 DB_NAME 配置
+        url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:continew_admin}?serverTimezone=Asia/Shanghai&useSSL=true&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&autoReconnect=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
         username: ${DB_USER:root}
         password: ${DB_PWD:123456}
         driver-class-name: com.mysql.cj.jdbc.Driver
         type: ${spring.datasource.type}
+        #  # PostgreSQL 配置
+        #  url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:continew_admin}?serverTimezone=Asia/Shanghai&useSSL=true&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&autoReconnect=true&stringtype=unspecified
+        #  username: ${DB_USER:postgres}
+        #  password: ${DB_PWD:123456}
+        #  driver-class-name: org.postgresql.Driver
     # Hikari 连接池配置（完整配置请参阅：https://github.com/brettwooldridge/HikariCP）
     hikari:
       # 最大连接数量（默认 10，根据实际环境调整）
@@ -40,7 +46,6 @@ spring.datasource:
       keepaliveTime: 30000
       # 连接最大生存时间（默认 1800000 毫秒，30 分钟）
       max-lifetime: 1800000
-
 
 ## Liquibase 配置
 spring.liquibase:
@@ -176,7 +181,7 @@ captcha:
     expirationInMinutes: 5
 
 --- ### 短信配置
-## 提示：配置文件方式和 [短信配置] 功能可任选其一方式使用，也可共同使用，但实际开发时建议选择一种，注释或删除另一方
+## 提示：配置文件方式和 [系统管理/系统配置/短信配置] 功能可任选其一方式使用，也可共同使用，但实际开发时建议选择一种，注释或删除另一方
 sms:
   http-log: true
   is-print: true
@@ -192,7 +197,7 @@ sms:
 #      sdk-app-id: 你的应用ID
 
 --- ### 邮件配置
-## 提示：配置文件方式和 [邮件配置] 功能可任选其一方式使用，实际开发时请注释或删除另一方
+## 提示：配置文件方式和 [系统管理/系统配置/邮件配置] 功能可任选其一方式使用，实际开发时请注释或删除另一方
 #spring.mail:
 #  # 根据需要更换
 #  host: smtp.126.com

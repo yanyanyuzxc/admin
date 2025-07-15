@@ -66,7 +66,7 @@ public class DeptResp extends BaseDetailResp {
     /**
      * 排序
      */
-    @Schema(description = "排序", example = "3")
+    @Schema(description = "排序", example = "1")
     @ExcelProperty(value = "排序", order = 6)
     private Integer sort;
 

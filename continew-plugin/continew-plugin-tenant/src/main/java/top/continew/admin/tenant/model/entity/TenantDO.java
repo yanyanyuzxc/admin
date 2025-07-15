@@ -19,6 +19,8 @@ package top.continew.admin.tenant.model.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.continew.admin.common.base.model.entity.BaseDO;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.tenant.model.enums.TenantIsolationLevelEnum;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -27,57 +29,63 @@ import java.time.LocalDateTime;
  * 租户实体
  *
  * @author 小熊
+ * @author Charles7c
  * @since 2024/11/26 17:20
  */
 @Data
-@TableName("sys_tenant")
+@TableName("tenant")
 public class TenantDO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 租户名称
+     * 名称
      */
     private String name;
 
     /**
-     * 绑定的域名
+     * 编码
+     */
+    private String code;
+
+    /**
+     * 域名
      */
     private String domain;
 
     /**
-     * 租户套餐编号
-     */
-    private Long packageId;
-
-    /**
-     * 状态（1：启用；2：禁用）
-     */
-    private Integer status;
-
-    /**
-     * 租户过期时间
+     * 过期时间
      */
     private LocalDateTime expireTime;
 
     /**
-     * 用户ID
-     */
-    private Long userId;
-
-    /**
-     * 租户编号
-     */
-    private String tenantSn;
-
-    /**
      * 隔离级别
      */
-    private Integer isolationLevel;
+    private TenantIsolationLevelEnum isolationLevel;
 
     /**
-     * 数据连接ID
+     * 描述
      */
-    private Long dbConnectId;
+    private String description;
+
+    /**
+     * 状态
+     */
+    private DisEnableStatusEnum status;
+
+    /**
+     * 租户管理员
+     */
+    private Long adminUser;
+
+    /**
+     * 套餐 ID
+     */
+    private Long packageId;
+
+    /**
+     * 数据源 ID
+     */
+    private Long datasourceId;
 }

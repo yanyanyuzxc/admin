@@ -44,7 +44,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.auth.model.resp.CaptchaResp;
-import top.continew.admin.common.config.properties.CaptchaProperties;
+import top.continew.admin.common.config.CaptchaProperties;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.system.enums.OptionCategoryEnum;

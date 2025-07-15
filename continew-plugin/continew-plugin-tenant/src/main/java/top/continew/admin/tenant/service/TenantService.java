@@ -31,33 +31,21 @@ import java.util.List;
  * 租户业务接口
  *
  * @author 小熊
+ * @author Charles7c
  * @since 2024/11/26 17:20
  */
 public interface TenantService extends BaseService<TenantResp, TenantDetailResp, TenantQuery, TenantReq>, IService<TenantDO> {
 
     /**
+     * 检查租户状态
+     *
+     * @param id ID
+     * @return 租户信息
+     */
+    TenantDO checkStatus(Long id);
+
+    /**
      * 获取所有可用的租户列表
      */
     List<TenantAvailableResp> getAvailableList();
-
-    /**
-     * 租户绑定用户
-     */
-    void bindUser(Long tenantId, Long userId);
-
-    /**
-     * 检查租户状态
-     */
-    void checkStatus();
-
-    /**
-     * 根据id获取租户DO
-     */
-    TenantDO getTenantById(Long id);
-
-    /**
-     * 根据用户id获取租户信息
-     */
-    TenantDO getTenantByUserId(Long userId);
-
 }

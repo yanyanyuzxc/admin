@@ -182,19 +182,52 @@ continew-starter.trace:
     pattern: '[$spanId][$traceId]'
     mdc-enable: false
 
---- ### 全局树结构配置（简单树，对应前端 UI）
-continew-starter.crud:
-  tree:
-    id-key: key
-    name-key: title
-    weight-key: sort
-
 --- ### 安全配置：密码编码器配置
 continew-starter.security:
   password:
     enabled: true
     # BCryptPasswordEncoder（如有改动，需同步调整 top.continew.admin.common.config.mybatis.BCryptEncryptor）
     encoding-id: bcrypt
+
+--- ### CRUD 配置
+continew-starter.crud:
+  ## 全局树结构配置（简单树，对应前端 UI）
+  tree:
+    id-key: key
+    name-key: title
+    weight-key: sort
+
+--- ### 租户配置
+continew-starter.tenant:
+  enabled: true
+  # 超级/默认租户 ID
+  super-tenant-id: 0
+  # 忽略表（忽略拼接租户条件）
+  ignore-tables:
+    - gen_config # 代码生成
+    - gen_field_config
+    - sys_dict # 字典表
+    - sys_dict_item
+    - sys_option # 参数
+    - sys_storage # 存储配置
+    - tenant # 租户
+    - tenant_package
+    - tenant_package_menu
+    - tenant_datasource
+    - sys_client # 客户端管理
+    - sys_sms_config
+    - sys_sms_log
+    - sys_app # 应用
+  # 忽略菜单 ID（租户不能使用的菜单）
+  ignore-menus:
+    - 1130 # 字典管理
+    - 1140 # 字典项管理
+    - 1150 # 系统配置
+    - 2050 # 短信日志
+    - 3000 # 租户管理
+    - 7000 # 能力开放
+    - 8000 # 任务调度
+    - 9000 # 代码生成
 
 --- ### 限流器配置
 continew-starter:
@@ -287,6 +320,14 @@ cosid:
       safe-js:
         machine-bit: 7
         sequence-bit: 9
+      # 租户编码
+      tenant-code:
+        converter:
+          type: RADIX
+          prefix: T
+          radix:
+            char-size: 11
+            pad-start: true
 
 --- ### 认证配置
 auth:
@@ -298,32 +339,3 @@ auth:
       - /auth/logout
       - /system/user/password
 
-#多租户配置
-continew-starter.tenant:
-  enabled: true
-  # 多租户忽略的表
-  ignore-tables:
-    - gen_config # 代码生成
-    - gen_field_config
-    - sys_dict # 字典表
-    - sys_dict_item
-    - sys_option #参数
-    - sys_storage # 存储配置
-    - sys_tenant # 租户
-    - sys_tenant_package
-    - sys_tenant_db_connect
-    - sys_app #应用
-    - sys_client #客户端管理
-    - sys_sms_config
-    - sys_sms_log
-  #租户不能使用的菜单
-  ignore-menus:
-    - 1130 #字典管理
-    - 1140
-    - 1150 #系统配置
-    - 2050 #短信日志
-    - 3000 #任务调度
-    - 9000 #代码生成
-    - 7000 #能力开放
-    - 7010 #应用管理
-    - 10010 #租户管理

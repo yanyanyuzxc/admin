@@ -70,7 +70,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
         String code = req.getCode();
         CheckUtils.throwIf(this.isCodeExists(code, null), "新增失败，[{}] 已存在", code);
         // 防止租户添加超管
-        CheckUtils.throwIf(SysConstants.SUPER_ROLE_CODE.equals(code), "新增失败，[{}] 禁止使用", code);
+        CheckUtils.throwIf(SysConstants.SUPER_ROLE_CODE.equals(code), "新增失败，编码 [{}] 禁止使用", code);
         // 新增信息
         Long roleId = super.create(req);
         // 保存角色和部门关联
@@ -248,25 +248,5 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
                 UserContextHolder.setContext(userContext);
             }
         });
-    }
-
-    /**
-     * 初始化租户角色
-     *
-     * @return 角色ID
-     */
-    @Override
-    public Long initTenantRole() {
-        RoleDO roleDO = new RoleDO();
-        roleDO.setName("系统管理员");
-        roleDO.setCode(SysConstants.TENANT_ADMIN_CODE);
-        roleDO.setDataScope(DataScopeEnum.ALL);
-        roleDO.setDescription("系统初始角色");
-        roleDO.setSort(1);
-        roleDO.setIsSystem(true);
-        roleDO.setMenuCheckStrictly(false);
-        roleDO.setDeptCheckStrictly(false);
-        baseMapper.insert(roleDO);
-        return roleDO.getId();
     }
 }

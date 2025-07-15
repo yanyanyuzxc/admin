@@ -1,0 +1,245 @@
+/*
+ * Copyright (c) 2022-present Charles7c Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package top.continew.admin.tenant.handler;
+
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.common.constant.RegexConstants;
+import top.continew.admin.common.constant.SysConstants;
+import top.continew.admin.common.enums.DataScopeEnum;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.common.enums.GenderEnum;
+import top.continew.admin.common.util.SecureUtils;
+import top.continew.admin.system.mapper.*;
+import top.continew.admin.system.mapper.user.UserMapper;
+import top.continew.admin.system.mapper.user.UserPasswordHistoryMapper;
+import top.continew.admin.system.mapper.user.UserSocialMapper;
+import top.continew.admin.system.model.entity.DeptDO;
+import top.continew.admin.system.model.entity.MenuDO;
+import top.continew.admin.system.model.entity.RoleDO;
+import top.continew.admin.system.model.entity.user.UserDO;
+import top.continew.admin.system.service.FileService;
+import top.continew.admin.system.service.RoleMenuService;
+import top.continew.admin.system.service.RoleService;
+import top.continew.admin.tenant.constant.TenantCacheConstants;
+import top.continew.admin.tenant.mapper.TenantMapper;
+import top.continew.admin.tenant.model.entity.TenantDO;
+import top.continew.admin.tenant.model.req.TenantReq;
+import top.continew.admin.tenant.service.PackageMenuService;
+import top.continew.starter.cache.redisson.util.RedisUtils;
+import top.continew.starter.core.util.ExceptionUtils;
+import top.continew.starter.core.util.validation.ValidationUtils;
+import top.continew.starter.extension.crud.model.entity.BaseIdDO;
+import top.continew.starter.extension.tenant.TenantHandler;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ * 租户数据处理器
+ *
+ * @author 小熊
+ * @author Charles7c
+ * @since 2024/12/2 20:12
+ */
+@Service
+@RequiredArgsConstructor
+public class TenantDataHandlerForSystem implements TenantDataHandler {
+
+    private final PackageMenuService packageMenuService;
+    private final DeptMapper deptMapper;
+    private final MenuMapper menuMapper;
+    private final RoleMapper roleMapper;
+    private final RoleMenuService roleMenuService;
+    private final RoleMenuMapper roleMenuMapper;
+    private final RoleService roleService;
+    private final TenantMapper tenantMapper;
+    private final FileService fileService;
+    private final LogMapper logMapper;
+    private final MessageMapper messageMapper;
+    private final MessageMapper messageUserMapper;
+    private final NoticeMapper noticeMapper;
+    private final RoleDeptMapper roleDeptMapper;
+    private final UserMapper userMapper;
+    private final UserPasswordHistoryMapper userPasswordHistoryMapper;
+    private final UserRoleMapper userRoleMapper;
+    private final UserSocialMapper userSocialMapper;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void init(TenantReq tenant) {
+        Long tenantId = tenant.getId();
+        SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> {
+            // 初始化部门
+            Long deptId = this.initDeptData(tenant);
+            // 初始化菜单
+            List<Long> menuIds = packageMenuService.listMenuIdsByPackageId(tenant.getPackageId());
+            List<MenuDO> menuList = menuMapper.lambdaQuery().in(MenuDO::getId, menuIds).list();
+            this.initMenuData(menuList, 0L, 0L);
+            // 初始化角色
+            Long roleId = this.initRoleData(tenant);
+            // 角色绑定菜单
+            roleMenuService.add(menuIds, roleId);
+            // 初始化管理用户
+            Long userId = this.initUserData(tenant, deptId);
+            // 用户绑定角色
+            roleService.assignToUsers(roleId, ListUtil.of(userId));
+            // 租户绑定用户
+            this.bindTenantUser(tenantId, userId);
+        });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void clear() {
+        // 退出所有用户
+        List<UserDO> userList = userMapper.selectList(null);
+        for (UserDO user : userList) {
+            StpUtil.logout(user.getId());
+        }
+        Wrapper dw = Wrappers.query().eq("1", 1);
+        // 部门清除
+        deptMapper.delete(dw);
+        // 文件清除
+        List<Long> fileIds = fileService.list().stream().map(BaseIdDO::getId).toList();
+        if (!fileIds.isEmpty()) {
+            fileService.delete(fileIds);
+        }
+        // 日志清除
+        logMapper.delete(dw);
+        // 菜单清除
+        menuMapper.delete(dw);
+        // 消息清除
+        messageMapper.delete(dw);
+        messageUserMapper.delete(dw);
+        // 通知清除
+        noticeMapper.delete(dw);
+        // 角色相关数据清除
+        roleMapper.delete(dw);
+        roleDeptMapper.delete(dw);
+        roleMenuMapper.delete(dw);
+        // 用户数据清除
+        userMapper.delete(dw);
+        userPasswordHistoryMapper.delete(dw);
+        userRoleMapper.delete(dw);
+        userSocialMapper.delete(dw);
+    }
+
+    /**
+     * 初始化部门数据
+     *
+     * @param tenant 租户信息
+     * @return 部门 ID
+     */
+    private Long initDeptData(TenantReq tenant) {
+        DeptDO dept = new DeptDO();
+        dept.setName(tenant.getName());
+        dept.setParentId(SysConstants.SUPER_PARENT_ID);
+        dept.setAncestors("0");
+        dept.setDescription("系统初始部门");
+        dept.setSort(1);
+        dept.setStatus(DisEnableStatusEnum.ENABLE);
+        deptMapper.insert(dept);
+        return dept.getId();
+    }
+
+    /**
+     * 递归初始化菜单数据
+     *
+     * @param menuList    菜单列表
+     * @param oldParentId 旧父级 ID
+     * @param newParentId 新父级 ID
+     */
+    private void initMenuData(List<MenuDO> menuList, Long oldParentId, Long newParentId) {
+        List<MenuDO> children = menuList.stream().filter(menuDO -> menuDO.getParentId().equals(oldParentId)).toList();
+        for (MenuDO menu : children) {
+            Long oldId = menu.getId();
+            menu.setId(null);
+            menu.setParentId(newParentId);
+            menuMapper.insert(menu);
+            initMenuData(menuList, oldId, menu.getId());
+        }
+    }
+
+    /**
+     * 初始化角色数据
+     *
+     * @param tenant 租户信息
+     * @return 角色 ID
+     */
+    private Long initRoleData(TenantReq tenant) {
+        RoleDO role = new RoleDO();
+        role.setName("系统管理员");
+        role.setCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+        role.setDataScope(DataScopeEnum.ALL);
+        role.setDescription("系统初始角色");
+        role.setSort(1);
+        role.setIsSystem(true);
+        role.setMenuCheckStrictly(true);
+        role.setDeptCheckStrictly(true);
+        roleMapper.insert(role);
+        return role.getId();
+    }
+
+    /**
+     * 初始化用户数据
+     *
+     * @param tenant 租户信息
+     * @param deptId 部门 ID
+     * @return 用户 ID
+     */
+    private Long initUserData(TenantReq tenant, Long deptId) {
+        // 解密密码
+        String rawPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(tenant.getPassword()));
+        ValidationUtils.throwIfNull(rawPassword, "密码解密失败");
+        ValidationUtils.throwIf(!ReUtil
+            .isMatch(RegexConstants.PASSWORD, rawPassword), "密码长度为 8-32 个字符，支持大小写字母、数字、特殊字符，至少包含字母和数字");
+        // 初始化用户
+        UserDO user = new UserDO();
+        user.setUsername(tenant.getUsername());
+        user.setNickname("系统管理员");
+        user.setPassword(rawPassword);
+        user.setGender(GenderEnum.UNKNOWN);
+        user.setDescription("系统初始用户");
+        user.setStatus(DisEnableStatusEnum.ENABLE);
+        user.setIsSystem(true);
+        user.setPwdResetTime(LocalDateTime.now());
+        user.setDeptId(deptId);
+        userMapper.insert(user);
+        return user.getId();
+    }
+
+    /**
+     * 绑定租户管理员用户
+     *
+     * @param tenantId 租户 ID
+     * @param userId   用户 ID
+     */
+    public void bindTenantUser(Long tenantId, Long userId) {
+        tenantMapper.lambdaUpdate().set(TenantDO::getAdminUser, userId).eq(BaseIdDO::getId, tenantId).update();
+        // 更新租户缓存
+        TenantDO entity = tenantMapper.selectById(tenantId);
+        RedisUtils.set(TenantCacheConstants.TENANT_KEY_PREFIX + tenantId, entity);
+    }
+}

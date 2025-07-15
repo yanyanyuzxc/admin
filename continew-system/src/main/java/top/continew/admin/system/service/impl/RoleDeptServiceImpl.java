@@ -27,7 +27,7 @@ import top.continew.admin.system.service.RoleDeptService;
 import java.util.List;
 
 /**
- * 角色和部门业务实现
+ * 角色和部门关联业务实现
  *
  * @author Charles7c
  * @since 2023/2/19 10:47

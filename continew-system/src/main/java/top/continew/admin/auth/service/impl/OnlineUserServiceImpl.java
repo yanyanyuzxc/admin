@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 import top.continew.admin.auth.model.query.OnlineUserQuery;
 import top.continew.admin.auth.model.resp.OnlineUserResp;
 import top.continew.admin.auth.service.OnlineUserService;
-import top.continew.admin.common.config.properties.TenantProperties;
+import top.continew.admin.common.config.TenantProperties;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.context.UserExtraContext;

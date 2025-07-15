@@ -62,13 +62,6 @@
                 <version>${revision}</version>
             </dependency>
 
-            <!-- 任务调度插件（后续会改造为独立插件） -->
-            <dependency>
-                <groupId>top.continew.admin</groupId>
-                <artifactId>continew-plugin-schedule</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
             <!-- 能力开放插件（后续会改造为独立插件） -->
             <dependency>
                 <groupId>top.continew.admin</groupId>
@@ -76,11 +69,18 @@
                 <version>${revision}</version>
             </dependency>
 
-            <!-- 多租户插件 -->
+            <!-- 租户插件（后续会改造为独立插件） -->
             <dependency>
                 <groupId>top.continew.admin</groupId>
                 <artifactId>continew-plugin-tenant</artifactId>
-                <version>4.0.0-SNAPSHOT</version>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- 任务调度插件（后续会改造为独立插件） -->
+            <dependency>
+                <groupId>top.continew.admin</groupId>
+                <artifactId>continew-plugin-schedule</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <!-- 代码生成器插件（后续会改造为独立插件） -->

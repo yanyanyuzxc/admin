@@ -89,9 +89,7 @@ public class LogDaoLocalImpl implements LogDao {
         // 设置操作人
         this.setCreateUser(logDO, logRequest, logResponse);
         Long tenantId = TenantContextHolder.getTenantId();
-        SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> {
-            logMapper.insert(logDO);
-        });
+        SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> logMapper.insert(logDO));
     }
 
     /**

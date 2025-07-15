@@ -16,16 +16,8 @@
 
 package top.continew.admin.tenant.mapper;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.tenant.model.entity.TenantDO;
-import top.continew.admin.tenant.model.resp.TenantResp;
 import top.continew.starter.data.mapper.BaseMapper;
 
 /**
@@ -34,11 +26,6 @@ import top.continew.starter.data.mapper.BaseMapper;
  * @author 小熊
  * @since 2024/11/26 17:20
  */
-@DS(SysConstants.DEFAULT_DATASOURCE)
 @Mapper
 public interface TenantMapper extends BaseMapper<TenantDO> {
-
-    @Select("SELECT sys_tenant.*,sys_tenant_package.`name` as package_name FROM sys_tenant\n" + "LEFT JOIN sys_tenant_package ON sys_tenant.package_id = sys_tenant_package.id\n" + "${ew.getCustomSqlSegment}")
-    IPage<TenantResp> listTenant(IPage page, @Param(Constants.WRAPPER) Wrapper wrapper);
-
 }
