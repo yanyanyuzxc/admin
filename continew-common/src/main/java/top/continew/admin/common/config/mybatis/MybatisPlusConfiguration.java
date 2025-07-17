@@ -17,11 +17,14 @@
 package top.continew.admin.common.config.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.extension.parser.JsqlParserGlobal;
+import com.baomidou.mybatisplus.extension.parser.cache.JdkSerialCaffeineJsqlParseCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import top.continew.starter.extension.datapermission.filter.DataPermissionUserContextProvider;
 import top.continew.starter.extension.datapermission.filter.DataPermissionUserDataProvider;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * MyBatis Plus 配置
@@ -31,6 +34,12 @@ import top.continew.starter.extension.datapermission.filter.DataPermissionUserDa
  */
 @Configuration
 public class MybatisPlusConfiguration {
+
+    // SQL 解析本地缓存
+    static {
+        JsqlParserGlobal.setJsqlParseCache(new JdkSerialCaffeineJsqlParseCache(cache -> cache.maximumSize(1024)
+            .expireAfterWrite(5, TimeUnit.SECONDS)));
+    }
 
     /**
      * 元对象处理器配置（插入或修改时自动填充）
