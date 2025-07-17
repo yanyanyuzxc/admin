@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.monitor;
+package top.continew.admin.auth.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;

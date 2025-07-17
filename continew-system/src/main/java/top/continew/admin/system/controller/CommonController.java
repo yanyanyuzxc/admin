@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.common;
+package top.continew.admin.system.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.lang.tree.Tree;
@@ -53,9 +53,9 @@ import java.util.List;
 @Tag(name = "公共 API")
 @Log(ignore = true)
 @Validated
-@RestController
+@RestController("systemCommonController")
 @RequiredArgsConstructor
-@RequestMapping("/common")
+@RequestMapping("/system/common")
 public class CommonController {
 
     private final FileService fileService;

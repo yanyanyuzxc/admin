@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.common;
+package top.continew.admin.controller;
 
 import com.alicp.jetcache.anno.CachePenetrationProtect;
 import com.alicp.jetcache.anno.CacheRefresh;

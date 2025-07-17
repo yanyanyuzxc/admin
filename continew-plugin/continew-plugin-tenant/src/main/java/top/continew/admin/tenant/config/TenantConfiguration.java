@@ -34,6 +34,6 @@ public class TenantConfiguration {
      */
     @Bean
     public GroupedOpenApi tenantApi() {
-        return GroupedOpenApi.builder().group("tenant").displayName("租户").pathsToMatch("/tenant/**").build();
+        return GroupedOpenApi.builder().group("tenant").displayName("租户管理").pathsToMatch("/tenant/**").build();
     }
 }
