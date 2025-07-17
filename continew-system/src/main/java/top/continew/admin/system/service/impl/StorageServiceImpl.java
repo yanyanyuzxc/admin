@@ -75,8 +75,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
         storageType.validate(req);
         storageType.pretreatment(req);
         // 校验存储编码
-        String code = req.getCode();
-        CheckUtils.throwIf(this.isCodeExists(code, null), "新增失败，[{}] 已存在", code);
+        this.checkCodeRepeat(req.getCode(), null);
         // 需要独立操作来指定默认存储
         req.setIsDefault(false);
         // 加载存储引擎
@@ -245,13 +244,15 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
     }
 
     /**
-     * 编码是否存在
+     * 检查编码是否重复
      *
      * @param code 编码
      * @param id   ID
-     * @return 是否存在
      */
-    private boolean isCodeExists(String code, Long id) {
-        return baseMapper.lambdaQuery().eq(StorageDO::getCode, code).ne(id != null, StorageDO::getId, id).exists();
+    private void checkCodeRepeat(String code, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
+            .eq(StorageDO::getCode, code)
+            .ne(id != null, StorageDO::getId, id)
+            .exists(), "编码为 [{}] 的存储配置已存在", code);
     }
 }

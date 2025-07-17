@@ -62,12 +62,10 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
 
     @Override
     public Long create(MenuReq req) {
-        String title = req.getTitle();
-        CheckUtils.throwIf(this.isTitleExists(title, req.getParentId(), null), "新增失败，标题 [{}] 已存在", title);
+        this.checkTitleRepeat(req.getTitle(), req.getParentId(), null);
         // 目录和菜单的组件名称不能重复
         if (!MenuTypeEnum.BUTTON.equals(req.getType())) {
-            String name = req.getName();
-            CheckUtils.throwIf(this.isNameExists(name, null), "新增失败，组件名称 [{}] 已存在", name);
+            this.checkNameRepeat(req.getName(), null);
         }
         // 目录类型菜单，默认为 Layout
         if (MenuTypeEnum.DIR.equals(req.getType())) {
@@ -79,12 +77,10 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
 
     @Override
     public void update(MenuReq req, Long id) {
-        String title = req.getTitle();
-        CheckUtils.throwIf(this.isTitleExists(title, req.getParentId(), id), "修改失败，标题 [{}] 已存在", title);
+        this.checkTitleRepeat(req.getTitle(), req.getParentId(), id);
         // 目录和菜单的组件名称不能重复
         if (!MenuTypeEnum.BUTTON.equals(req.getType())) {
-            String name = req.getName();
-            CheckUtils.throwIf(this.isNameExists(name, id), "修改失败，组件名称 [{}] 已存在", name);
+            this.checkNameRepeat(req.getName(), id);
         }
         MenuDO oldMenu = super.getById(id);
         CheckUtils.throwIfNotEqual(req.getType(), oldMenu.getType(), "不允许修改菜单类型");
@@ -168,33 +164,31 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
     }
 
     /**
-     * 标题是否存在
+     * 检查标题是否重复
      *
      * @param title    标题
      * @param parentId 上级 ID
      * @param id       ID
-     * @return true：存在；false：不存在
      */
-    private boolean isTitleExists(String title, Long parentId, Long id) {
-        return baseMapper.lambdaQuery()
+    private void checkTitleRepeat(String title, Long parentId, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
             .eq(MenuDO::getTitle, title)
             .eq(MenuDO::getParentId, parentId)
             .ne(id != null, MenuDO::getId, id)
-            .exists();
+            .exists(), "标题为 [{}] 的菜单已存在", title);
     }
 
     /**
-     * 名称是否存在
+     * 检查组件名称是否重复
      *
-     * @param name 标题
+     * @param name 组件名称
      * @param id   ID
-     * @return true：存在；false：不存在
      */
-    private boolean isNameExists(String name, Long id) {
-        return baseMapper.lambdaQuery()
+    private void checkNameRepeat(String name, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
             .eq(MenuDO::getName, name)
             .ne(MenuDO::getType, MenuTypeEnum.BUTTON)
             .ne(id != null, MenuDO::getId, id)
-            .exists();
+            .exists(), "组件名称为 [{}] 的菜单已存在", name);
     }
 }

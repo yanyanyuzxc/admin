@@ -47,16 +47,13 @@ public class DictServiceImpl extends BaseServiceImpl<DictMapper, DictDO, DictRes
 
     @Override
     public void beforeCreate(DictReq req) {
-        String name = req.getName();
-        CheckUtils.throwIf(this.isNameExists(name, null), "新增失败，[{}] 已存在", name);
-        String code = req.getCode();
-        CheckUtils.throwIf(this.isCodeExists(code, null), "新增失败，[{}] 已存在", code);
+        this.checkNameRepeat(req.getName(), null);
+        this.checkCodeRepeat(req.getCode(), null);
     }
 
     @Override
     public void beforeUpdate(DictReq req, Long id) {
-        String name = req.getName();
-        CheckUtils.throwIf(this.isNameExists(name, id), "修改失败，[{}] 已存在", name);
+        this.checkNameRepeat(req.getName(), id);
         DictDO oldDict = super.getById(id);
         CheckUtils.throwIfNotEqual(req.getCode(), oldDict.getCode(), "不允许修改字典编码");
     }
@@ -80,24 +77,28 @@ public class DictServiceImpl extends BaseServiceImpl<DictMapper, DictDO, DictRes
     }
 
     /**
-     * 名称是否存在
+     * 检查名称是否重复
      *
      * @param name 名称
      * @param id   ID
-     * @return 是否存在
      */
-    private boolean isNameExists(String name, Long id) {
-        return baseMapper.lambdaQuery().eq(DictDO::getName, name).ne(id != null, DictDO::getId, id).exists();
+    private void checkNameRepeat(String name, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
+            .eq(DictDO::getName, name)
+            .ne(id != null, DictDO::getId, id)
+            .exists(), "名称为 [{}] 的字典已存在", name);
     }
 
     /**
-     * 编码是否存在
+     * 检查编码是否重复
      *
      * @param code 编码
      * @param id   ID
-     * @return 是否存在
      */
-    private boolean isCodeExists(String code, Long id) {
-        return baseMapper.lambdaQuery().eq(DictDO::getCode, code).ne(id != null, DictDO::getId, id).exists();
+    private void checkCodeRepeat(String code, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
+            .eq(DictDO::getCode, code)
+            .ne(id != null, DictDO::getId, id)
+            .exists(), "编码为 [{}] 的字典已存在", code);
     }
 }

@@ -58,15 +58,13 @@ public class DictItemServiceImpl extends BaseServiceImpl<DictItemMapper, DictIte
 
     @Override
     public void beforeCreate(DictItemReq req) {
-        String value = req.getValue();
-        CheckUtils.throwIf(this.isValueExists(value, null, req.getDictId()), "新增失败，字典值 [{}] 已存在", value);
+        this.checkValueRepeat(req.getValue(), null, req.getDictId());
         RedisUtils.deleteByPattern(CacheConstants.DICT_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
     @Override
     public void beforeUpdate(DictItemReq req, Long id) {
-        String value = req.getValue();
-        CheckUtils.throwIf(this.isValueExists(value, id, req.getDictId()), "修改失败，字典值 [{}] 已存在", value);
+        this.checkValueRepeat(req.getValue(), id, req.getDictId());
         RedisUtils.deleteByPattern(CacheConstants.DICT_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
@@ -91,19 +89,18 @@ public class DictItemServiceImpl extends BaseServiceImpl<DictItemMapper, DictIte
     }
 
     /**
-     * 字典值是否存在
+     * 检查字典值是否重复
      *
      * @param value  字典值
      * @param id     ID
      * @param dictId 字典 ID
-     * @return 是否存在
      */
-    private boolean isValueExists(String value, Long id, Long dictId) {
-        return baseMapper.lambdaQuery()
+    private void checkValueRepeat(String value, Long id, Long dictId) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
             .eq(DictItemDO::getValue, value)
             .eq(DictItemDO::getDictId, dictId)
             .ne(id != null, DictItemDO::getId, id)
-            .exists();
+            .exists(), "字典值为 [{}] 的字典项已存在", value);
     }
 
     /**

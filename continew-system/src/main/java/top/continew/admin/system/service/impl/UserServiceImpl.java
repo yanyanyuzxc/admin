@@ -138,13 +138,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
 
     @Override
     public void beforeCreate(UserReq req) {
-        final String errorMsgTemplate = "新增失败，[{}] 已存在";
-        String username = req.getUsername();
-        CheckUtils.throwIf(this.isNameExists(username, null), errorMsgTemplate, username);
+        this.checkUsernameRepeat(req.getUsername(), null);
         String email = req.getEmail();
-        CheckUtils.throwIf(StrUtil.isNotBlank(email) && this.isEmailExists(email, null), errorMsgTemplate, email);
+        CheckUtils.throwIf(StrUtil.isNotBlank(email) && this.isEmailExists(email, null), "邮箱为 [%s] 的用户已存在"
+            .formatted(email));
         String phone = req.getPhone();
-        CheckUtils.throwIf(StrUtil.isNotBlank(phone) && this.isPhoneExists(phone, null), errorMsgTemplate, phone);
+        CheckUtils.throwIf(StrUtil.isNotBlank(phone) && this.isPhoneExists(phone, null), "手机号为 [%s] 的用户已存在"
+            .formatted(phone));
     }
 
     @Override
@@ -159,13 +159,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     @Transactional(rollbackFor = Exception.class)
     @CacheUpdate(key = "#id", value = "#req.nickname", name = CacheConstants.USER_KEY_PREFIX)
     public void update(UserReq req, Long id) {
-        final String errorMsgTemplate = "修改失败，[{}] 已存在";
-        String username = req.getUsername();
-        CheckUtils.throwIf(this.isNameExists(username, id), errorMsgTemplate, username);
+        this.checkUsernameRepeat(req.getUsername(), id);
         String email = req.getEmail();
-        CheckUtils.throwIf(StrUtil.isNotBlank(email) && this.isEmailExists(email, id), errorMsgTemplate, email);
+        CheckUtils.throwIf(StrUtil.isNotBlank(email) && this.isEmailExists(email, id), "邮箱为 [%s] 的用户已存在"
+            .formatted(email));
         String phone = req.getPhone();
-        CheckUtils.throwIf(StrUtil.isNotBlank(phone) && this.isPhoneExists(phone, id), errorMsgTemplate, phone);
+        CheckUtils.throwIf(StrUtil.isNotBlank(phone) && this.isPhoneExists(phone, id), "手机号为 [%s] 的用户已存在"
+            .formatted(phone));
         DisEnableStatusEnum newStatus = req.getStatus();
         CheckUtils.throwIf(DisEnableStatusEnum.DISABLE.equals(newStatus) && ObjectUtil.equal(id, UserContextHolder
             .getUserId()), "不允许禁用当前用户");
@@ -670,14 +670,16 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     }
 
     /**
-     * 名称是否存在
+     * 检查用户名是否重复
      *
-     * @param name 名称
-     * @param id   ID
-     * @return 是否存在
+     * @param username 用户名
+     * @param id       ID
      */
-    private boolean isNameExists(String name, Long id) {
-        return baseMapper.lambdaQuery().eq(UserDO::getUsername, name).ne(id != null, UserDO::getId, id).exists();
+    private void checkUsernameRepeat(String username, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
+            .eq(UserDO::getUsername, username)
+            .ne(id != null, UserDO::getId, id)
+            .exists(), "用户名为 [{}] 的用户已存在", username);
     }
 
     /**

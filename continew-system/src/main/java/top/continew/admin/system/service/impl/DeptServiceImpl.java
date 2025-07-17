@@ -61,17 +61,13 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
 
     @Override
     public void beforeCreate(DeptReq req) {
-        String name = req.getName();
-        boolean isExists = this.isNameExists(name, req.getParentId(), null);
-        CheckUtils.throwIf(isExists, "新增失败，[{}] 已存在", name);
+        this.checkNameRepeat(req.getName(), req.getParentId(), null);
         req.setAncestors(this.getAncestors(req.getParentId()));
     }
 
     @Override
     public void beforeUpdate(DeptReq req, Long id) {
-        String name = req.getName();
-        boolean isExists = this.isNameExists(name, req.getParentId(), id);
-        CheckUtils.throwIf(isExists, "修改失败，[{}] 已存在", name);
+        this.checkNameRepeat(req.getName(), req.getParentId(), id);
         DeptDO oldDept = super.getById(id);
         String oldName = oldDept.getName();
         DisEnableStatusEnum newStatus = req.getStatus();
@@ -140,19 +136,18 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
     }
 
     /**
-     * 名称是否存在
+     * 检查名称是否重复
      *
      * @param name     名称
      * @param parentId 上级 ID
      * @param id       ID
-     * @return 是否存在
      */
-    private boolean isNameExists(String name, Long parentId, Long id) {
-        return baseMapper.lambdaQuery()
+    private void checkNameRepeat(String name, Long parentId, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
             .eq(DeptDO::getName, name)
             .eq(DeptDO::getParentId, parentId)
             .ne(id != null, DeptDO::getId, id)
-            .exists();
+            .exists(), "名称为 [{}] 的部门已存在", name);
     }
 
     /**
