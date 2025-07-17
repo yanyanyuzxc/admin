@@ -57,6 +57,7 @@ import top.continew.starter.core.autoconfigure.application.ApplicationProperties
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.enums.BaseEnum;
 import top.continew.starter.core.exception.BusinessException;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.data.enums.DatabaseType;
 import top.continew.starter.data.util.MetaUtils;
@@ -296,9 +297,8 @@ public class GeneratorServiceImpl implements GeneratorService {
         InnerGenConfigDO innerGenConfig = new InnerGenConfigDO(genConfig);
         List<String> imports = new ArrayList<>();
         // 处理枚举字段
-        List<FieldConfigDO> fieldConfigRecords = fieldConfigList.stream()
-            .map(s -> convertToFieldConfigDO(s, imports))
-            .toList();
+        List<FieldConfigDO> fieldConfigRecords = CollUtils
+            .mapToList(fieldConfigList, s -> convertToFieldConfigDO(s, imports));
         innerGenConfig.setImports(imports);
 
         // 渲染代码

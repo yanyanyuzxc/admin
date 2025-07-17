@@ -32,6 +32,7 @@ import top.continew.admin.system.mapper.StorageMapper;
 import top.continew.admin.system.model.entity.FileDO;
 import top.continew.admin.system.model.entity.StorageDO;
 import top.continew.starter.core.constant.StringConstants;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.URLUtils;
 
 import java.util.List;
@@ -128,7 +129,7 @@ public class FileRecorderImpl implements FileRecorder {
             return list.get(0);
         }
         // 结合存储配置进行匹配
-        List<StorageDO> storageList = storageMapper.selectByIds(list.stream().map(FileDO::getStorageId).toList());
+        List<StorageDO> storageList = storageMapper.selectByIds(CollUtils.mapToList(list, FileDO::getStorageId));
         Map<Long, StorageDO> storageMap = storageList.stream()
             .collect(Collectors.toMap(StorageDO::getId, storage -> storage));
         return list.stream().filter(file -> {

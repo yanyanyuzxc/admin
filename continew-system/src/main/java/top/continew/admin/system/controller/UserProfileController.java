@@ -48,6 +48,7 @@ import top.continew.admin.system.service.UserService;
 import top.continew.admin.system.service.UserSocialService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.exception.BadRequestException;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 
@@ -131,13 +132,13 @@ public class UserProfileController {
     @GetMapping("/social")
     public List<UserSocialBindResp> listSocialBind() {
         List<UserSocialDO> userSocialList = userSocialService.listByUserId(UserContextHolder.getUserId());
-        return userSocialList.stream().map(userSocial -> {
+        return CollUtils.mapToList(userSocialList, userSocial -> {
             String source = userSocial.getSource();
             UserSocialBindResp userSocialBind = new UserSocialBindResp();
             userSocialBind.setSource(source);
             userSocialBind.setDescription(SocialSourceEnum.valueOf(source).getDescription());
             return userSocialBind;
-        }).toList();
+        });
     }
 
     @Operation(summary = "绑定三方账号", description = "绑定三方账号")

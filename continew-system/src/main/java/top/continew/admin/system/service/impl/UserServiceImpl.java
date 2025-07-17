@@ -80,6 +80,7 @@ import top.continew.admin.system.service.*;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.exception.BusinessException;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.FileUploadUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
@@ -202,7 +203,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
             .select(UserDO::getId, UserDO::getNickname, UserDO::getIsSystem)
             .in(UserDO::getId, ids)
             .list();
-        List<Long> idList = list.stream().map(UserDO::getId).toList();
+        List<Long> idList = CollUtils.mapToList(list, UserDO::getId);
         Collection<Long> subtractIds = CollUtil.subtract(ids, idList);
         CheckUtils.throwIfNotEmpty(subtractIds, "所选用户 [{}] 不存在", CollUtil.join(subtractIds, StringConstants.COMMA));
         Optional<UserDO> isSystemData = list.stream().filter(UserDO::getIsSystem).findFirst();
@@ -278,7 +279,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         int existRoleCount = roleService.countByNames(roleNames);
         CheckUtils.throwIf(existRoleCount < roleNames.size(), "存在无效角色，请检查数据");
         // 校验是否存在无效部门
-        List<String> deptNames = validRowList.stream().map(UserImportRowReq::getDeptName).distinct().toList();
+        List<String> deptNames = CollUtils.mapToList(validRowList, UserImportRowReq::getDeptName);
         int existDeptCount = deptService.countByNames(deptNames);
         CheckUtils.throwIf(existDeptCount < deptNames.size(), "存在无效部门，请检查数据");
 
@@ -316,11 +317,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         // 已存在数据查询
         List<String> existEmails = listExistByField(importUserList, UserImportRowReq::getEmail, UserDO::getEmail);
         List<String> existPhones = listExistByField(importUserList, UserImportRowReq::getPhone, UserDO::getPhone);
-        List<UserDO> existUserList = listByUsernames(importUserList.stream()
-            .map(UserImportRowReq::getUsername)
-            .filter(Objects::nonNull)
-            .toList());
-        List<String> existUsernames = existUserList.stream().map(UserDO::getUsername).toList();
+        List<UserDO> existUserList = listByUsernames(CollUtils
+            .mapToList(importUserList, UserImportRowReq::getUsername));
+        List<String> existUsernames = CollUtils.mapToList(existUserList, UserDO::getUsername);
         CheckUtils
             .throwIf(isExitImportUser(req, importUserList, existUsernames, existEmails, existPhones), "数据不符合导入策略，已退出导入");
 
@@ -519,10 +518,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
             .between(CollUtil.isNotEmpty(createTimeList), "t1.create_time", CollUtil.getFirst(createTimeList), CollUtil
                 .getLast(createTimeList))
             .and(deptId != null && !SysConstants.SUPER_DEPT_ID.equals(deptId), q -> {
-                List<Long> deptIdList = deptService.listChildren(deptId)
-                    .stream()
-                    .map(DeptDO::getId)
-                    .collect(Collectors.toList());
+                List<Long> deptIdList = CollUtils.mapToList(deptService.listChildren(deptId), DeptDO::getId);
                 deptIdList.add(deptId);
                 q.in("t1.dept_id", deptIdList);
             })
@@ -543,7 +539,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         }
         if (CollUtil.isNotEmpty(updateList)) {
             baseMapper.updateBatchById(updateList);
-            userRoleService.deleteByUserIds(updateList.stream().map(UserDO::getId).toList());
+            userRoleService.deleteByUserIds(CollUtils.mapToList(updateList, UserDO::getId));
         }
         if (CollUtil.isNotEmpty(userRoleDOList)) {
             userRoleService.saveBatch(userRoleDOList);
@@ -603,7 +599,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                                   Function<UserImportRowReq, String> rowField,
                                   SFunction<UserDO, ?> dbField,
                                   boolean fieldEncrypt) {
-        List<String> fieldValues = userRowList.stream().map(rowField).filter(Objects::nonNull).toList();
+        List<String> fieldValues = CollUtils.mapToList(userRowList, rowField);
         if (fieldValues.isEmpty()) {
             return 0;
         }
@@ -622,14 +618,14 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     private List<String> listExistByField(List<UserImportRowReq> userRowList,
                                           Function<UserImportRowReq, String> rowField,
                                           SFunction<UserDO, String> dbField) {
-        List<String> fieldValues = userRowList.stream().map(rowField).filter(Objects::nonNull).toList();
+        List<String> fieldValues = CollUtils.mapToList(userRowList, rowField);
         if (fieldValues.isEmpty()) {
             return Collections.emptyList();
         }
-        List<UserDO> userDOList = baseMapper.selectList(Wrappers.<UserDO>lambdaQuery()
+        List<UserDO> userList = baseMapper.selectList(Wrappers.<UserDO>lambdaQuery()
             .in(dbField, SecureUtils.encryptFieldByAes(fieldValues))
             .select(dbField));
-        return userDOList.stream().map(dbField).filter(Objects::nonNull).toList();
+        return CollUtils.mapToList(userList, dbField);
     }
 
     /**

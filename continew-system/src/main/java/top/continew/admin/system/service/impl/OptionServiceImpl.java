@@ -37,6 +37,7 @@ import top.continew.admin.system.model.resp.OptionResp;
 import top.continew.admin.system.service.OptionService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.data.util.QueryWrapperHelper;
@@ -75,7 +76,7 @@ public class OptionServiceImpl implements OptionService {
     @Override
     public void update(List<OptionReq> options) {
         // 非空校验
-        List<Long> idList = options.stream().map(OptionReq::getId).toList();
+        List<Long> idList = CollUtils.mapToList(options, OptionReq::getId);
         List<OptionDO> optionList = baseMapper.selectByIds(idList);
         Map<String, OptionDO> optionMap = optionList.stream()
             .collect(Collectors.toMap(OptionDO::getCode, Function.identity(), (existing, replacement) -> existing));

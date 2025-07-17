@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.tenant.mapper.PackageMenuMapper;
 import top.continew.admin.tenant.model.entity.PackageMenuDO;
 import top.continew.admin.tenant.service.PackageMenuService;
+import top.continew.starter.core.util.CollUtils;
 
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class PackageMenuServiceImpl implements PackageMenuService {
         // 删除原有关联
         baseMapper.lambdaUpdate().eq(PackageMenuDO::getPackageId, packageId).remove();
         // 保存最新关联
-        List<PackageMenuDO> newList = menuIds.stream().map(menuId -> new PackageMenuDO(packageId, menuId)).toList();
+        List<PackageMenuDO> newList = CollUtils.mapToList(menuIds, menuId -> new PackageMenuDO(packageId, menuId));
         return baseMapper.insertBatch(newList);
     }
 

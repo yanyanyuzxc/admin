@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.system.mapper.RoleMenuMapper;
 import top.continew.admin.system.model.entity.RoleMenuDO;
 import top.continew.admin.system.service.RoleMenuService;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.data.service.impl.ServiceImpl;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenuDO>
         // 删除原有关联
         baseMapper.lambdaUpdate().eq(RoleMenuDO::getRoleId, roleId).remove();
         // 保存最新关联
-        List<RoleMenuDO> roleMenuList = menuIds.stream().map(menuId -> new RoleMenuDO(roleId, menuId)).toList();
+        List<RoleMenuDO> roleMenuList = CollUtils.mapToList(menuIds, menuId -> new RoleMenuDO(roleId, menuId));
         return baseMapper.insertBatch(roleMenuList);
     }
 

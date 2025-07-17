@@ -19,12 +19,11 @@ package top.continew.admin.common.config.mybatis;
 import cn.hutool.core.convert.Convert;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.extension.datapermission.enums.DataScope;
 import top.continew.starter.extension.datapermission.filter.DataPermissionUserDataProvider;
 import top.continew.starter.extension.datapermission.model.RoleData;
 import top.continew.starter.extension.datapermission.model.UserData;
-
-import java.util.stream.Collectors;
 
 /**
  * 数据权限用户数据提供者
@@ -45,10 +44,8 @@ public class DefaultDataPermissionUserDataProvider implements DataPermissionUser
         UserData userData = new UserData();
         userData.setUserId(Convert.toStr(userContext.getId()));
         userData.setDeptId(Convert.toStr(userContext.getDeptId()));
-        userData.setRoles(userContext.getRoles()
-            .stream()
-            .map(r -> new RoleData(Convert.toStr(r.getId()), DataScope.valueOf(r.getDataScope().name())))
-            .collect(Collectors.toSet()));
+        userData.setRoles(CollUtils.mapToSet(userContext.getRoles(), r -> new RoleData(Convert.toStr(r
+            .getId()), DataScope.valueOf(r.getDataScope().name()))));
         return userData;
     }
 }

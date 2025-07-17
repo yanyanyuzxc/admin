@@ -31,6 +31,7 @@ import top.continew.admin.system.model.entity.UserRoleDO;
 import top.continew.admin.system.model.query.RoleUserQuery;
 import top.continew.admin.system.model.resp.role.RoleUserResp;
 import top.continew.admin.system.service.UserRoleService;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.data.util.QueryWrapperHelper;
 import top.continew.starter.extension.crud.model.query.PageQuery;
@@ -85,13 +86,13 @@ public class UserRoleServiceImpl implements UserRoleService {
         // 删除原有关联
         baseMapper.lambdaUpdate().eq(UserRoleDO::getUserId, userId).remove();
         // 保存最新关联
-        List<UserRoleDO> userRoleList = roleIds.stream().map(roleId -> new UserRoleDO(userId, roleId)).toList();
+        List<UserRoleDO> userRoleList = CollUtils.mapToList(roleIds, roleId -> new UserRoleDO(userId, roleId));
         return baseMapper.insertBatch(userRoleList);
     }
 
     @Override
     public boolean assignRoleToUsers(Long roleId, List<Long> userIds) {
-        List<UserRoleDO> userRoleList = userIds.stream().map(userId -> new UserRoleDO(userId, roleId)).toList();
+        List<UserRoleDO> userRoleList = CollUtils.mapToList(userIds, userId -> new UserRoleDO(userId, roleId));
         return baseMapper.insertBatch(userRoleList);
     }
 

@@ -20,12 +20,12 @@ import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import top.continew.admin.common.constant.SysConstants;
+import top.continew.starter.core.util.CollUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 用户上下文
@@ -103,7 +103,7 @@ public class UserContext implements Serializable {
 
     public void setRoles(Set<RoleContext> roles) {
         this.roles = roles;
-        this.roleCodes = roles.stream().map(RoleContext::getCode).collect(Collectors.toSet());
+        this.roleCodes = CollUtils.mapToSet(roles, RoleContext::getCode);
     }
 
     /**

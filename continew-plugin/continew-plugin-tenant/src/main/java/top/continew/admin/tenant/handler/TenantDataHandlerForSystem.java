@@ -35,6 +35,7 @@ import top.continew.admin.system.mapper.user.UserMapper;
 import top.continew.admin.system.mapper.user.UserPasswordHistoryMapper;
 import top.continew.admin.system.mapper.user.UserSocialMapper;
 import top.continew.admin.system.model.entity.DeptDO;
+import top.continew.admin.system.model.entity.FileDO;
 import top.continew.admin.system.model.entity.MenuDO;
 import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.entity.user.UserDO;
@@ -47,6 +48,7 @@ import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.req.TenantReq;
 import top.continew.admin.tenant.service.PackageMenuService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.entity.BaseIdDO;
@@ -121,7 +123,7 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
         // 部门清除
         deptMapper.delete(dw);
         // 文件清除
-        List<Long> fileIds = fileService.list().stream().map(BaseIdDO::getId).toList();
+        List<Long> fileIds = CollUtils.mapToList(fileService.list(), FileDO::getId);
         if (!fileIds.isEmpty()) {
             fileService.delete(fileIds);
         }

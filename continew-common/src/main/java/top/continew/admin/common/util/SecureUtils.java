@@ -22,13 +22,13 @@ import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.extra.spring.SpringUtil;
 import top.continew.admin.common.config.RsaProperties;
 import top.continew.starter.core.exception.BusinessException;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.security.crypto.autoconfigure.CryptoProperties;
 import top.continew.starter.security.crypto.encryptor.AesEncryptor;
 import top.continew.starter.security.crypto.encryptor.IEncryptor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 加密/解密工具类
@@ -96,12 +96,12 @@ public class SecureUtils {
     public static List<String> encryptFieldByAes(List<String> values) {
         IEncryptor encryptor = new AesEncryptor();
         CryptoProperties properties = SpringUtil.getBean(CryptoProperties.class);
-        return values.stream().map(value -> {
+        return CollUtils.mapToList(values, value -> {
             try {
                 return encryptor.encrypt(value, properties.getPassword(), properties.getPublicKey());
             } catch (Exception e) {
                 throw new BusinessException("字段加密异常");
             }
-        }).collect(Collectors.toList());
+        });
     }
 }

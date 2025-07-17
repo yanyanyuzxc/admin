@@ -26,6 +26,7 @@ import top.continew.admin.system.model.req.DictReq;
 import top.continew.admin.system.model.resp.DictResp;
 import top.continew.admin.system.service.DictItemService;
 import top.continew.admin.system.service.DictService;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 
@@ -75,7 +76,7 @@ public class DictServiceImpl extends BaseServiceImpl<DictMapper, DictDO, DictRes
     @Override
     public List<LabelValueResp> listEnumDict() {
         List<String> enumDictNameList = dictItemService.listEnumDictNames();
-        return enumDictNameList.stream().map(name -> new LabelValueResp(name, name)).toList();
+        return CollUtils.mapToList(enumDictNameList, name -> new LabelValueResp(name, name));
     }
 
     /**

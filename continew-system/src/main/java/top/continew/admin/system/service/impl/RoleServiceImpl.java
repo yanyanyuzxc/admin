@@ -39,13 +39,13 @@ import top.continew.admin.system.model.resp.MenuResp;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
 import top.continew.admin.system.service.*;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 角色业务实现
@@ -150,7 +150,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
         if (obj instanceof RoleDetailResp detail) {
             Long roleId = detail.getId();
             List<MenuResp> list = menuService.listByRoleId(roleId);
-            List<Long> menuIds = list.stream().map(MenuResp::getId).toList();
+            List<Long> menuIds = CollUtils.mapToList(list, MenuResp::getId);
             detail.setMenuIds(menuIds);
         }
     }
@@ -172,7 +172,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
             return Collections.emptySet();
         }
         List<RoleDO> roleList = baseMapper.lambdaQuery().select(RoleDO::getCode).in(RoleDO::getId, roleIdList).list();
-        return roleList.stream().map(RoleDO::getCode).collect(Collectors.toSet());
+        return CollUtils.mapToSet(roleList, RoleDO::getCode);
     }
 
     @Override
@@ -185,9 +185,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
             .select(RoleDO::getId, RoleDO::getCode, RoleDO::getDataScope)
             .in(RoleDO::getId, roleIdList)
             .list();
-        return roleList.stream()
-            .map(r -> new RoleContext(r.getId(), r.getCode(), r.getDataScope()))
-            .collect(Collectors.toSet());
+        return CollUtils.mapToSet(roleList, r -> new RoleContext(r.getId(), r.getCode(), r.getDataScope()));
     }
 
     @Override
