@@ -35,6 +35,7 @@ import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.model.entity.user.UserSocialDO;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
+import top.continew.starter.extension.tenant.annotation.TenantIgnore;
 
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -78,6 +79,7 @@ public class DemoEnvironmentJob {
     /**
      * 重置演示环境数据
      */
+    @TenantIgnore
     @JobExecutor(name = "ResetEnvironmentData")
     @Transactional(rollbackFor = Exception.class)
     public void resetEnvironmentData() {

@@ -57,6 +57,7 @@ import top.continew.starter.core.autoconfigure.application.ApplicationProperties
 import top.continew.starter.core.util.TemplateUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
+import top.continew.starter.extension.tenant.annotation.TenantIgnore;
 import top.continew.starter.log.annotation.Log;
 import top.continew.starter.messaging.mail.util.MailUtils;
 import top.continew.starter.ratelimiter.annotation.RateLimiter;
@@ -78,6 +79,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2022/12/11 14:00
  */
 @Tag(name = "验证码 API")
+@TenantIgnore
 @SaIgnore
 @Validated
 @RestController

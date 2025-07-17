@@ -73,7 +73,7 @@ public class SmsConfigServiceImpl extends BaseServiceImpl<SmsConfigMapper, SmsCo
             return;
         }
         // 启用状态才能设为默认配置
-        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE, smsConfig.getStatus(), "请先启用所选配置");
+        CheckUtils.throwIfEqual(DisEnableStatusEnum.DISABLE, smsConfig.getStatus(), "请先启用所选配置");
         baseMapper.lambdaUpdate().eq(SmsConfigDO::getIsDefault, true).set(SmsConfigDO::getIsDefault, false).update();
         baseMapper.lambdaUpdate().eq(SmsConfigDO::getId, id).set(SmsConfigDO::getIsDefault, true).update();
     }

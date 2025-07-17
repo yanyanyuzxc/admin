@@ -16,25 +16,23 @@
 
 package top.continew.admin.tenant.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alicp.jetcache.anno.Cached;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import me.ahoo.cosid.provider.IdGeneratorProvider;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.system.model.entity.MenuDO;
+import top.continew.admin.system.service.MenuService;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
 import top.continew.admin.tenant.handler.TenantDataHandler;
 import top.continew.admin.tenant.mapper.TenantMapper;
-import top.continew.admin.tenant.model.entity.PackageDO;
 import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.query.TenantQuery;
 import top.continew.admin.tenant.model.req.TenantReq;
-import top.continew.admin.tenant.model.resp.TenantAvailableResp;
 import top.continew.admin.tenant.model.resp.TenantDetailResp;
 import top.continew.admin.tenant.model.resp.TenantResp;
 import top.continew.admin.tenant.service.PackageMenuService;
@@ -42,12 +40,12 @@ import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
-import top.continew.starter.extension.crud.model.entity.BaseIdDO;
 import top.continew.starter.extension.tenant.TenantHandler;
 import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,17 +60,18 @@ import java.util.List;
 public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, TenantResp, TenantDetailResp, TenantQuery, TenantReq> implements TenantService {
 
     private final TenantProperties tenantProperties;
-    private final IdGeneratorProvider idGeneratorProvider;
-    private final PackageMenuService packageMenuService;
     private final PackageService packageService;
+    private final IdGeneratorProvider idGeneratorProvider;
     private final TenantDataHandler tenantDataHandler;
+    private final PackageMenuService packageMenuService;
+    private final MenuService menuService;
 
     @Override
     public Long create(TenantReq req) {
         this.checkNameRepeat(req.getName(), null);
-        // 检查租户套餐
-        List<Long> menuIds = packageMenuService.listMenuIdsByPackageId(req.getPackageId());
-        CheckUtils.throwIfEmpty(menuIds, "所选套餐无可用菜单");
+        this.checkDomainRepeat(req.getDomain(), null);
+        // 检查套餐
+        packageService.checkStatus(req.getPackageId());
         // 生成租户编码
         req.setCode(this.generateCode());
         // 新增信息
@@ -86,6 +85,12 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     @Override
     public void beforeUpdate(TenantReq req, Long id) {
         this.checkNameRepeat(req.getName(), id);
+        this.checkDomainRepeat(req.getDomain(), id);
+        TenantDO tenant = super.getById(id);
+        // 变更套餐
+        if (!tenant.getPackageId().equals(req.getPackageId())) {
+            packageService.checkStatus(req.getPackageId());
+        }
     }
 
     @Override
@@ -114,30 +119,63 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     }
 
     @Override
-    public void checkStatus(Long id) {
-        TenantDO tenant = this.getById(id);
-        if (!tenantProperties.isEnabled() || id.equals(tenantProperties.getSuperTenantId())) {
-            return;
-        }
-        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE, tenant.getStatus(), "此租户已被禁用");
-        CheckUtils.throwIf(tenant.getExpireTime() != null && tenant.getExpireTime()
-            .isBefore(LocalDateTime.now()), "此租户已过期");
-        // 检查套餐
-        PackageDO tenantPackage = packageService.getById(tenant.getPackageId());
-        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE, tenantPackage.getStatus(), "此租户套餐已被禁用");
+    public TenantDO getByDomain(String domain) {
+        return baseMapper.lambdaQuery().eq(TenantDO::getDomain, domain).oneOpt().orElse(null);
     }
 
     @Override
-    public List<TenantAvailableResp> getAvailableList() {
-        List<TenantDO> tenantList = baseMapper.selectList(Wrappers.lambdaQuery(TenantDO.class)
-            .select(TenantDO::getName, BaseIdDO::getId, TenantDO::getDomain)
-            .eq(TenantDO::getStatus, DisEnableStatusEnum.ENABLE)
-            .and(t -> t.isNull(TenantDO::getExpireTime).or().ge(TenantDO::getExpireTime, DateUtil.date())));
-        return BeanUtil.copyToList(tenantList, TenantAvailableResp.class);
+    public TenantDO getByCode(String code) {
+        return baseMapper.lambdaQuery().eq(TenantDO::getCode, code).oneOpt().orElse(null);
+    }
+
+    @Override
+    public void checkStatus(Long id) {
+        TenantDO tenant = this.getById(id);
+        if (id.equals(tenantProperties.getSuperTenantId())) {
+            return;
+        }
+        CheckUtils.throwIfEqual(DisEnableStatusEnum.DISABLE, tenant.getStatus(), "租户已被禁用");
+        CheckUtils.throwIf(tenant.getExpireTime() != null && tenant.getExpireTime()
+            .isBefore(LocalDateTime.now()), "租户已过期");
+        // 检查套餐
+        packageService.checkStatus(tenant.getPackageId());
+    }
+
+    @Override
+    public void updateTenantMenu(List<Long> newMenuIds, Long packageId) {
+        List<Long> tenantIdList = this.listIdByPackageId(packageId);
+        if (CollUtil.isEmpty(tenantIdList)) {
+            return;
+        }
+        List<Long> oldMenuIds = packageMenuService.listMenuIdsByPackageId(packageId);
+        // 如果有删除的菜单则绑定了套餐的租户对应的菜单也会删除
+        List<Long> deleteMenuIds = new ArrayList<>(oldMenuIds);
+        deleteMenuIds.removeAll(newMenuIds);
+        if (CollUtil.isNotEmpty(deleteMenuIds)) {
+            List<MenuDO> deleteMenus = menuService.listByIds(deleteMenuIds);
+            tenantIdList.forEach(tenantId ->  SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> menuService
+                .deleteTenantMenus(deleteMenus)));
+        }
+        // 如果有新增的菜单则绑定了套餐的租户对应的菜单也会新增
+        List<Long> addMenuIds = new ArrayList<>(newMenuIds);
+        addMenuIds.removeAll(oldMenuIds);
+        if (CollUtil.isNotEmpty(addMenuIds)) {
+            List<MenuDO> addMenus = menuService.listByIds(addMenuIds);
+            for (MenuDO addMenu : addMenus) {
+                MenuDO parentMenu = addMenu.getParentId() != 0 ? menuService.getById(addMenu.getParentId()) : null;
+                tenantIdList.forEach(tenantId ->  SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> menuService
+                    .addTenantMenu(addMenu, parentMenu)));
+            }
+        }
+    }
+
+    @Override
+    public Long countByPackageIds(List<Long> packageIds) {
+        return baseMapper.lambdaQuery().in(TenantDO::getPackageId, packageIds).count();
     }
 
     /**
-     * 名称是否存在
+     * 检查名称是否重复
      *
      * @param name 名称
      * @param id   ID
@@ -147,6 +185,19 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
             .eq(TenantDO::getName, name)
             .ne(id != null, TenantDO::getId, id)
             .exists(), "名称为 [{}] 的租户已存在", name);
+    }
+
+    /**
+     * 检查绑定域名是否重复
+     *
+     * @param domain 绑定域名
+     * @param id     ID
+     */
+    private void checkDomainRepeat(String domain, Long id) {
+        CheckUtils.throwIf(baseMapper.lambdaQuery()
+            .eq(TenantDO::getDomain, domain)
+            .ne(id != null, TenantDO::getId, id)
+            .exists(), "绑定域名为 [{}] 的租户已存在", domain);
     }
 
     /**
@@ -160,5 +211,21 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
             code = idGeneratorProvider.getRequired(TenantConstants.CODE_GENERATOR_KEY).generateAsString();
         } while (baseMapper.lambdaQuery().eq(TenantDO::getCode, code).exists());
         return code;
+    }
+
+    /**
+     * 根据套餐 ID 查询租户 ID 列表
+     *
+     * @param id 套餐 ID
+     * @return 租户 ID 列表
+     */
+    private List<Long> listIdByPackageId(Long id) {
+        return baseMapper.lambdaQuery()
+            .select(TenantDO::getId)
+            .eq(TenantDO::getPackageId, id)
+            .list()
+            .stream()
+            .map(TenantDO::getId)
+            .toList();
     }
 }

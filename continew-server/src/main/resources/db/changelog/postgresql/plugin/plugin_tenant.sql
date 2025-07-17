@@ -22,13 +22,12 @@ CREATE TABLE IF NOT EXISTS "tenant" (
 CREATE UNIQUE INDEX "uk_tenant_code" ON "tenant" ("code");
 CREATE INDEX "idx_tenant_admin_user" ON "tenant" ("admin_user");
 CREATE INDEX "idx_tenant_package_id" ON "tenant" ("package_id");
-CREATE INDEX "idx_tenant_datasource_id" ON "tenant" ("datasource_id");
 CREATE INDEX "idx_tenant_create_user" ON "tenant" ("create_user");
 CREATE INDEX "idx_tenant_update_user" ON "tenant" ("update_user");
 COMMENT ON COLUMN "tenant"."id" IS 'ID';
 COMMENT ON COLUMN "tenant"."name" IS '名称';
 COMMENT ON COLUMN "tenant"."code" IS '编码';
-COMMENT ON COLUMN "tenant"."domain" IS '域名';
+COMMENT ON COLUMN "tenant"."domain" IS '绑定域名';
 COMMENT ON COLUMN "tenant"."expire_time" IS '过期时间';
 COMMENT ON COLUMN "tenant"."description" IS '描述';
 COMMENT ON COLUMN "tenant"."status" IS '状态（1：启用；2：禁用）';

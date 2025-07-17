@@ -20,7 +20,6 @@ import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.query.TenantQuery;
 import top.continew.admin.tenant.model.req.TenantReq;
-import top.continew.admin.tenant.model.resp.TenantAvailableResp;
 import top.continew.admin.tenant.model.resp.TenantDetailResp;
 import top.continew.admin.tenant.model.resp.TenantResp;
 import top.continew.starter.data.service.IService;
@@ -37,6 +36,22 @@ import java.util.List;
 public interface TenantService extends BaseService<TenantResp, TenantDetailResp, TenantQuery, TenantReq>, IService<TenantDO> {
 
     /**
+     * 根据绑定域名查询
+     *
+     * @param domain 绑定域名
+     * @return 租户信息
+     */
+    TenantDO getByDomain(String domain);
+
+    /**
+     * 根据编码查询
+     *
+     * @param code 编码
+     * @return 租户信息
+     */
+    TenantDO getByCode(String code);
+
+    /**
      * 检查租户状态
      *
      * @param id ID
@@ -44,7 +59,18 @@ public interface TenantService extends BaseService<TenantResp, TenantDetailResp,
     void checkStatus(Long id);
 
     /**
-     * 获取所有可用的租户列表
+     * 更新租户菜单
+     *
+     * @param newMenuIds 新菜单 ID 列表
+     * @param packageId  套餐 ID
      */
-    List<TenantAvailableResp> getAvailableList();
+    void updateTenantMenu(List<Long> newMenuIds, Long packageId);
+
+    /**
+     * 根据套餐 ID 查询数量
+     *
+     * @param packageIds 套餐 ID 列表
+     * @return 租户数量
+     */
+    Long countByPackageIds(List<Long> packageIds);
 }

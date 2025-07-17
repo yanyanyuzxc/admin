@@ -14,39 +14,30 @@
  * limitations under the License.
  */
 
-package top.continew.admin.common.config;
+package top.continew.admin.common.base.model.entity;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-import top.continew.starter.core.constant.PropertiesConstants;
 
-import java.util.List;
+import java.io.Serial;
 
 /**
- * 租户扩展配置属性
+ * 租户实体类基类
  *
- * @author 小熊
+ * <p>
+ * 通用字段：ID、创建人、创建时间、修改人、修改时间、租户 ID
+ * </p>
+ *
  * @author Charles7c
- * @since 2024/11/29 12:05
+ * @since 2025/7/17 20:20
  */
 @Data
-@Component
-@ConfigurationProperties(prefix = PropertiesConstants.TENANT)
-public class TenantExtensionProperties {
+public class TenantBaseDO extends BaseDO {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 是否启用
+     * 租户 ID
      */
-    private boolean enabled;
-
-    /**
-     * 请求头中租户编码键名
-     */
-    private String tenantCodeHeader;
-
-    /**
-     * 忽略菜单 ID（租户不能使用的菜单）
-     */
-    private List<Long> ignoreMenus;
+    private Long tenantId;
 }

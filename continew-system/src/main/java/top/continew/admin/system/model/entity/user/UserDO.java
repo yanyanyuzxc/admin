@@ -20,11 +20,11 @@ import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.continew.admin.common.base.model.entity.TenantBaseDO;
 import top.continew.admin.common.config.mybatis.BCryptEncryptor;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
 import top.continew.starter.extension.crud.annotation.DictModel;
-import top.continew.admin.common.base.model.entity.BaseDO;
 import top.continew.starter.security.crypto.annotation.FieldEncrypt;
 
 import java.io.Serial;
@@ -39,7 +39,7 @@ import java.time.LocalDateTime;
 @Data
 @DictModel(labelKey = "nickname", extraKeys = {"username"})
 @TableName("sys_user")
-public class UserDO extends BaseDO {
+public class UserDO extends TenantBaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -108,10 +108,4 @@ public class UserDO extends BaseDO {
      * 部门 ID
      */
     private Long deptId;
-
-    /**
-     * 租户 ID
-     */
-    @TableField(select = false)
-    private Long tenantId;
 }

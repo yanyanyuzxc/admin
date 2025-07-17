@@ -155,7 +155,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
             return;
         }
         // 启用状态才能设为默认存储
-        CheckUtils.throwIfNotEqual(DisEnableStatusEnum.ENABLE, storage.getStatus(), "请先启用所选存储");
+        CheckUtils.throwIfEqual(DisEnableStatusEnum.DISABLE, storage.getStatus(), "请先启用所选存储");
         baseMapper.lambdaUpdate().eq(StorageDO::getIsDefault, true).set(StorageDO::getIsDefault, false).update();
         baseMapper.lambdaUpdate().eq(StorageDO::getId, id).set(StorageDO::getIsDefault, true).update();
     }

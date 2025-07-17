@@ -49,7 +49,7 @@ public class TenantDO extends BaseDO {
     private String code;
 
     /**
-     * 域名
+     * 绑定域名
      */
     private String domain;
 

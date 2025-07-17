@@ -38,6 +38,7 @@ import top.continew.admin.system.service.*;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
+import top.continew.starter.extension.tenant.annotation.TenantIgnore;
 import top.continew.starter.log.annotation.Log;
 
 import java.io.IOException;
@@ -111,6 +112,7 @@ public class CommonController {
         return dictItemService.listByDictCode(code);
     }
 
+    @TenantIgnore
     @SaIgnore
     @Operation(summary = "查询系统配置参数", description = "查询系统配置参数")
     @GetMapping("/dict/option/site")

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `tenant` (
     `id`          bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',
     `name`        varchar(30)  NOT NULL                    COMMENT '名称',
     `code`        varchar(30)  NOT NULL                    COMMENT '编码',
-    `domain`      varchar(255) DEFAULT NULL                COMMENT '域名',
+    `domain`      varchar(255) DEFAULT NULL                COMMENT '绑定域名',
     `expire_time` datetime     DEFAULT NULL                COMMENT '过期时间',
     `description` varchar(200) DEFAULT NULL                COMMENT '描述',
     `status`      tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态（1：启用；2：禁用）',

@@ -54,10 +54,11 @@ public class TenantReq implements Serializable {
     private String name;
 
     /**
-     * 域名
+     * 绑定域名
      */
-    @Schema(description = "域名", example = "https://T0sL6RWv0vFh.continew.top/")
-    @Length(max = 255, message = "域名长度不能超过 {max} 个字符")
+    @Schema(description = "绑定域名", example = "https://T0sL6RWv0vFh.continew.top/")
+    @Length(max = 255, message = "绑定域名长度不能超过 {max} 个字符")
+    @Pattern(regexp = RegexConstants.HTTP_HOST, message = "绑定域名格式不正确")
     private String domain;
 
     /**

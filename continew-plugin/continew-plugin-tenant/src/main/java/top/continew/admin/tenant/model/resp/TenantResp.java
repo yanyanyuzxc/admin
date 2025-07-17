@@ -61,10 +61,10 @@ public class TenantResp extends BaseDetailResp {
     private String code;
 
     /**
-     * 域名
+     * 绑定域名
      */
-    @Schema(description = "域名", example = "https://T0sL6RWv0vFh.continew.top/")
-    @ExcelProperty(value = "域名", order = 4)
+    @Schema(description = "绑定域名", example = "https://T0sL6RWv0vFh.continew.top/")
+    @ExcelProperty(value = "绑定域名", order = 4)
     private String domain;
 
     /**

@@ -16,27 +16,23 @@
 
 package top.continew.admin.tenant.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.extra.spring.SpringUtil;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.base.service.BaseServiceImpl;
-import top.continew.admin.system.model.entity.MenuDO;
-import top.continew.admin.system.service.MenuService;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.tenant.mapper.PackageMapper;
-import top.continew.admin.tenant.mapper.TenantMapper;
 import top.continew.admin.tenant.model.entity.PackageDO;
-import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.query.PackageQuery;
 import top.continew.admin.tenant.model.req.PackageReq;
 import top.continew.admin.tenant.model.resp.PackageDetailResp;
 import top.continew.admin.tenant.model.resp.PackageResp;
 import top.continew.admin.tenant.service.PackageMenuService;
 import top.continew.admin.tenant.service.PackageService;
+import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.core.util.validation.CheckUtils;
-import top.continew.starter.extension.tenant.TenantHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,8 +47,9 @@ import java.util.List;
 public class PackageServiceImpl extends BaseServiceImpl<PackageMapper, PackageDO, PackageResp, PackageDetailResp, PackageQuery, PackageReq> implements PackageService {
 
     private final PackageMenuService packageMenuService;
-    private final MenuService menuService;
-    private final TenantMapper tenantMapper;
+    @Lazy
+    @Resource
+    private TenantService tenantService;
 
     @Override
     public Long create(PackageReq req) {
@@ -75,42 +72,18 @@ public class PackageServiceImpl extends BaseServiceImpl<PackageMapper, PackageDO
             return;
         }
         // 更新租户菜单
-        List<Long> tenantIdList = tenantMapper.lambdaQuery()
-            .select(TenantDO::getId)
-            .eq(TenantDO::getPackageId, id)
-            .list()
-            .stream()
-            .map(TenantDO::getId)
-            .toList();
-        if (CollUtil.isEmpty(tenantIdList)) {
-            return;
-        }
-        List<Long> oldMenuIds = packageMenuService.listMenuIdsByPackageId(id);
-        List<Long> newMenuIds = req.getMenuIds();
-        // 如果有删除的菜单则绑定了套餐的租户对应的菜单也会删除
-        List<Long> deleteMenuIds = new ArrayList<>(oldMenuIds);
-        deleteMenuIds.removeAll(newMenuIds);
-        if (CollUtil.isNotEmpty(deleteMenuIds)) {
-            List<MenuDO> deleteMenus = menuService.listByIds(deleteMenuIds);
-            tenantIdList.forEach(tenantId -> SpringUtil.getBean(TenantHandler.class)
-                .execute(tenantId, () -> menuService.deleteTenantMenus(deleteMenus)));
-        }
-        // 如果有新增的菜单则绑定了套餐的租户对应的菜单也会新增
-        List<Long> addMenuIds = new ArrayList<>(newMenuIds);
-        addMenuIds.removeAll(oldMenuIds);
-        if (CollUtil.isNotEmpty(addMenuIds)) {
-            List<MenuDO> addMenus = menuService.listByIds(addMenuIds);
-            for (MenuDO addMenu : addMenus) {
-                MenuDO parentMenu = addMenu.getParentId() != 0 ? menuService.getById(addMenu.getParentId()) : null;
-                tenantIdList.forEach(tenantId -> SpringUtil.getBean(TenantHandler.class)
-                    .execute(tenantId, () -> menuService.addTenantMenu(addMenu, parentMenu)));
-            }
-        }
+        tenantService.updateTenantMenu(req.getMenuIds(), id);
     }
 
     @Override
     public void beforeDelete(List<Long> ids) {
-        CheckUtils.throwIf(tenantMapper.lambdaQuery().in(TenantDO::getPackageId, ids).exists(), "所选套餐存在关联租户，不允许删除");
+        CheckUtils.throwIf(tenantService.countByPackageIds(ids) > 0, "所选套餐存在关联租户，不允许删除");
+    }
+
+    @Override
+    public void checkStatus(Long id) {
+        PackageDO entity = this.getById(id);
+        CheckUtils.throwIfEqual(DisEnableStatusEnum.DISABLE, entity.getStatus(), "租户套餐已被禁用");
     }
 
     /**

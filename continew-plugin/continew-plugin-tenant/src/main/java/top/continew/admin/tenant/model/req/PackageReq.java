@@ -18,13 +18,13 @@ package top.continew.admin.tenant.model.req;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,5 +78,6 @@ public class PackageReq implements Serializable {
      * 关联的菜单 ID 列表
      */
     @Schema(description = "关联的菜单 ID 列表", example = "[1000, 1010, 1011]")
-    private List<Long> menuIds = new ArrayList<>();
+    @NotEmpty(message = "关联菜单不能为空")
+    private List<Long> menuIds;
 }

@@ -40,10 +40,10 @@ import java.util.List;
 @Tag(name = "公共 API")
 @Log(ignore = true)
 @Validated
-@RestController
 @RequiredArgsConstructor
+@RestController("tenantCommonController")
 @RequestMapping("/tenant/common")
-public class TenantCommonController {
+public class CommonController {
 
     private final PackageService packageService;
 

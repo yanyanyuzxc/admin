@@ -175,7 +175,7 @@ logging:
 --- ### 链路追踪配置
 continew-starter.trace:
   enabled: true
-  trace-id-name: traceId
+  trace-id-name: X-Trace-Id
   ## TLog 配置
   tlog:
     enable-invoke-time-print: false
@@ -202,24 +202,27 @@ continew-starter.tenant:
   enabled: true
   # 隔离级别（默认：LINE，行级）
   isolation-level: LINE
-  # 超级/默认租户 ID
+  # 超级/默认租户 ID：超管用户所在租户（默认：0）
   super-tenant-id: 0
+  # 请求头中租户 ID 键名
+  tenant-id-header: X-Tenant-Id
+  # 请求头中租户编码键名
+  tenant-code-header: X-Tenant-Code
   # 忽略表（忽略拼接租户条件）
   ignore-tables:
-    - gen_config # 代码生成
-    - gen_field_config
+    - tenant # 租户表
+    - tenant_package # 租户套餐表
+    - tenant_package_menu # 租户套餐与菜单关联表
+    - gen_config # 代码生成配置表
+    - gen_field_config # 代码生成字段配置表
     - sys_dict # 字典表
-    - sys_dict_item
-    - sys_option # 参数
-    - sys_storage # 存储配置
-    - tenant # 租户
-    - tenant_package
-    - tenant_package_menu
-    - tenant_datasource
-    - sys_client # 客户端管理
-    - sys_sms_config
-    - sys_sms_log
-    - sys_app # 应用
+    - sys_dict_item # 字典项表
+    - sys_option # 参数表
+    - sys_storage # 存储表
+    - sys_sms_config # 短信配置表
+    - sys_sms_log # 短信日志表
+    - sys_client # 客户端表
+    - sys_app # 应用表
   # 忽略菜单 ID（租户不能使用的菜单）
   ignore-menus:
     - 1130 # 字典管理
@@ -229,7 +232,7 @@ continew-starter.tenant:
     - 3000 # 租户管理
     - 7000 # 能力开放
     - 8000 # 任务调度
-    - 9000 # 代码生成
+    - 9000 # 开发工具
 
 --- ### 限流器配置
 continew-starter:

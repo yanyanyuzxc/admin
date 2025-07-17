@@ -29,13 +29,13 @@ import org.springframework.stereotype.Service;
 import top.continew.admin.auth.model.query.OnlineUserQuery;
 import top.continew.admin.auth.model.resp.OnlineUserResp;
 import top.continew.admin.auth.service.OnlineUserService;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.context.UserExtraContext;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
-import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 import top.continew.starter.extension.tenant.context.TenantContextHolder;
 
 import java.time.LocalDateTime;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OnlineUserServiceImpl implements OnlineUserService {
 
-    private final TenantProperties tenantProperties;
+    private final TenantExtensionProperties tenantExtensionProperties;
 
     @Override
     @AutoOperate(type = OnlineUserResp.class, on = "list")
@@ -92,8 +92,8 @@ public class OnlineUserServiceImpl implements OnlineUserService {
                 .isMatchClientId(query.getClientId(), userContext)) {
                 continue;
             }
-            //租户数据过滤
-            if (tenantProperties.isEnabled()) {
+            // 只显示本租户数据
+            if (tenantExtensionProperties.isEnabled()) {
                 if (!TenantContextHolder.getTenantId().equals(userContext.getTenantId())) {
                     continue;
                 }

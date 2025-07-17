@@ -21,6 +21,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
@@ -53,10 +54,10 @@ import java.util.Optional;
 public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptResp, DeptResp, DeptQuery, DeptReq> implements DeptService {
 
     private final RoleDeptService roleDeptService;
+    private final DataSource dataSource;
+    @Lazy
     @Resource
     private UserService userService;
-    @Resource
-    private DataSource dataSource;
 
     @Override
     public void beforeCreate(DeptReq req) {

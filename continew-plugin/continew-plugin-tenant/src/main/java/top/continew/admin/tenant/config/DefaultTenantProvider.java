@@ -17,13 +17,17 @@
 package top.continew.admin.tenant.config;
 
 import cn.hutool.core.util.StrUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import top.continew.admin.common.config.TenantExtensionProperties;
+import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.service.TenantService;
+import top.continew.starter.core.util.ServletUtils;
+import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 import top.continew.starter.extension.tenant.config.TenantProvider;
 import top.continew.starter.extension.tenant.context.TenantContext;
-import top.continew.starter.extension.tenant.enums.TenantIsolationLevel;
 
 /**
  * 默认租户提供者
@@ -37,21 +41,38 @@ import top.continew.starter.extension.tenant.enums.TenantIsolationLevel;
 public class DefaultTenantProvider implements TenantProvider {
 
     private final TenantProperties tenantProperties;
+    private final TenantExtensionProperties tenantExtensionProperties;
     private final TenantService tenantService;
 
     @Override
     public TenantContext getByTenantId(String tenantIdAsString, boolean verify) {
         TenantContext context = new TenantContext();
-        context.setIsolationLevel(TenantIsolationLevel.LINE);
-        // 超级租户
         Long superTenantId = tenantProperties.getSuperTenantId();
-        if (StrUtil.isBlank(tenantIdAsString) || superTenantId.toString().equals(tenantIdAsString)) {
-            context.setTenantId(superTenantId);
+        context.setTenantId(superTenantId);
+        // 超级租户
+        if (superTenantId.toString().equals(tenantIdAsString)) {
             return context;
         }
-        // 获取租户信息
-        Long tenantId = Long.valueOf(tenantIdAsString);
-        tenantService.checkStatus(tenantId);
+        Long tenantId;
+        // 未指定租户
+        if (StrUtil.isBlank(tenantIdAsString)) {
+            // 检查是否指定了租户编码（登录相关接口）
+            HttpServletRequest request = ServletUtils.getRequest();
+            String tenantCode = request.getHeader(tenantExtensionProperties.getTenantCodeHeader());
+            if (StrUtil.isBlank(tenantCode)) {
+                return context;
+            }
+            TenantDO tenant = tenantService.getByCode(tenantCode);
+            CheckUtils.throwIfNull(tenant, "编码为 [%s] 的租户不存在".formatted(tenantCode));
+            tenantId = tenant.getId();
+        } else {
+            // 指定租户
+            tenantId = Long.parseLong(tenantIdAsString);
+        }
+        // 检查租户状态
+        if (verify) {
+            tenantService.checkStatus(tenantId);
+        }
         context.setTenantId(tenantId);
         return context;
     }
