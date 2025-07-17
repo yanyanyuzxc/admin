@@ -23,7 +23,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +41,8 @@ import top.continew.admin.system.service.UserService;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.StrUtils;
-import top.continew.starter.extension.tenant.TenantHandler;
 import top.continew.starter.extension.tenant.context.TenantContextHolder;
+import top.continew.starter.extension.tenant.util.TenantUtils;
 import top.continew.starter.log.dao.LogDao;
 import top.continew.starter.log.model.LogRecord;
 import top.continew.starter.log.model.LogRequest;
@@ -89,7 +88,7 @@ public class LogDaoLocalImpl implements LogDao {
         // 设置操作人
         this.setCreateUser(logDO, logRequest, logResponse);
         Long tenantId = TenantContextHolder.getTenantId();
-        SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> logMapper.insert(logDO));
+        TenantUtils.execute(tenantId, () -> logMapper.insert(logDO));
     }
 
     /**

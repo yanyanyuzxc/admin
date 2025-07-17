@@ -17,7 +17,6 @@
 package top.continew.admin.tenant.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.alicp.jetcache.anno.Cached;
 import lombok.RequiredArgsConstructor;
 import me.ahoo.cosid.provider.IdGeneratorProvider;
@@ -40,8 +39,8 @@ import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
-import top.continew.starter.extension.tenant.TenantHandler;
 import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
+import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -103,7 +102,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     public void beforeDelete(List<Long> ids) {
         // 在租户中执行数据清除
         for (Long id : ids) {
-            SpringUtil.getBean(TenantHandler.class).execute(id, tenantDataHandler::clear);
+            TenantUtils.execute(id, tenantDataHandler::clear);
         }
     }
 
@@ -153,7 +152,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
         deleteMenuIds.removeAll(newMenuIds);
         if (CollUtil.isNotEmpty(deleteMenuIds)) {
             List<MenuDO> deleteMenus = menuService.listByIds(deleteMenuIds);
-            tenantIdList.forEach(tenantId ->  SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> menuService
+            tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> menuService
                 .deleteTenantMenus(deleteMenus)));
         }
         // 如果有新增的菜单则绑定了套餐的租户对应的菜单也会新增
@@ -163,7 +162,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
             List<MenuDO> addMenus = menuService.listByIds(addMenuIds);
             for (MenuDO addMenu : addMenus) {
                 MenuDO parentMenu = addMenu.getParentId() != 0 ? menuService.getById(addMenu.getParentId()) : null;
-                tenantIdList.forEach(tenantId ->  SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> menuService
+                tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> menuService
                     .addTenantMenu(addMenu, parentMenu)));
             }
         }

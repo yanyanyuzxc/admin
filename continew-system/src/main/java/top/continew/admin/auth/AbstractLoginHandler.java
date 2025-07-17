@@ -19,7 +19,6 @@ package top.continew.admin.auth;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.stp.parameter.SaLoginParameter;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -40,8 +39,8 @@ import top.continew.admin.system.service.UserService;
 import top.continew.starter.core.util.ServletUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.core.util.validation.Validator;
-import top.continew.starter.extension.tenant.TenantHandler;
 import top.continew.starter.extension.tenant.context.TenantContextHolder;
+import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -97,14 +96,14 @@ public abstract class AbstractLoginHandler<T extends LoginReq> implements LoginH
         Long tenantId = TenantContextHolder.getTenantId();
         CompletableFuture<Set<String>> permissionFuture = CompletableFuture.supplyAsync(() -> {
             Set<String> permissions = new HashSet<>();
-            SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> {
+            TenantUtils.execute(tenantId, () -> {
                 permissions.addAll(roleService.listPermissionByUserId(userId));
             });
             return permissions;
         }, threadPoolTaskExecutor);
         CompletableFuture<Set<RoleContext>> roleFuture = CompletableFuture.supplyAsync(() -> {
             Set<RoleContext> roles = new HashSet<>();
-            SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> {
+            TenantUtils.execute(tenantId, () -> {
                 roles.addAll(roleService.listByUserId(userId));
             });
             return roles;

@@ -19,16 +19,14 @@ package top.continew.admin.config.satoken;
 import cn.dev33.satoken.fun.SaParamFunction;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.extra.servlet.JakartaServletUtil;
-import cn.hutool.json.JSONUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
+import top.continew.starter.core.util.ServletUtils;
 import top.continew.starter.extension.tenant.context.TenantContextHolder;
 import top.continew.starter.web.model.R;
 
@@ -59,12 +57,13 @@ public class SaExtensionInterceptor extends SaInterceptor {
             return true;
         }
         // 检查用户租户权限
-        Long userTenantId = userContext.getTenantId();
-        Long tenantId = TenantContextHolder.getTenantId();
-        if (!userTenantId.equals(tenantId)) {
-            JakartaServletUtil.write(response, JSONUtil.toJsonStr(R.fail(String.valueOf(HttpStatus.FORBIDDEN
-                .value()), "您当前没有访问该租户的权限")), MediaType.APPLICATION_JSON_VALUE);
-            return false;
+        if (TenantContextHolder.isTenantEnabled()) {
+            Long userTenantId = userContext.getTenantId();
+            Long tenantId = TenantContextHolder.getTenantId();
+            if (!userTenantId.equals(tenantId)) {
+                ServletUtils.writeJSON(response, R.fail(String.valueOf(HttpStatus.FORBIDDEN.value()), "您当前没有访问该租户的权限"));
+                return false;
+            }
         }
         UserContextHolder.getExtraContext();
         return true;

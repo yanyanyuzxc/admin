@@ -17,21 +17,22 @@
 package top.continew.admin.common.config.mybatis;
 
 import cn.hutool.core.convert.Convert;
+import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.starter.extension.datapermission.enums.DataScope;
-import top.continew.starter.extension.datapermission.filter.DataPermissionUserContextProvider;
-import top.continew.starter.extension.datapermission.model.RoleContext;
-import top.continew.starter.extension.datapermission.model.UserContext;
+import top.continew.starter.extension.datapermission.filter.DataPermissionUserDataProvider;
+import top.continew.starter.extension.datapermission.model.RoleData;
+import top.continew.starter.extension.datapermission.model.UserData;
 
 import java.util.stream.Collectors;
 
 /**
- * 数据权限用户上下文提供者
+ * 数据权限用户数据提供者
  *
  * @author Charles7c
  * @since 2023/12/21 21:19
  */
-public class DefaultDataPermissionUserContextProvider implements DataPermissionUserContextProvider {
+public class DefaultDataPermissionUserDataProvider implements DataPermissionUserDataProvider {
 
     @Override
     public boolean isFilter() {
@@ -39,15 +40,15 @@ public class DefaultDataPermissionUserContextProvider implements DataPermissionU
     }
 
     @Override
-    public UserContext getUserContext() {
-        top.continew.admin.common.context.UserContext context = UserContextHolder.getContext();
-        UserContext userContext = new UserContext();
-        userContext.setUserId(Convert.toStr(context.getId()));
-        userContext.setDeptId(Convert.toStr(context.getDeptId()));
-        userContext.setRoles(context.getRoles()
+    public UserData getUserData() {
+        UserContext userContext = UserContextHolder.getContext();
+        UserData userData = new UserData();
+        userData.setUserId(Convert.toStr(userContext.getId()));
+        userData.setDeptId(Convert.toStr(userContext.getDeptId()));
+        userData.setRoles(userContext.getRoles()
             .stream()
-            .map(r -> new RoleContext(Convert.toStr(r.getId()), DataScope.valueOf(r.getDataScope().name())))
+            .map(r -> new RoleData(Convert.toStr(r.getId()), DataScope.valueOf(r.getDataScope().name())))
             .collect(Collectors.toSet()));
-        return userContext;
+        return userData;
     }
 }

@@ -36,11 +36,6 @@ import java.util.List;
 public class TenantExtensionProperties {
 
     /**
-     * 是否启用
-     */
-    private boolean enabled;
-
-    /**
      * 请求头中租户编码键名
      */
     private String tenantCodeHeader;

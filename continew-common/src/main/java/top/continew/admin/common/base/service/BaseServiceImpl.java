@@ -16,6 +16,8 @@
 
 package top.continew.admin.common.base.service;
 
+import cn.crane4j.core.support.OperateTemplate;
+import cn.hutool.extra.spring.SpringUtil;
 import top.continew.starter.data.mapper.BaseMapper;
 import top.continew.starter.extension.crud.model.entity.BaseIdDO;
 import top.continew.starter.extension.crud.service.CrudServiceImpl;
@@ -38,4 +40,18 @@ import top.continew.starter.extension.crud.service.CrudServiceImpl;
  * @since 2024/12/6 20:30
  */
 public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseIdDO, L, D, Q, C> extends CrudServiceImpl<M, T, L, D, Q, C> implements BaseService<L, D, Q, C> {
+
+    /**
+     * 填充数据
+     *
+     * @param obj 待填充信息
+     */
+    @Override
+    protected void fill(Object obj) {
+        if (obj == null) {
+            return;
+        }
+        OperateTemplate operateTemplate = SpringUtil.getBean(OperateTemplate.class);
+        operateTemplate.execute(obj);
+    }
 }

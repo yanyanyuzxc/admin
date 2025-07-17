@@ -17,7 +17,6 @@
 package top.continew.admin.tenant.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.extra.spring.SpringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -42,7 +41,7 @@ import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
-import top.continew.starter.extension.tenant.TenantHandler;
+import top.continew.starter.extension.tenant.util.TenantUtils;
 
 /**
  * 租户管理 API
@@ -65,7 +64,7 @@ public class TenantController extends BaseController<TenantService, TenantResp, 
     public void updateAdminUserPwd(@Valid @RequestBody TenantAdminUserPwdUpdateReq req, @PathVariable Long id) {
         TenantDO tenant = baseService.getById(id);
         String encryptPassword = req.getPassword();
-        SpringUtil.getBean(TenantHandler.class).execute(id, () -> {
+        TenantUtils.execute(id, () -> {
             UserDO user = userService.getById(tenant.getAdminUser());
             String password = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(encryptPassword));
             ValidationUtils.throwIfNull(password, "新密码解密失败");

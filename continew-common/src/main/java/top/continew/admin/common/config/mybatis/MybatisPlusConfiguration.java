@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import top.continew.starter.extension.datapermission.filter.DataPermissionUserContextProvider;
+import top.continew.starter.extension.datapermission.filter.DataPermissionUserDataProvider;
 
 /**
  * MyBatis Plus 配置
@@ -40,11 +41,11 @@ public class MybatisPlusConfiguration {
     }
 
     /**
-     * 数据权限用户上下文提供者
+     * 数据权限用户数据提供者
      */
     @Bean
-    public DataPermissionUserContextProvider dataPermissionUserContextProvider() {
-        return new DefaultDataPermissionUserContextProvider();
+    public DataPermissionUserDataProvider dataPermissionUserDataProvider() {
+        return new DefaultDataPermissionUserDataProvider();
     }
 
     /**

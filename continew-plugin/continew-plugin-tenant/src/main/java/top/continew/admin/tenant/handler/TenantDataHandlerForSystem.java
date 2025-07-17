@@ -19,7 +19,6 @@ package top.continew.admin.tenant.handler;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,7 @@ import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.entity.BaseIdDO;
-import top.continew.starter.extension.tenant.TenantHandler;
+import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -90,7 +89,7 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
     @Transactional(rollbackFor = Exception.class)
     public void init(TenantReq tenant) {
         Long tenantId = tenant.getId();
-        SpringUtil.getBean(TenantHandler.class).execute(tenantId, () -> {
+        TenantUtils.execute(tenantId, () -> {
             // 初始化部门
             Long deptId = this.initDeptData(tenant);
             // 初始化菜单
