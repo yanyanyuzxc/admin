@@ -19,13 +19,10 @@ package top.continew.admin.tenant.config;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.core.util.ServletUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
-import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 import top.continew.starter.extension.tenant.config.TenantProvider;
 import top.continew.starter.extension.tenant.context.TenantContext;
 
@@ -36,21 +33,19 @@ import top.continew.starter.extension.tenant.context.TenantContext;
  * @author Charles7c
  * @since 2024/12/12 15:35
  */
-@Service
 @RequiredArgsConstructor
 public class DefaultTenantProvider implements TenantProvider {
 
-    private final TenantProperties tenantProperties;
     private final TenantExtensionProperties tenantExtensionProperties;
     private final TenantService tenantService;
 
     @Override
     public TenantContext getByTenantId(String tenantIdAsString, boolean verify) {
         TenantContext context = new TenantContext();
-        Long superTenantId = tenantProperties.getSuperTenantId();
-        context.setTenantId(superTenantId);
-        // 超级租户
-        if (superTenantId.toString().equals(tenantIdAsString)) {
+        Long defaultTenantId = tenantExtensionProperties.getDefaultTenantId();
+        context.setTenantId(defaultTenantId);
+        // 默认租户
+        if (defaultTenantId.toString().equals(tenantIdAsString)) {
             return context;
         }
         Long tenantId;

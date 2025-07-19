@@ -202,12 +202,12 @@ continew-starter.tenant:
   enabled: true
   # 隔离级别（默认：LINE，行级）
   isolation-level: LINE
-  # 超级/默认租户 ID：超管用户所在租户（默认：0）
-  super-tenant-id: 0
   # 请求头中租户 ID 键名
   tenant-id-header: X-Tenant-Id
   # 请求头中租户编码键名
   tenant-code-header: X-Tenant-Code
+  # 默认租户 ID：超管用户所在租户（默认：0）
+  default-tenant-id: 0
   # 忽略表（忽略拼接租户条件）
   ignore-tables:
     - tenant # 租户表

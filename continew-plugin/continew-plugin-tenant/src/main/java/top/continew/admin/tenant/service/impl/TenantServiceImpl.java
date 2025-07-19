@@ -25,6 +25,7 @@ import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.system.model.entity.MenuDO;
 import top.continew.admin.system.service.MenuService;
+import top.continew.admin.tenant.config.TenantExtensionProperties;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
 import top.continew.admin.tenant.handler.TenantDataHandler;
@@ -39,7 +40,6 @@ import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
-import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.io.Serializable;
@@ -58,7 +58,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, TenantResp, TenantDetailResp, TenantQuery, TenantReq> implements TenantService {
 
-    private final TenantProperties tenantProperties;
+    private final TenantExtensionProperties tenantExtensionProperties;
     private final PackageService packageService;
     private final IdGeneratorProvider idGeneratorProvider;
     private final TenantDataHandler tenantDataHandler;
@@ -129,10 +129,11 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
 
     @Override
     public void checkStatus(Long id) {
-        TenantDO tenant = this.getById(id);
-        if (id.equals(tenantProperties.getSuperTenantId())) {
+        // 默认租户
+        if (tenantExtensionProperties.getDefaultTenantId().equals(id)) {
             return;
         }
+        TenantDO tenant = this.getById(id);
         CheckUtils.throwIfEqual(DisEnableStatusEnum.DISABLE, tenant.getStatus(), "租户已被禁用");
         CheckUtils.throwIf(tenant.getExpireTime() != null && tenant.getExpireTime()
             .isBefore(LocalDateTime.now()), "租户已过期");

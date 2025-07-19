@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package top.continew.admin.common.config;
+package top.continew.admin.tenant.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 import top.continew.starter.core.constant.PropertiesConstants;
 
 import java.util.List;
@@ -31,14 +30,18 @@ import java.util.List;
  * @since 2024/11/29 12:05
  */
 @Data
-@Component
 @ConfigurationProperties(prefix = PropertiesConstants.TENANT)
 public class TenantExtensionProperties {
 
     /**
-     * 请求头中租户编码键名
+     * 请求头中租户编码键名（默认：X-Tenant-Code）
      */
-    private String tenantCodeHeader;
+    private String tenantCodeHeader = "X-Tenant-Code";
+
+    /**
+     * 默认租户 ID（默认：0）
+     */
+    private Long defaultTenantId = 0L;
 
     /**
      * 忽略菜单 ID（租户不能使用的菜单）
