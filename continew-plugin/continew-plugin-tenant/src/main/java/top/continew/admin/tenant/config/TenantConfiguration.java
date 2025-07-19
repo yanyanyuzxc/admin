@@ -16,14 +16,11 @@
 
 package top.continew.admin.tenant.config;
 
-import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.extension.tenant.annotation.ConditionalOnEnabledTenant;
-import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 import top.continew.starter.extension.tenant.config.TenantProvider;
 
 /**
@@ -35,32 +32,12 @@ import top.continew.starter.extension.tenant.config.TenantProvider;
 @Configuration
 public class TenantConfiguration {
 
-    @Autowired(required = false)
-    private TenantProperties tenantProperties;
-
-    /**
-     * API 文档分组配置
-     */
-    @Bean
-    public GroupedOpenApi tenantApi() {
-        return GroupedOpenApi.builder().group("tenant").displayName("租户管理").pathsToMatch("/tenant/**").build();
-    }
-
     /**
      * 租户扩展配置属性
      */
     @Bean
     public TenantExtensionProperties tenantExtensionProperties() {
         return new TenantExtensionProperties();
-    }
-
-    /**
-     * 租户行级隔离处理器（默认），等待 ContiNew Starter 2.13.2 发布后替换
-     */
-    @Bean
-    @ConditionalOnEnabledTenant
-    public TenantLineHandler tenantLineHandler() {
-        return new DefaultTenantLineHandler(tenantProperties);
     }
 
     /**
@@ -71,5 +48,13 @@ public class TenantConfiguration {
     public TenantProvider tenantProvider(TenantExtensionProperties tenantExtensionProperties,
                                          TenantService tenantService) {
         return new DefaultTenantProvider(tenantExtensionProperties, tenantService);
+    }
+
+    /**
+     * API 文档分组配置
+     */
+    @Bean
+    public GroupedOpenApi tenantApi() {
+        return GroupedOpenApi.builder().group("tenant").displayName("租户管理").pathsToMatch("/tenant/**").build();
     }
 }
