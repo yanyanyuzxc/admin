@@ -39,6 +39,7 @@ import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 
 import java.time.Duration;
 
@@ -71,7 +72,7 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
         super.checkUserStatus(user);
         // 执行认证
         String token = this.authenticate(user, client);
-        return LoginResp.builder().token(token).build();
+        return LoginResp.builder().token(token).tenantId(TenantContextHolder.isTenantEnabled()? TenantContextHolder.getTenantId():null).build();
     }
 
     @Override

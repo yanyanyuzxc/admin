@@ -27,6 +27,7 @@ import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.model.resp.ClientResp;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 
 /**
  * 邮箱登录处理器
@@ -47,8 +48,7 @@ public class EmailLoginHandler extends AbstractLoginHandler<EmailLoginReq> {
         super.checkUserStatus(user);
         // 执行认证
         String token = super.authenticate(user, client);
-        return LoginResp.builder().token(token).build();
-    }
+        return LoginResp.builder().token(token).tenantId(TenantContextHolder.isTenantEnabled()? TenantContextHolder.getTenantId():null).build();    }
 
     @Override
     public void preLogin(EmailLoginReq req, ClientResp client, HttpServletRequest request) {

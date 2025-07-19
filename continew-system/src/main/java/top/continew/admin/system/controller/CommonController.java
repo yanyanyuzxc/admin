@@ -39,6 +39,7 @@ import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 import top.continew.starter.extension.tenant.annotation.TenantIgnore;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 import top.continew.starter.log.annotation.Log;
 
 import java.io.IOException;
@@ -125,5 +126,14 @@ public class CommonController {
             .map(option -> new LabelValueResp<>(option.getCode(), StrUtil.nullToDefault(option.getValue(), option
                 .getDefaultValue())))
             .toList();
+    }
+
+    @TenantIgnore
+    @SaIgnore
+    @Operation(summary = "查询租户开启状态",description = "查询租户开启状态")
+    @GetMapping("/dict/option/tenant")
+    @Cached(key = "'TENANT'", name = CacheConstants.OPTION_KEY_PREFIX)
+    public Boolean tenantEnabled(){
+        return TenantContextHolder.isTenantEnabled();
     }
 }
