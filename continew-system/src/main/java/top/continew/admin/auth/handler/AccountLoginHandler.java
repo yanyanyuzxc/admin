@@ -72,7 +72,10 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
         super.checkUserStatus(user);
         // 执行认证
         String token = this.authenticate(user, client);
-        return LoginResp.builder().token(token).tenantId(TenantContextHolder.isTenantEnabled()? TenantContextHolder.getTenantId():null).build();
+        return LoginResp.builder()
+            .token(token)
+            .tenantId(TenantContextHolder.isTenantEnabled() ? TenantContextHolder.getTenantId() : null)
+            .build();
     }
 
     @Override

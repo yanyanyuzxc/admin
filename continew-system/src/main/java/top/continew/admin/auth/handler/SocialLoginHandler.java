@@ -128,7 +128,10 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
         userSocialService.saveOrUpdate(userSocial);
         // 执行认证
         String token = super.authenticate(user, client);
-        return LoginResp.builder().token(token).tenantId(TenantContextHolder.isTenantEnabled()? TenantContextHolder.getTenantId():null).build();
+        return LoginResp.builder()
+            .token(token)
+            .tenantId(TenantContextHolder.isTenantEnabled() ? TenantContextHolder.getTenantId() : null)
+            .build();
     }
 
     @Override

@@ -64,9 +64,9 @@ public class CommonController {
     @SaIgnore
     @TenantIgnore
     @GetMapping("/id/domain")
-    public Long getTenantIdByUrl(@RequestParam("domain") String domain){
+    public Long getTenantIdByUrl(@RequestParam("domain") String domain) {
         TenantDO tenantDO = tenantService.getByDomain(domain);
-        if (tenantDO != null){
+        if (tenantDO != null) {
             return tenantDO.getId();
         }
         return null;

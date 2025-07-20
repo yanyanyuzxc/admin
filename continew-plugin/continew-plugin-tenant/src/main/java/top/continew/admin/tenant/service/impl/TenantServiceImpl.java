@@ -18,13 +18,18 @@ package top.continew.admin.tenant.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alicp.jetcache.anno.Cached;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import me.ahoo.cosid.provider.IdGeneratorProvider;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.base.service.BaseServiceImpl;
+import top.continew.admin.common.constant.CacheConstants;
+import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.system.model.entity.MenuDO;
-import top.continew.admin.system.service.MenuService;
+import top.continew.admin.system.model.entity.RoleDO;
+import top.continew.admin.system.model.entity.RoleMenuDO;
+import top.continew.admin.system.service.RoleMenuService;
+import top.continew.admin.system.service.RoleService;
 import top.continew.admin.tenant.config.TenantExtensionProperties;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
@@ -35,16 +40,15 @@ import top.continew.admin.tenant.model.query.TenantQuery;
 import top.continew.admin.tenant.model.req.TenantReq;
 import top.continew.admin.tenant.model.resp.TenantDetailResp;
 import top.continew.admin.tenant.model.resp.TenantResp;
-import top.continew.admin.tenant.service.PackageMenuService;
 import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
+import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,8 +66,8 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     private final PackageService packageService;
     private final IdGeneratorProvider idGeneratorProvider;
     private final TenantDataHandler tenantDataHandler;
-    private final PackageMenuService packageMenuService;
-    private final MenuService menuService;
+    private final RoleMenuService roleMenuService;
+    private final RoleService roleService;
 
     @Override
     public Long create(TenantReq req) {
@@ -147,26 +151,20 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
         if (CollUtil.isEmpty(tenantIdList)) {
             return;
         }
-        List<Long> oldMenuIds = packageMenuService.listMenuIdsByPackageId(packageId);
-        // 如果有删除的菜单则绑定了套餐的租户对应的菜单也会删除
-        List<Long> deleteMenuIds = new ArrayList<>(oldMenuIds);
-        deleteMenuIds.removeAll(newMenuIds);
-        if (CollUtil.isNotEmpty(deleteMenuIds)) {
-            List<MenuDO> deleteMenus = menuService.listByIds(deleteMenuIds);
-            tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> menuService
-                .deleteTenantMenus(deleteMenus)));
-        }
-        // 如果有新增的菜单则绑定了套餐的租户对应的菜单也会新增
-        List<Long> addMenuIds = new ArrayList<>(newMenuIds);
-        addMenuIds.removeAll(oldMenuIds);
-        if (CollUtil.isNotEmpty(addMenuIds)) {
-            List<MenuDO> addMenus = menuService.listByIds(addMenuIds);
-            for (MenuDO addMenu : addMenus) {
-                MenuDO parentMenu = addMenu.getParentId() != 0 ? menuService.getById(addMenu.getParentId()) : null;
-                tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> menuService
-                    .addTenantMenu(addMenu, parentMenu)));
-            }
-        }
+        //删除旧菜单
+        tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> roleMenuService.remove(Wrappers
+            .lambdaQuery(RoleMenuDO.class)
+            .notIn(RoleMenuDO::getMenuId, newMenuIds))));
+        //新增菜单
+        tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
+            RoleDO roleDO = roleService.getByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+            List<Long> oldMenuIds = roleMenuService.list(Wrappers.lambdaQuery(RoleMenuDO.class)
+                .eq(RoleMenuDO::getRoleId, roleDO.getId())).stream().map(RoleMenuDO::getMenuId).toList();
+            newMenuIds.removeAll(oldMenuIds);
+            roleMenuService.add(newMenuIds, roleDO.getId());
+        }));
+        //清理角色菜单缓存
+        RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
     @Override

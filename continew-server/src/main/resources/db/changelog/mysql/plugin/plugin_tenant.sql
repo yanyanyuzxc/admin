@@ -48,9 +48,6 @@ CREATE TABLE IF NOT EXISTS `tenant_package_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='租户套餐和菜单关联表';
 
 -- 为已有表增加租户字段
-ALTER TABLE `sys_menu`
-    ADD COLUMN `tenant_id` BIGINT NOT NULL DEFAULT 0 COMMENT '租户ID',
-    ADD INDEX `idx_tenant_id` (`tenant_id`);
 ALTER TABLE `sys_dept`
     ADD COLUMN `tenant_id` BIGINT NOT NULL DEFAULT 0 COMMENT '租户ID',
     ADD INDEX `idx_tenant_id` (`tenant_id`);
@@ -98,9 +95,6 @@ ALTER TABLE `sys_app`
     ADD INDEX `idx_tenant_id` (`tenant_id`);
 
 -- 调整唯一索引
-ALTER TABLE `sys_menu`
-    DROP INDEX `uk_title_parent_id`,
-    ADD UNIQUE INDEX `uk_title_parent_id` (`title`, `parent_id`, `tenant_id`);
 ALTER TABLE `sys_dept`
     DROP INDEX `uk_name_parent_id`,
     ADD UNIQUE INDEX `uk_name_parent_id` (`name`, `parent_id`, `tenant_id`);

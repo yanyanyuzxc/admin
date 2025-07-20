@@ -130,10 +130,10 @@ public class CommonController {
 
     @TenantIgnore
     @SaIgnore
-    @Operation(summary = "查询租户开启状态",description = "查询租户开启状态")
+    @Operation(summary = "查询租户开启状态", description = "查询租户开启状态")
     @GetMapping("/dict/option/tenant")
     @Cached(key = "'TENANT'", name = CacheConstants.OPTION_KEY_PREFIX)
-    public Boolean tenantEnabled(){
+    public Boolean tenantEnabled() {
         return TenantContextHolder.isTenantEnabled();
     }
 }

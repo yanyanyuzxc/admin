@@ -36,7 +36,6 @@ import top.continew.admin.system.mapper.user.UserPasswordHistoryMapper;
 import top.continew.admin.system.mapper.user.UserSocialMapper;
 import top.continew.admin.system.model.entity.DeptDO;
 import top.continew.admin.system.model.entity.FileDO;
-import top.continew.admin.system.model.entity.MenuDO;
 import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.service.FileService;
@@ -96,8 +95,6 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
             Long deptId = this.initDeptData(tenant);
             // 初始化菜单
             List<Long> menuIds = packageMenuService.listMenuIdsByPackageId(tenant.getPackageId());
-            List<MenuDO> menuList = menuMapper.lambdaQuery().in(MenuDO::getId, menuIds).list();
-            this.initMenuData(menuList, 0L, 0L);
             // 初始化角色
             Long roleId = this.initRoleData(tenant);
             // 角色绑定菜单
@@ -163,24 +160,6 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
         dept.setStatus(DisEnableStatusEnum.ENABLE);
         deptMapper.insert(dept);
         return dept.getId();
-    }
-
-    /**
-     * 递归初始化菜单数据
-     *
-     * @param menuList    菜单列表
-     * @param oldParentId 旧父级 ID
-     * @param newParentId 新父级 ID
-     */
-    private void initMenuData(List<MenuDO> menuList, Long oldParentId, Long newParentId) {
-        List<MenuDO> children = menuList.stream().filter(menuDO -> menuDO.getParentId().equals(oldParentId)).toList();
-        for (MenuDO menu : children) {
-            Long oldId = menu.getId();
-            menu.setId(null);
-            menu.setParentId(newParentId);
-            menuMapper.insert(menu);
-            initMenuData(menuList, oldId, menu.getId());
-        }
     }
 
     /**

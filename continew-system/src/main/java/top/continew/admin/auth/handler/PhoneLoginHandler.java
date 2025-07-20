@@ -48,7 +48,11 @@ public class PhoneLoginHandler extends AbstractLoginHandler<PhoneLoginReq> {
         super.checkUserStatus(user);
         // 执行认证
         String token = super.authenticate(user, client);
-        return LoginResp.builder().token(token).tenantId(TenantContextHolder.isTenantEnabled()? TenantContextHolder.getTenantId():null).build();    }
+        return LoginResp.builder()
+            .token(token)
+            .tenantId(TenantContextHolder.isTenantEnabled() ? TenantContextHolder.getTenantId() : null)
+            .build();
+    }
 
     @Override
     public void preLogin(PhoneLoginReq req, ClientResp client, HttpServletRequest request) {

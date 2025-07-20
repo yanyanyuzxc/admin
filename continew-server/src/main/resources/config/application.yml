@@ -223,6 +223,7 @@ continew-starter.tenant:
     - sys_sms_log # 短信日志表
     - sys_client # 客户端表
     - sys_app # 应用表
+    - sys_menu
   # 忽略菜单 ID（租户不能使用的菜单）
   ignore-menus:
     - 1130 # 字典管理
