@@ -18,6 +18,7 @@ package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -161,6 +162,18 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
         roleMenuService.save(new RoleMenuDO(role.getId(), menu.getId()));
         // 删除缓存
         RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
+    }
+
+    @Override
+    public List<Long> listExcludeTenantMenu() {
+        RoleDO role = roleMapper.selectOne(Wrappers.lambdaQuery(RoleDO.class)
+            .eq(RoleDO::getCode, SysConstants.TENANT_ADMIN_ROLE_CODE));
+        if (role == null) {
+            return ListUtil.of();
+        }
+        List<Long> allMenuList = list().stream().map(MenuDO::getId).toList();
+        List<Long> menuList = baseMapper.selectListByRoleId(role.getId()).stream().map(MenuDO::getId).toList();
+        return CollUtil.disjunction(allMenuList, menuList).stream().toList();
     }
 
     /**

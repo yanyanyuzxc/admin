@@ -17,10 +17,13 @@
 package top.continew.admin.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.constant.CacheConstants;
@@ -36,8 +39,10 @@ import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.annotation.CrudApi;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
+import top.continew.starter.extension.crud.model.query.SortQuery;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 菜单管理 API
@@ -47,8 +52,11 @@ import java.lang.reflect.Method;
  */
 @Tag(name = "菜单管理 API")
 @RestController
+@AllArgsConstructor
 @CrudRequestMapping(value = "/system/menu", api = {Api.TREE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE})
 public class MenuController extends BaseController<MenuService, MenuResp, MenuResp, MenuQuery, MenuReq> {
+
+    private final MenuService menuService;
 
     @Operation(summary = "清除缓存", description = "清除缓存")
     @SaCheckPermission("system:menu:clearCache")
@@ -77,4 +85,11 @@ public class MenuController extends BaseController<MenuService, MenuResp, MenuRe
             req.setComponent(StrUtil.removePrefix(req.getComponent(), StringConstants.SLASH));
         }
     }
+
+    @Override
+    public List<Tree<Long>> tree(@Valid MenuQuery query, @Valid SortQuery sortQuery) {
+        query.setExcludeMenuIdList(menuService.listExcludeTenantMenu());
+        return super.tree(query, sortQuery);
+    }
+
 }

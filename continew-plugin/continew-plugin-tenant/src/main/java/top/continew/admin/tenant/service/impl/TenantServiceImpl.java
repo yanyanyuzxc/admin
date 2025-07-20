@@ -49,6 +49,7 @@ import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -160,8 +161,15 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
             RoleDO roleDO = roleService.getByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
             List<Long> oldMenuIds = roleMenuService.list(Wrappers.lambdaQuery(RoleMenuDO.class)
                 .eq(RoleMenuDO::getRoleId, roleDO.getId())).stream().map(RoleMenuDO::getMenuId).toList();
-            newMenuIds.removeAll(oldMenuIds);
-            roleMenuService.add(newMenuIds, roleDO.getId());
+            List<Long> addMenuIds = CollUtil.disjunction(newMenuIds, oldMenuIds).stream().toList();
+            if (CollUtil.isNotEmpty(addMenuIds)) {
+                List<RoleMenuDO> roleMenuDOList = new ArrayList<>();
+                for (Long addMenuId : addMenuIds) {
+                    RoleMenuDO roleMenuDO = new RoleMenuDO(roleDO.getId(), addMenuId);
+                    roleMenuDOList.add(roleMenuDO);
+                }
+                roleMenuService.saveBatch(roleMenuDOList, roleMenuDOList.size());
+            }
         }));
         //清理角色菜单缓存
         RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);

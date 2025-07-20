@@ -126,8 +126,6 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
         }
         // 日志清除
         logMapper.delete(dw);
-        // 菜单清除
-        menuMapper.delete(dw);
         // 消息清除
         messageMapper.delete(dw);
         messageUserMapper.delete(dw);
