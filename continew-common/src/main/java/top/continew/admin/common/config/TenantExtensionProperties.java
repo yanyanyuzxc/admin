@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package top.continew.admin.tenant.config;
+package top.continew.admin.common.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import top.continew.starter.core.constant.PropertiesConstants;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 
 import java.util.List;
 
@@ -47,4 +48,13 @@ public class TenantExtensionProperties {
      * 忽略菜单 ID（租户不能使用的菜单）
      */
     private List<Long> ignoreMenus;
+
+    /**
+     * 是否为默认租户
+     *
+     * @return 是否为默认租户
+     */
+    public boolean isDefaultTenant() {
+        return defaultTenantId.equals(TenantContextHolder.getTenantId());
+    }
 }

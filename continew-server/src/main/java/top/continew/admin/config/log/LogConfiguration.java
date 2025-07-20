@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.continew.admin.system.mapper.LogMapper;
 import top.continew.admin.system.service.UserService;
-import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
 import top.continew.starter.log.annotation.ConditionalOnEnabledLog;
 import top.continew.starter.log.dao.LogDao;
 import top.continew.starter.trace.autoconfigure.TraceProperties;
@@ -39,10 +38,7 @@ public class LogConfiguration {
      * 日志持久层接口本地实现类
      */
     @Bean
-    public LogDao logDao(UserService userService,
-                         LogMapper logMapper,
-                         TraceProperties traceProperties,
-                         TenantProperties tenantProperties) {
-        return new LogDaoLocalImpl(userService, logMapper, traceProperties, tenantProperties);
+    public LogDao logDao(UserService userService, LogMapper logMapper, TraceProperties traceProperties) {
+        return new LogDaoLocalImpl(userService, logMapper, traceProperties);
     }
 }

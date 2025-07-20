@@ -19,6 +19,7 @@ package top.continew.admin.tenant.config;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.extension.tenant.annotation.ConditionalOnEnabledTenant;
 import top.continew.starter.extension.tenant.config.TenantProvider;

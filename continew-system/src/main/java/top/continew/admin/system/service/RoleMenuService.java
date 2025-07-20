@@ -39,14 +39,14 @@ public interface RoleMenuService extends IService<RoleMenuDO> {
     boolean add(List<Long> menuIds, Long roleId);
 
     /**
-     * 根据角色 ID 删除
+     * 根据角色 ID 列表删除
      *
      * @param roleIds 角色 ID 列表
      */
     void deleteByRoleIds(List<Long> roleIds);
 
     /**
-     * 根据角色 ID 查询
+     * 根据角色 ID 列表查询
      *
      * @param roleIds 角色 ID 列表
      * @return 菜单 ID 列表

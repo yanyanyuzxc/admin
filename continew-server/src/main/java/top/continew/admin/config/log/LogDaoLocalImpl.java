@@ -41,7 +41,7 @@ import top.continew.admin.system.service.UserService;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.StrUtils;
-import top.continew.starter.extension.tenant.autoconfigure.TenantProperties;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 import top.continew.starter.log.dao.LogDao;
 import top.continew.starter.log.model.LogRecord;
@@ -67,7 +67,6 @@ public class LogDaoLocalImpl implements LogDao {
     private final UserService userService;
     private final LogMapper logMapper;
     private final TraceProperties traceProperties;
-    private final TenantProperties tenantProperties;
 
     @Async
     @Override
@@ -88,12 +87,8 @@ public class LogDaoLocalImpl implements LogDao {
         logDO.setCreateTime(LocalDateTime.ofInstant(logRecord.getTimestamp(), ZoneId.systemDefault()));
         // 设置操作人
         this.setCreateUser(logDO, logRequest, logResponse);
-        String strTenantId = logRequest.getHeaders().get(tenantProperties.getTenantIdHeader());
-        if (StrUtil.isNotBlank(strTenantId)) {
-            TenantUtils.execute(Long.parseLong(strTenantId), () -> logMapper.insert(logDO));
-        } else {
-            logMapper.insert(logDO);
-        }
+        // 保存记录
+        TenantUtils.execute(TenantContextHolder.getTenantId(), () -> logMapper.insert(logDO));
     }
 
     /**

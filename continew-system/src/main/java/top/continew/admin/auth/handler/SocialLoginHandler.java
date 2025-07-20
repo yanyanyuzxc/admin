@@ -53,7 +53,6 @@ import top.continew.admin.system.service.UserSocialService;
 import top.continew.starter.core.autoconfigure.application.ApplicationProperties;
 import top.continew.starter.core.exception.BadRequestException;
 import top.continew.starter.core.util.validation.ValidationUtils;
-import top.continew.starter.extension.tenant.context.TenantContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -127,11 +126,7 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
         userSocial.setLastLoginTime(LocalDateTime.now());
         userSocialService.saveOrUpdate(userSocial);
         // 执行认证
-        String token = super.authenticate(user, client);
-        return LoginResp.builder()
-            .token(token)
-            .tenantId(TenantContextHolder.isTenantEnabled() ? TenantContextHolder.getTenantId() : null)
-            .build();
+        return super.authenticate(user, client);
     }
 
     @Override

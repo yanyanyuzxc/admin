@@ -23,11 +23,12 @@ import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.base.controller.BaseController;
+import top.continew.admin.common.config.TenantExtensionProperties;
+import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.system.model.query.MenuQuery;
 import top.continew.admin.system.model.req.MenuReq;
 import top.continew.admin.system.model.resp.MenuResp;
@@ -40,6 +41,7 @@ import top.continew.starter.extension.crud.annotation.CrudApi;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
 import top.continew.starter.extension.crud.model.query.SortQuery;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -52,11 +54,12 @@ import java.util.List;
  */
 @Tag(name = "菜单管理 API")
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrudRequestMapping(value = "/system/menu", api = {Api.TREE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE})
 public class MenuController extends BaseController<MenuService, MenuResp, MenuResp, MenuQuery, MenuReq> {
 
     private final MenuService menuService;
+    private final TenantExtensionProperties tenantExtensionProperties;
 
     @Operation(summary = "清除缓存", description = "清除缓存")
     @SaCheckPermission("system:menu:clearCache")
@@ -88,7 +91,9 @@ public class MenuController extends BaseController<MenuService, MenuResp, MenuRe
 
     @Override
     public List<Tree<Long>> tree(@Valid MenuQuery query, @Valid SortQuery sortQuery) {
-        query.setExcludeMenuIdList(menuService.listExcludeTenantMenu());
+        if (TenantContextHolder.isTenantEnabled() && !tenantExtensionProperties.isDefaultTenant()) {
+            query.setExcludeMenuIdList(menuService.listExcludeTenantMenu());
+        }
         return super.tree(query, sortQuery);
     }
 

@@ -18,11 +18,11 @@ package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alicp.jetcache.anno.Cached;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
@@ -31,20 +31,18 @@ import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.system.enums.MenuTypeEnum;
 import top.continew.admin.system.mapper.MenuMapper;
-import top.continew.admin.system.mapper.RoleMapper;
 import top.continew.admin.system.model.entity.MenuDO;
 import top.continew.admin.system.model.entity.RoleDO;
-import top.continew.admin.system.model.entity.RoleMenuDO;
 import top.continew.admin.system.model.query.MenuQuery;
 import top.continew.admin.system.model.req.MenuReq;
 import top.continew.admin.system.model.resp.MenuResp;
 import top.continew.admin.system.service.MenuService;
-import top.continew.admin.system.service.RoleMenuService;
+import top.continew.admin.system.service.RoleService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -58,8 +56,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuResp, MenuResp, MenuQuery, MenuReq> implements MenuService {
 
-    private final RoleMenuService roleMenuService;
-    private final RoleMapper roleMapper;
+    @Lazy
+    @Resource
+    private RoleService roleService;
 
     @Override
     public Long create(MenuReq req) {
@@ -115,65 +114,11 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteTenantMenus(List<MenuDO> menuList) {
-        if (CollUtil.isEmpty(menuList)) {
-            return;
-        }
-        List<Long> delIds = new ArrayList<>();
-        for (MenuDO menu : menuList) {
-            MenuDO parentMenu = baseMapper.query()
-                .eq(menu.getType().equals(MenuTypeEnum.BUTTON), "CONCAT(title,permission)", menu.getTitle() + menu
-                    .getPermission())
-                .eq(!menu.getType().equals(MenuTypeEnum.BUTTON), "name", menu.getName())
-                .one();
-            if (parentMenu != null) {
-                delIds.add(parentMenu.getId());
-            }
-        }
-        if (!delIds.isEmpty()) {
-            // 菜单删除
-            this.delete(delIds);
-            // 删除绑定关系
-            roleMenuService.remove(Wrappers.lambdaQuery(RoleMenuDO.class).in(RoleMenuDO::getMenuId, delIds));
-        }
-        // 删除缓存
-        RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
-    }
-
-    @Override
-    public void addTenantMenu(MenuDO menu, MenuDO parentMenu) {
-        Long parentId = SysConstants.SUPER_PARENT_ID;
-        if (parentMenu != null) {
-            MenuDO parent = baseMapper.query()
-                .eq(parentMenu.getType().equals(MenuTypeEnum.BUTTON), "CONCAT(title,permission)", parentMenu
-                    .getTitle() + parentMenu.getPermission())
-                .eq(!parentMenu.getType().equals(MenuTypeEnum.BUTTON), "name", parentMenu.getName())
-                .one();
-            parentId = parent.getId();
-        }
-        menu.setId(null);
-        menu.setParentId(parentId);
-        // 菜单新增
-        baseMapper.insert(menu);
-        // 管理员绑定菜单
-        RoleDO role = roleMapper.selectOne(Wrappers.lambdaQuery(RoleDO.class)
-            .eq(RoleDO::getCode, SysConstants.TENANT_ADMIN_ROLE_CODE));
-        roleMenuService.save(new RoleMenuDO(role.getId(), menu.getId()));
-        // 删除缓存
-        RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
-    }
-
-    @Override
     public List<Long> listExcludeTenantMenu() {
-        RoleDO role = roleMapper.selectOne(Wrappers.lambdaQuery(RoleDO.class)
-            .eq(RoleDO::getCode, SysConstants.TENANT_ADMIN_ROLE_CODE));
-        if (role == null) {
-            return ListUtil.of();
-        }
-        List<Long> allMenuList = list().stream().map(MenuDO::getId).toList();
-        List<Long> menuList = baseMapper.selectListByRoleId(role.getId()).stream().map(MenuDO::getId).toList();
-        return CollUtil.disjunction(allMenuList, menuList).stream().toList();
+        RoleDO role = roleService.getByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+        List<Long> allMenuIdList = CollUtils.mapToList(super.list(), MenuDO::getId);
+        List<Long> menuIdList = CollUtils.mapToList(baseMapper.selectListByRoleId(role.getId()), MenuDO::getId);
+        return CollUtil.disjunction(allMenuIdList, menuIdList).stream().toList();
     }
 
     /**

@@ -18,11 +18,12 @@ package top.continew.admin.tenant.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alicp.jetcache.anno.Cached;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import me.ahoo.cosid.provider.IdGeneratorProvider;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
@@ -30,7 +31,6 @@ import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.entity.RoleMenuDO;
 import top.continew.admin.system.service.RoleMenuService;
 import top.continew.admin.system.service.RoleService;
-import top.continew.admin.tenant.config.TenantExtensionProperties;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
 import top.continew.admin.tenant.handler.TenantDataHandler;
@@ -44,13 +44,14 @@ import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
+import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 租户业务实现
@@ -99,8 +100,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
 
     @Override
     public void afterUpdate(TenantReq req, TenantDO entity) {
-        // 更新租户缓存
-        RedisUtils.set(TenantCacheConstants.TENANT_KEY_PREFIX + entity.getId(), entity);
+        RedisUtils.deleteByPattern(TenantCacheConstants.TENANT_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
     @Override
@@ -113,23 +113,29 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
 
     @Override
     public void afterDelete(List<Long> ids) {
-        ids.forEach(id -> RedisUtils.delete(TenantCacheConstants.TENANT_KEY_PREFIX + id));
+        RedisUtils.deleteByPattern(TenantCacheConstants.TENANT_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
     @Override
-    @Cached(name = TenantCacheConstants.TENANT_KEY_PREFIX, key = "#id")
-    public TenantDO getById(Serializable id) {
-        return super.getById(id);
+    @Cached(name = TenantCacheConstants.TENANT_KEY_PREFIX, key = "#domain")
+    public Long getIdByDomain(String domain) {
+        return baseMapper.lambdaQuery()
+            .select(TenantDO::getId)
+            .eq(TenantDO::getDomain, domain)
+            .oneOpt()
+            .map(TenantDO::getId)
+            .orElse(null);
     }
 
     @Override
-    public TenantDO getByDomain(String domain) {
-        return baseMapper.lambdaQuery().eq(TenantDO::getDomain, domain).oneOpt().orElse(null);
-    }
-
-    @Override
-    public TenantDO getByCode(String code) {
-        return baseMapper.lambdaQuery().eq(TenantDO::getCode, code).oneOpt().orElse(null);
+    @Cached(name = TenantCacheConstants.TENANT_KEY_PREFIX, key = "#code")
+    public Long getIdByCode(String code) {
+        return baseMapper.lambdaQuery()
+            .select(TenantDO::getId)
+            .eq(TenantDO::getCode, code)
+            .oneOpt()
+            .map(TenantDO::getId)
+            .orElse(null);
     }
 
     @Override
@@ -147,31 +153,39 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateTenantMenu(List<Long> newMenuIds, Long packageId) {
         List<Long> tenantIdList = this.listIdByPackageId(packageId);
         if (CollUtil.isEmpty(tenantIdList)) {
             return;
         }
-        //删除旧菜单
-        tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> roleMenuService.remove(Wrappers
-            .lambdaQuery(RoleMenuDO.class)
-            .notIn(RoleMenuDO::getMenuId, newMenuIds))));
-        //新增菜单
+        // 删除旧菜单
         tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
-            RoleDO roleDO = roleService.getByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
-            List<Long> oldMenuIds = roleMenuService.list(Wrappers.lambdaQuery(RoleMenuDO.class)
-                .eq(RoleMenuDO::getRoleId, roleDO.getId())).stream().map(RoleMenuDO::getMenuId).toList();
-            List<Long> addMenuIds = CollUtil.disjunction(newMenuIds, oldMenuIds).stream().toList();
-            if (CollUtil.isNotEmpty(addMenuIds)) {
-                List<RoleMenuDO> roleMenuDOList = new ArrayList<>();
-                for (Long addMenuId : addMenuIds) {
-                    RoleMenuDO roleMenuDO = new RoleMenuDO(roleDO.getId(), addMenuId);
-                    roleMenuDOList.add(roleMenuDO);
-                }
-                roleMenuService.saveBatch(roleMenuDOList, roleMenuDOList.size());
+            // 更新在线用户上下文
+            List<RoleMenuDO> roleMenuList = roleMenuService.lambdaQuery()
+                .select(RoleMenuDO::getRoleId)
+                .notIn(RoleMenuDO::getMenuId, newMenuIds)
+                .list();
+            Set<Long> roleIdSet = CollUtils.mapToSet(roleMenuList, RoleMenuDO::getRoleId);
+            roleIdSet.forEach(roleService::updateUserContext);
+            // 删除旧菜单
+            roleMenuService.lambdaUpdate().notIn(RoleMenuDO::getMenuId, newMenuIds).remove();
+        }));
+        // 租户管理员：新增菜单
+        tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
+            RoleDO role = roleService.getByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+            List<Long> oldMenuIdList = roleMenuService.listMenuIdByRoleIds(List.of(role.getId()));
+            Collection<Long> addMenuIdList = CollUtil.disjunction(newMenuIds, oldMenuIdList);
+            if (CollUtil.isNotEmpty(addMenuIdList)) {
+                List<RoleMenuDO> roleMenuList = addMenuIdList.stream()
+                    .map(menuId -> new RoleMenuDO(role.getId(), menuId))
+                    .toList();
+                roleMenuService.saveBatch(roleMenuList, roleMenuList.size());
+                // 更新在线用户上下文
+                roleService.updateUserContext(role.getId());
             }
         }));
-        //清理角色菜单缓存
+        // 删除缓存
         RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
     }
 

@@ -69,7 +69,6 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
 
     private final PackageMenuService packageMenuService;
     private final DeptMapper deptMapper;
-    private final MenuMapper menuMapper;
     private final RoleMapper roleMapper;
     private final RoleMenuService roleMenuService;
     private final RoleMenuMapper roleMenuMapper;
@@ -93,11 +92,10 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
         TenantUtils.execute(tenantId, () -> {
             // 初始化部门
             Long deptId = this.initDeptData(tenant);
-            // 初始化菜单
-            List<Long> menuIds = packageMenuService.listMenuIdsByPackageId(tenant.getPackageId());
             // 初始化角色
             Long roleId = this.initRoleData(tenant);
             // 角色绑定菜单
+            List<Long> menuIds = packageMenuService.listMenuIdsByPackageId(tenant.getPackageId());
             roleMenuService.add(menuIds, roleId);
             // 初始化管理用户
             Long userId = this.initUserData(tenant, deptId);
@@ -116,30 +114,30 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
         for (UserDO user : userList) {
             StpUtil.logout(user.getId());
         }
-        Wrapper dw = Wrappers.query().eq("1", 1);
+        Wrapper queryWrapper = Wrappers.query().eq("1", 1);
         // 部门清除
-        deptMapper.delete(dw);
+        deptMapper.delete(queryWrapper);
         // 文件清除
         List<Long> fileIds = CollUtils.mapToList(fileService.list(), FileDO::getId);
         if (!fileIds.isEmpty()) {
             fileService.delete(fileIds);
         }
         // 日志清除
-        logMapper.delete(dw);
+        logMapper.delete(queryWrapper);
         // 消息清除
-        messageMapper.delete(dw);
-        messageUserMapper.delete(dw);
+        messageMapper.delete(queryWrapper);
+        messageUserMapper.delete(queryWrapper);
         // 通知清除
-        noticeMapper.delete(dw);
+        noticeMapper.delete(queryWrapper);
         // 角色相关数据清除
-        roleMapper.delete(dw);
-        roleDeptMapper.delete(dw);
-        roleMenuMapper.delete(dw);
+        roleMapper.delete(queryWrapper);
+        roleDeptMapper.delete(queryWrapper);
+        roleMenuMapper.delete(queryWrapper);
         // 用户数据清除
-        userMapper.delete(dw);
-        userPasswordHistoryMapper.delete(dw);
-        userRoleMapper.delete(dw);
-        userSocialMapper.delete(dw);
+        userMapper.delete(queryWrapper);
+        userPasswordHistoryMapper.delete(queryWrapper);
+        userRoleMapper.delete(queryWrapper);
+        userSocialMapper.delete(queryWrapper);
     }
 
     /**

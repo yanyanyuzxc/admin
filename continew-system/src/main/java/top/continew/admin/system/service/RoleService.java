@@ -54,6 +54,13 @@ public interface RoleService extends BaseService<RoleResp, RoleDetailResp, RoleQ
     void assignToUsers(Long id, List<Long> userIds);
 
     /**
+     * 更新用户上下文
+     *
+     * @param roleId 角色 ID
+     */
+    void updateUserContext(Long roleId);
+
+    /**
      * 根据用户 ID 查询权限码
      *
      * @param userId 用户 ID

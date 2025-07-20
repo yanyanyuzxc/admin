@@ -19,7 +19,7 @@ package top.continew.admin.tenant.config;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import top.continew.admin.tenant.model.entity.TenantDO;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.core.util.ServletUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
@@ -57,9 +57,9 @@ public class DefaultTenantProvider implements TenantProvider {
             if (StrUtil.isBlank(tenantCode)) {
                 return context;
             }
-            TenantDO tenant = tenantService.getByCode(tenantCode);
-            CheckUtils.throwIfNull(tenant, "编码为 [%s] 的租户不存在".formatted(tenantCode));
-            tenantId = tenant.getId();
+            Long id = tenantService.getIdByCode(tenantCode);
+            CheckUtils.throwIfNull(id, "编码为 [%s] 的租户不存在".formatted(tenantCode));
+            tenantId = id;
         } else {
             // 指定租户
             tenantId = Long.parseLong(tenantIdAsString);

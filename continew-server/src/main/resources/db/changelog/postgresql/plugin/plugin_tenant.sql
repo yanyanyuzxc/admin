@@ -76,10 +76,6 @@ COMMENT ON COLUMN "tenant_package_menu"."menu_id" IS '菜单ID';
 COMMENT ON TABLE "tenant_package_menu" IS '租户套餐和菜单关联表';
 
 -- 为已有表增加租户字段
-ALTER TABLE "sys_menu" ADD COLUMN "tenant_id" int8 NOT NULL DEFAULT 0;
-COMMENT ON COLUMN "sys_menu"."tenant_id" IS '租户ID';
-CREATE INDEX "idx_menu_tenant_id" ON "sys_menu" ("tenant_id");
-
 ALTER TABLE "sys_dept" ADD COLUMN "tenant_id" int8 NOT NULL DEFAULT 0;
 COMMENT ON COLUMN "sys_dept"."tenant_id" IS '租户ID';
 CREATE INDEX "idx_dept_tenant_id" ON "sys_dept" ("tenant_id");
@@ -141,9 +137,6 @@ COMMENT ON COLUMN "sys_app"."tenant_id" IS '租户ID';
 CREATE INDEX "idx_app_tenant_id" ON "sys_app" ("tenant_id");
 
 -- 调整唯一索引
-ALTER TABLE "sys_menu" DROP INDEX "uk_menu_title_parent_id";
-CREATE UNIQUE INDEX "uk_menu_title_parent_id" ON "sys_menu" ("title", "parent_id", "tenant_id");
-
 ALTER TABLE "sys_dept" DROP INDEX "uk_dept_name_parent_id";
 CREATE UNIQUE INDEX "uk_dept_name_parent_id" ON "sys_dept" ("name", "parent_id", "tenant_id");
 

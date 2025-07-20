@@ -51,22 +51,9 @@ public interface MenuService extends BaseService<MenuResp, MenuResp, MenuQuery, 
     List<MenuResp> listByRoleId(Long roleId);
 
     /**
-     * 删除租户菜单
+     * 查询租户排除的菜单 ID 列表
      *
-     * @param menuS 菜单列表
-     */
-    void deleteTenantMenus(List<MenuDO> menuS);
-
-    /**
-     * 新增租户菜单
-     *
-     * @param menu       新增的菜单
-     * @param parentMenu 父菜单
-     */
-    void addTenantMenu(MenuDO menu, MenuDO parentMenu);
-
-    /**
-     * 查询租户排除的菜单
+     * @return 租户排除的菜单 ID 列表
      */
     List<Long> listExcludeTenantMenu();
 }

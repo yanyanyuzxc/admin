@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import top.continew.admin.auth.model.req.LoginReq;
+import top.continew.admin.auth.model.resp.LoginResp;
 import top.continew.admin.common.context.RoleContext;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
@@ -88,9 +89,9 @@ public abstract class AbstractLoginHandler<T extends LoginReq> implements LoginH
      *
      * @param user   用户信息
      * @param client 客户端信息
-     * @return token 令牌信息
+     * @return 登录响应参数
      */
-    protected String authenticate(UserDO user, ClientResp client) {
+    protected LoginResp authenticate(UserDO user, ClientResp client) {
         // 获取权限、角色、密码过期天数
         Long userId = user.getId();
         Long tenantId = TenantContextHolder.getTenantId();
@@ -127,7 +128,10 @@ public abstract class AbstractLoginHandler<T extends LoginReq> implements LoginH
         StpUtil.login(userContext.getId(), loginParameter.setExtraData(BeanUtil
             .beanToMap(new UserExtraContext(ServletUtils.getRequest()))));
         UserContextHolder.setContext(userContext);
-        return StpUtil.getTokenValue();
+        return LoginResp.builder()
+            .token(StpUtil.getTokenValue())
+            .tenantId(TenantContextHolder.isTenantEnabled() ? TenantContextHolder.getTenantId() : null)
+            .build();
     }
 
     /**

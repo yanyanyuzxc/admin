@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.base.controller.BaseController;
-import top.continew.admin.tenant.config.TenantExtensionProperties;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.system.model.query.MenuQuery;
 import top.continew.admin.system.service.MenuService;

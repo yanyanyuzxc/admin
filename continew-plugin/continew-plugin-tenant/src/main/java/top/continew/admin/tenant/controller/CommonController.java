@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.query.PackageQuery;
 import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
@@ -60,15 +59,11 @@ public class CommonController {
         return packageService.listDict(query, sortQuery);
     }
 
-    @Operation(summary = "根据域名查询租户ID", description = "根据域名查询租户编码")
     @SaIgnore
     @TenantIgnore
-    @GetMapping("/id/domain")
-    public Long getTenantIdByUrl(@RequestParam("domain") String domain) {
-        TenantDO tenantDO = tenantService.getByDomain(domain);
-        if (tenantDO != null) {
-            return tenantDO.getId();
-        }
-        return null;
+    @Operation(summary = "根据域名查询租户 ID", description = "根据域名查询租户 ID")
+    @GetMapping("/id")
+    public Long getTenantIdByDomain(@RequestParam String domain) {
+        return tenantService.getIdByDomain(domain);
     }
 }

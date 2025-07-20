@@ -39,17 +39,17 @@ public interface TenantService extends BaseService<TenantResp, TenantDetailResp,
      * 根据绑定域名查询
      *
      * @param domain 绑定域名
-     * @return 租户信息
+     * @return ID
      */
-    TenantDO getByDomain(String domain);
+    Long getIdByDomain(String domain);
 
     /**
      * 根据编码查询
      *
      * @param code 编码
-     * @return 租户信息
+     * @return ID
      */
-    TenantDO getByCode(String code);
+    Long getIdByCode(String code);
 
     /**
      * 检查租户状态

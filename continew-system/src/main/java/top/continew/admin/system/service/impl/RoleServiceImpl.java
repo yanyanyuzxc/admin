@@ -20,6 +20,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alicp.jetcache.anno.CacheInvalidate;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +58,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleResp, RoleDetailResp, RoleQuery, RoleReq> implements RoleService {
 
-    private final MenuService menuService;
+    @Resource
+    private MenuService menuService;
     private final RoleMenuService roleMenuService;
     private final RoleDeptService roleDeptService;
     private final UserRoleService userRoleService;
@@ -117,6 +119,17 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     }
 
     @Override
+    public void fill(Object obj) {
+        super.fill(obj);
+        if (obj instanceof RoleDetailResp detail) {
+            Long roleId = detail.getId();
+            List<MenuResp> list = menuService.listByRoleId(roleId);
+            List<Long> menuIds = CollUtils.mapToList(list, MenuResp::getId);
+            detail.setMenuIds(menuIds);
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheInvalidate(key = "#id", name = CacheConstants.ROLE_MENU_KEY_PREFIX)
     public void updatePermission(Long id, RoleUpdatePermissionReq req) {
@@ -143,14 +156,16 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     }
 
     @Override
-    public void fill(Object obj) {
-        super.fill(obj);
-        if (obj instanceof RoleDetailResp detail) {
-            Long roleId = detail.getId();
-            List<MenuResp> list = menuService.listByRoleId(roleId);
-            List<Long> menuIds = CollUtils.mapToList(list, MenuResp::getId);
-            detail.setMenuIds(menuIds);
-        }
+    public void updateUserContext(Long roleId) {
+        List<Long> userIdList = userRoleService.listUserIdByRoleId(roleId);
+        userIdList.forEach(userId -> {
+            UserContext userContext = UserContextHolder.getContext(userId);
+            if (userContext != null) {
+                userContext.setRoles(this.listByUserId(userId));
+                userContext.setPermissions(this.listPermissionByUserId(userId));
+                UserContextHolder.setContext(userContext);
+            }
+        });
     }
 
     @Override
@@ -231,22 +246,5 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
             .eq(RoleDO::getCode, code)
             .ne(id != null, RoleDO::getId, id)
             .exists(), "编码为 [{}] 的角色已存在", code);
-    }
-
-    /**
-     * 更新用户上下文
-     *
-     * @param roleId 角色 ID
-     */
-    private void updateUserContext(Long roleId) {
-        List<Long> userIdList = userRoleService.listUserIdByRoleId(roleId);
-        userIdList.parallelStream().forEach(userId -> {
-            UserContext userContext = UserContextHolder.getContext(userId);
-            if (userContext != null) {
-                userContext.setRoles(this.listByUserId(userId));
-                userContext.setPermissions(this.listPermissionByUserId(userId));
-                UserContextHolder.setContext(userContext);
-            }
-        });
     }
 }

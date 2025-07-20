@@ -215,6 +215,7 @@ continew-starter.tenant:
     - tenant_package_menu # 租户套餐与菜单关联表
     - gen_config # 代码生成配置表
     - gen_field_config # 代码生成字段配置表
+    - sys_menu # 菜单表
     - sys_dict # 字典表
     - sys_dict_item # 字典项表
     - sys_option # 参数表
@@ -223,9 +224,9 @@ continew-starter.tenant:
     - sys_sms_log # 短信日志表
     - sys_client # 客户端表
     - sys_app # 应用表
-    - sys_menu # 菜单表
   # 忽略菜单 ID（租户不能使用的菜单）
   ignore-menus:
+    - 1050 # 菜单管理
     - 1130 # 字典管理
     - 1140 # 字典项管理
     - 1150 # 系统配置
@@ -234,7 +235,6 @@ continew-starter.tenant:
     - 7000 # 能力开放
     - 8000 # 任务调度
     - 9000 # 开发工具
-    - 1050 # 菜单管理
 
 --- ### 限流器配置
 continew-starter:
