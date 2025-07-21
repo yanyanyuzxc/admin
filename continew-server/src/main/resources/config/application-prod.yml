@@ -132,6 +132,8 @@ logging:
 continew-starter.security:
   crypto:
     enabled: true
+    # 默认算法，即 @FieldEncrypt 默认采用的算法（默认：AES 对称加密算法）
+    algorithm: AES
     # 对称加密算法密钥
     password: abcdefghijklmnop
     # 非对称加密算法密钥（在线生成 RSA 密钥对：http://web.chacuo.net/netrsakeypair）

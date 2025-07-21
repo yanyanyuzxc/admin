@@ -19,16 +19,8 @@ package top.continew.admin.common.util;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
-import cn.hutool.extra.spring.SpringUtil;
 import top.continew.admin.common.config.RsaProperties;
-import top.continew.starter.core.exception.BusinessException;
-import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
-import top.continew.starter.security.crypto.autoconfigure.CryptoProperties;
-import top.continew.starter.security.crypto.encryptor.AesEncryptor;
-import top.continew.starter.security.crypto.encryptor.IEncryptor;
-
-import java.util.List;
 
 /**
  * 加密/解密工具类
@@ -85,23 +77,5 @@ public class SecureUtils {
      */
     public static String decryptByRsaPrivateKey(String data, String privateKey) {
         return new String(SecureUtil.rsa(privateKey, null).decrypt(Base64.decode(data), KeyType.PrivateKey));
-    }
-
-    /**
-     * 对普通加密字段列表进行AES加密，优化starter加密模块后优化这个方法
-     *
-     * @param values 待加密内容
-     * @return 加密后内容
-     */
-    public static List<String> encryptFieldByAes(List<String> values) {
-        IEncryptor encryptor = new AesEncryptor();
-        CryptoProperties properties = SpringUtil.getBean(CryptoProperties.class);
-        return CollUtils.mapToList(values, value -> {
-            try {
-                return encryptor.encrypt(value, properties.getPassword(), properties.getPublicKey());
-            } catch (Exception e) {
-                throw new BusinessException("字段加密异常");
-            }
-        });
     }
 }

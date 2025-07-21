@@ -28,6 +28,7 @@ import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.starter.core.util.ServletUtils;
 import top.continew.starter.extension.tenant.context.TenantContextHolder;
+import top.continew.starter.json.jackson.util.JSONUtils;
 import top.continew.starter.web.model.R;
 
 /**
@@ -61,7 +62,8 @@ public class SaExtensionInterceptor extends SaInterceptor {
             Long userTenantId = userContext.getTenantId();
             Long tenantId = TenantContextHolder.getTenantId();
             if (!userTenantId.equals(tenantId)) {
-                ServletUtils.writeJSON(response, R.fail(String.valueOf(HttpStatus.FORBIDDEN.value()), "您当前没有访问该租户的权限"));
+                R r = R.fail(String.valueOf(HttpStatus.FORBIDDEN.value()), "您当前没有访问该租户的权限");
+                ServletUtils.writeJSON(response, JSONUtils.toJsonStr(r));
                 return false;
             }
         }

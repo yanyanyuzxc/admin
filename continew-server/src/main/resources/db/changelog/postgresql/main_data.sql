@@ -183,7 +183,9 @@ VALUES
 (547889293968801828, 'mochou', '莫愁', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '万事莫愁，皆得所愿。', 1, false, NOW(), 547887852587843602, 1, NOW()),
 (547889293968801829, 'Jing', 'MS-Jing', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '路虽远，行则将至。', 2, false, NOW(), 547887852587843599, 1, NOW()),
 (547889293968801830, 'domw', '梓陌', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '胜利是奖赏，挫折是常态。', 1, false, NOW(), 547887852587843608, 1, NOW()),
-(547889293968801831, 'xtanyu', '小熊', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '不想上班。', 1, false, NOW(), 547887852587843611, 1, NOW());
+(547889293968801831, 'xtanyu', '小熊', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '不想上班。', 1, false, NOW(), 547887852587843611, 1, NOW()),
+(547889293968801832, 'luoqiz', '老罗', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '行者无疆，丈量四方。', 1, false, NOW(), 1, 1, NOW()),
+(547889293968801833, 'lishuyanla', '颜如玉', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '书中自有颜如玉，世间多是李莫愁。', 1, false, NOW(), 1, 1, NOW());
 
 -- 初始化默认参数
 INSERT INTO "sys_option"
@@ -246,7 +248,9 @@ VALUES
 (8, 547889293968801828, 547888897925840928),
 (9, 547889293968801829, 547888897925840928),
 (10, 547889293968801830, 547888897925840928),
-(11, 547889293968801831, 547888897925840928);
+(11, 547889293968801831, 547888897925840928),
+(12, 547889293968801832, 547888897925840928),
+(13, 547889293968801833, 547888897925840928);
 
 -- 初始化默认角色和菜单关联数据
 INSERT INTO "sys_role_menu"

@@ -63,7 +63,6 @@ import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
 import top.continew.admin.common.service.CommonUserService;
-import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.mapper.user.UserMapper;
 import top.continew.admin.system.model.entity.DeptDO;
@@ -86,6 +85,7 @@ import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
+import top.continew.starter.security.crypto.utils.EncryptHelper;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -285,13 +285,13 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
 
         // 查询重复用户
         userImportResp
-            .setDuplicateUserRows(countExistByField(validRowList, UserImportRowReq::getUsername, UserDO::getUsername, false));
+            .setDuplicateUserRows(countExistByField(validRowList, UserImportRowReq::getUsername, UserDO::getUsername));
         // 查询重复邮箱
-        userImportResp
-            .setDuplicateEmailRows(countExistByField(validRowList, UserImportRowReq::getEmail, UserDO::getEmail, true));
+        userImportResp.setDuplicateEmailRows(countExistByField(validRowList, row -> EncryptHelper.encrypt(row
+            .getEmail()), UserDO::getEmail));
         // 查询重复手机
-        userImportResp
-            .setDuplicatePhoneRows(countExistByField(validRowList, UserImportRowReq::getPhone, UserDO::getPhone, true));
+        userImportResp.setDuplicatePhoneRows(countExistByField(validRowList, row -> EncryptHelper.encrypt(row
+            .getPhone()), UserDO::getPhone));
 
         // 设置导入会话并缓存数据，有效期10分钟
         String importKey = UUID.fastUUID().toString(true);
@@ -315,8 +315,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
             throw new BusinessException("导入已过期，请重新上传");
         }
         // 已存在数据查询
-        List<String> existEmails = listExistByField(importUserList, UserImportRowReq::getEmail, UserDO::getEmail);
-        List<String> existPhones = listExistByField(importUserList, UserImportRowReq::getPhone, UserDO::getPhone);
+        List<String> existEmails = listExistByField(importUserList, row -> EncryptHelper.encrypt(row
+            .getEmail()), UserDO::getEmail);
+        List<String> existPhones = listExistByField(importUserList, row -> EncryptHelper.encrypt(row
+            .getPhone()), UserDO::getPhone);
         List<UserDO> existUserList = listByUsernames(CollUtils
             .mapToList(importUserList, UserImportRowReq::getUsername));
         List<String> existUsernames = CollUtils.mapToList(existUserList, UserDO::getUsername);
@@ -597,14 +599,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
      */
     private int countExistByField(List<UserImportRowReq> userRowList,
                                   Function<UserImportRowReq, String> rowField,
-                                  SFunction<UserDO, ?> dbField,
-                                  boolean fieldEncrypt) {
+                                  SFunction<UserDO, ?> dbField) {
         List<String> fieldValues = CollUtils.mapToList(userRowList, rowField);
         if (fieldValues.isEmpty()) {
             return 0;
         }
-        return (int)this.count(Wrappers.<UserDO>lambdaQuery()
-            .in(dbField, fieldEncrypt ? SecureUtils.encryptFieldByAes(fieldValues) : fieldValues));
+        return Math.toIntExact(baseMapper.lambdaQuery().in(dbField, fieldValues).count());
     }
 
     /**
@@ -622,9 +622,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         if (fieldValues.isEmpty()) {
             return Collections.emptyList();
         }
-        List<UserDO> userList = baseMapper.selectList(Wrappers.<UserDO>lambdaQuery()
-            .in(dbField, SecureUtils.encryptFieldByAes(fieldValues))
-            .select(dbField));
+        List<UserDO> userList = baseMapper.lambdaQuery().select(dbField).in(dbField, fieldValues).list();
         return CollUtils.mapToList(userList, dbField);
     }
 

@@ -17,7 +17,8 @@
 package top.continew.admin.common.config.mybatis;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-import top.continew.starter.security.crypto.encryptor.IEncryptor;
+import top.continew.starter.security.crypto.encryptor.AbstractEncryptor;
+import top.continew.starter.security.crypto.encryptor.CryptoContext;
 import top.continew.starter.security.password.constant.PasswordEncoderConstants;
 
 /**
@@ -26,16 +27,17 @@ import top.continew.starter.security.password.constant.PasswordEncoderConstants;
  * @author Charles7c
  * @since 2024/2/8 22:29
  */
-public class BCryptEncryptor implements IEncryptor {
+public class BCryptEncryptor extends AbstractEncryptor {
 
     private final PasswordEncoder passwordEncoder;
 
-    public BCryptEncryptor(PasswordEncoder passwordEncoder) {
+    public BCryptEncryptor(CryptoContext context, PasswordEncoder passwordEncoder) {
+        super(context);
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public String encrypt(String plaintext, String password, String publicKey) {
+    public String encrypt(String plaintext) {
         // 如果已经是 BCrypt 加密格式，直接返回
         if (PasswordEncoderConstants.BCRYPT_PATTERN.matcher(plaintext).matches()) {
             return plaintext;
@@ -44,7 +46,7 @@ public class BCryptEncryptor implements IEncryptor {
     }
 
     @Override
-    public String decrypt(String ciphertext, String password, String privateKey) {
+    public String decrypt(String ciphertext) {
         return ciphertext;
     }
 }

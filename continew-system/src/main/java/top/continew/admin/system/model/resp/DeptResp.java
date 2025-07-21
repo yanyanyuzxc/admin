@@ -83,4 +83,10 @@ public class DeptResp extends BaseDetailResp {
     @Schema(description = "描述", example = "测试部描述信息")
     @ExcelProperty(value = "描述", order = 8)
     private String description;
+
+    // TODO 临时修复，等待 ContiNew Starter 2.13.3 发布移除
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
 }

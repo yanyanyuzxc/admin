@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.extension.parser.cache.JdkSerialCaffeineJsqlPars
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import top.continew.starter.extension.datapermission.filter.DataPermissionUserDataProvider;
+import top.continew.starter.extension.datapermission.provider.DataPermissionUserDataProvider;
 
 import java.util.concurrent.TimeUnit;
 
@@ -62,6 +62,6 @@ public class MybatisPlusConfiguration {
      */
     @Bean
     public BCryptEncryptor bCryptEncryptor(PasswordEncoder passwordEncoder) {
-        return new BCryptEncryptor(passwordEncoder);
+        return new BCryptEncryptor(null, passwordEncoder);
     }
 }
