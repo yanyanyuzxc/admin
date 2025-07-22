@@ -90,6 +90,7 @@ public class MenuController extends BaseController<MenuService, MenuResp, MenuRe
     }
 
     @Override
+    @Operation(summary = "查询树列表", description = "查询树列表")
     public List<Tree<Long>> tree(@Valid MenuQuery query, @Valid SortQuery sortQuery) {
         if (TenantContextHolder.isTenantEnabled() && !tenantExtensionProperties.isDefaultTenant()) {
             query.setExcludeMenuIdList(menuService.listExcludeTenantMenu());
