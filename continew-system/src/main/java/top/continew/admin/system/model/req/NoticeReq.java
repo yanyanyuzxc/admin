@@ -16,11 +16,11 @@
 
 package top.continew.admin.system.model.req;
 
+import cn.sticki.spel.validator.constrain.SpelFuture;
 import cn.sticki.spel.validator.constrain.SpelNotEmpty;
 import cn.sticki.spel.validator.constrain.SpelNotNull;
 import cn.sticki.spel.validator.jakarta.SpelValid;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -102,7 +102,7 @@ public class NoticeReq implements Serializable {
      */
     @Schema(description = "发布时间", example = "2023-08-08 00:00:00", type = "string")
     @SpelNotNull(condition = "#this.isTiming == true", message = "定时发布时间不能为空")
-    @Future(message = "定时发布时间不能早于当前时间")
+    @SpelFuture(condition = "#this.isTiming == true", message = "定时发布时间不能早于当前时间")
     private LocalDateTime publishTime;
 
     /**
