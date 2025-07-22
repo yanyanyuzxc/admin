@@ -122,10 +122,4 @@ public class MenuResp extends BaseResp {
      */
     @Schema(description = "状态", example = "1")
     private DisEnableStatusEnum status;
-
-    // TODO 临时修复，等待 ContiNew Starter 2.13.3 发布移除
-    @Override
-    public Long getId() {
-        return super.getId();
-    }
 }

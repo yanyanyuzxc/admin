@@ -18,6 +18,7 @@ package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.util.StrUtil;
 import com.alicp.jetcache.anno.Cached;
 import jakarta.annotation.Resource;
@@ -42,6 +43,7 @@ import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
+import top.continew.starter.extension.crud.model.query.SortQuery;
 
 import java.util.List;
 import java.util.Set;
@@ -59,6 +61,11 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
     @Lazy
     @Resource
     private RoleService roleService;
+
+    @Override
+    public List<Tree<Long>> tree(MenuQuery query, SortQuery sortQuery, boolean isSimple) {
+        return this.tree(query, sortQuery, isSimple, true);
+    }
 
     @Override
     public Long create(MenuReq req) {

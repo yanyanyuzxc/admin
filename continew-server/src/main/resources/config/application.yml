@@ -7,7 +7,7 @@ application:
   description: 持续迭代优化的前后端分离中后台管理系统框架，开箱即用，持续提供舒适的开发体验。
   # 版本
   version: 4.0.0-SNAPSHOT
-  starter: 2.13.2
+  starter: 2.13.3
   # 基本包
   base-package: top.continew.admin
   ## 作者信息配置
@@ -186,8 +186,8 @@ continew-starter.trace:
 continew-starter.security:
   password:
     enabled: true
-    # BCryptPasswordEncoder（如有改动，需同步调整 top.continew.admin.common.config.mybatis.BCryptEncryptor）
-    encoding-id: bcrypt
+    # 默认启用的编码器算法（默认：BCrypt 加密算法）
+    algorithm: BCRYPT
 
 --- ### CRUD 配置
 continew-starter.crud:

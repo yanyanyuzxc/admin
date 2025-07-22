@@ -21,7 +21,6 @@ import com.baomidou.mybatisplus.extension.parser.JsqlParserGlobal;
 import com.baomidou.mybatisplus.extension.parser.cache.JdkSerialCaffeineJsqlParseCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import top.continew.starter.extension.datapermission.provider.DataPermissionUserDataProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -55,13 +54,5 @@ public class MybatisPlusConfiguration {
     @Bean
     public DataPermissionUserDataProvider dataPermissionUserDataProvider() {
         return new DefaultDataPermissionUserDataProvider();
-    }
-
-    /**
-     * BCrypt 加/解密处理器
-     */
-    @Bean
-    public BCryptEncryptor bCryptEncryptor(PasswordEncoder passwordEncoder) {
-        return new BCryptEncryptor(null, passwordEncoder);
     }
 }

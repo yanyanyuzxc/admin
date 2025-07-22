@@ -85,7 +85,7 @@ import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
-import top.continew.starter.security.crypto.utils.EncryptHelper;
+import top.continew.starter.security.crypto.util.EncryptHelper;
 
 import java.io.IOException;
 import java.time.Duration;

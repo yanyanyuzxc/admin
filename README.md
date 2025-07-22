@@ -4,7 +4,7 @@
 <img src="https://img.shields.io/badge/SNAPSHOT-v4.0.0-%23ff3f59.svg" alt="Release" />
 </a>
 <a href="https://github.com/continew-org/continew-starter" title="ContiNew Starter" target="_blank">
-<img src="https://img.shields.io/badge/ContiNew Starter-2.13.2-%236CB52D.svg" alt="ContiNew Starter" />
+<img src="https://img.shields.io/badge/ContiNew Starter-2.13.3-%236CB52D.svg" alt="ContiNew Starter" />
 </a>
 <a href="https://spring.io/projects/spring-boot" title="Spring Boot" target="_blank">
 <img src="https://img.shields.io/badge/Spring Boot-3.3.12-%236CB52D.svg?logo=Spring-Boot" alt="Spring Boot" />
@@ -44,9 +44,14 @@
 
 **AI 编程纪元已经开启，基于 ContiNew 项目开发，让 AI 助手“学习”更优雅的代码规范，“写出”更优质的代码。**
 
-ContiNew Admin（Continue New Admin）：持续迭代优化的，前后端分离，多租户中后台管理系统框架。开箱即用，重视每一处代码规范，重视每一种解决方案细节，持续提供舒适的前、后端开发体验。
+ContiNew Admin（Continue New Admin），页面现代美观，且专注设计与代码细节的 **高质量多租户中后台** 管理系统框架。开箱即用，持续迭代优化，持续提供舒适的开发体验。
 
-当前采用的技术栈：Spring Boot3（Java17）、Vue3 & Arco Design & TS & Vite、Sa-Token、MyBatis Plus、FastExcel、Redisson、JetCache、JustAuth、Crane4j、Hutool、Liquibase 等。
+当前采用的技术栈：Spring Boot3（Java17）、Vue3 & Arco Design & TS & Vite、Sa-Token、MyBatis Plus、Redisson、FastExcel、CosId、JetCache、JustAuth、Crane4j、Spring Doc、Hutool 等。
+
+我们始终坚信好的产品必然是反复打磨出来的，而在工作中我们受限于客户需求、开发周期等因素，无法深度打磨、重构我们的代码，这也是架构腐烂的根源。所以，我们希望能在业余时间，通过开源社区的力量来打磨出一个好的产品，一个好的实践，一个好的生态。
+
+我们的愿景在于，当你将 ContiNew 系列项目应用到工作场景时，不仅仅是得到效率的提高，更可以得到舒适的开发体验，让更多开发者的编程工作多一点“甜”。
+
 
 ## 项目源码
 
@@ -226,7 +231,7 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 | <a href="https://arco.design/vue/docs/start" target="_blank">Arco Design</a> | 2.57.0       | 字节跳动推出的前端 UI 框架，年轻化的色彩和组件设计。         |
 | <a href="https://www.typescriptlang.org/zh/" target="_blank">TypeScript</a> | 5.0.4        | TypeScript 是微软开发的一个开源的编程语言，通过在 JavaScript 的基础上添加静态类型定义构建而成。 |
 | <a href="https://vite.dev/" target="_blank">Vite</a>         | 5.1.5        | 下一代的前端工具链，为开发提供极速响应。                     |
-| [ContiNew Starter](https://github.com/continew-org/continew-starter) | 2.13.2       | ContiNew Starter 包含了一系列经过企业实践优化的依赖包（如 MyBatis-Plus、SaToken），可轻松集成到应用中，为开发人员减少手动引入依赖及配置的麻烦，为 Spring Boot Web 项目的灵活快速构建提供支持。 |
+| [ContiNew Starter](https://github.com/continew-org/continew-starter) | 2.13.3       | ContiNew Starter 包含了一系列经过企业实践优化的依赖包（如 MyBatis-Plus、SaToken），可轻松集成到应用中，为开发人员减少手动引入依赖及配置的麻烦，为 Spring Boot Web 项目的灵活快速构建提供支持。 |
 | <a href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a> | 3.3.12       | 简化 Spring 应用的初始搭建和开发过程，基于“约定优于配置”的理念，使开发人员不再需要定义样板化的配置。（Spring Boot 3.0 开始，要求 Java 17 作为最低版本） |
 | <a href="https://undertow.io/" target="_blank">Undertow</a>  | 2.3.18.Final | 采用 Java 开发的灵活的高性能 Web 服务器，提供包括阻塞和基于 NIO 的非堵塞机制。 |
 | <a href="https://sa-token.dev33.cn/" target="_blank">Sa-Token + JWT</a> | 1.44.0       | 轻量级 Java 权限认证框架，让鉴权变得简单、优雅。             |

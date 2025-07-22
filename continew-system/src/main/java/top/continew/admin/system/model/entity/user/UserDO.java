@@ -21,11 +21,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.continew.admin.common.base.model.entity.TenantBaseDO;
-import top.continew.admin.common.config.mybatis.BCryptEncryptor;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
 import top.continew.starter.extension.crud.annotation.DictModel;
 import top.continew.starter.security.crypto.annotation.FieldEncrypt;
+import top.continew.starter.security.crypto.enums.Algorithm;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -57,7 +57,7 @@ public class UserDO extends TenantBaseDO {
     /**
      * 密码
      */
-    @FieldEncrypt(encryptor = BCryptEncryptor.class)
+    @FieldEncrypt(Algorithm.PASSWORD_ENCODER)
     private String password;
 
     /**
