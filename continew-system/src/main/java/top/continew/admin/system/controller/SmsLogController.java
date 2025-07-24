@@ -35,6 +35,6 @@ import top.continew.starter.extension.crud.enums.Api;
  */
 @Tag(name = "短信日志管理 API")
 @RestController
-@CrudRequestMapping(value = "/system/smsLog", api = {Api.PAGE, Api.GET, Api.BATCH_DELETE, Api.EXPORT})
+@CrudRequestMapping(value = "/system/sms/log", api = {Api.PAGE, Api.GET, Api.BATCH_DELETE, Api.EXPORT})
 public class SmsLogController extends BaseController<SmsLogService, SmsLogResp, SmsLogResp, SmsLogQuery, SmsLogReq> {
 }

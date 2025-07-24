@@ -35,6 +35,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.AnnotationUtils;
+import top.continew.admin.common.config.crud.CrudApiPermissionPrefixCache;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.open.sign.OpenApiSignTemplate;
@@ -113,11 +114,15 @@ public class SaTokenConfiguration {
             if (AopUtils.isAopProxy(bean)) {
                 clazz = AopProxyUtils.ultimateTargetClass(bean);
             }
-            // 使用 @CrudRequestMapping 的 Controller，如果使用了 @SaIgnore 注解，则表示忽略校验
+            // 使用 @CrudRequestMapping 的 Controller，如果使用了 @SaIgnore 注解，则表示忽略认证和权限校验
             CrudRequestMapping crudRequestMapping = AnnotationUtils.findAnnotation(clazz, CrudRequestMapping.class);
             SaIgnore saIgnore = AnnotationUtils.findAnnotation(clazz, SaIgnore.class);
-            if (crudRequestMapping != null && saIgnore != null) {
-                return crudRequestMapping.value() + StringConstants.PATH_PATTERN;
+            if (crudRequestMapping != null) {
+                if (saIgnore != null) {
+                    return crudRequestMapping.value() + StringConstants.PATH_PATTERN;
+                }
+                // 缓存权限前缀
+                CrudApiPermissionPrefixCache.put(clazz, crudRequestMapping.value());
             }
             return null;
         }).filter(Objects::nonNull).toList();

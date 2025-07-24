@@ -22,11 +22,9 @@ import cn.dev33.satoken.context.model.SaRequest;
 import cn.dev33.satoken.sign.template.SaSignTemplate;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.text.CharSequenceUtil;
 import top.continew.admin.common.base.service.BaseService;
-import top.continew.starter.core.constant.StringConstants;
+import top.continew.admin.common.config.crud.CrudApiPermissionPrefixCache;
 import top.continew.starter.extension.crud.annotation.CrudApi;
-import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.controller.AbstractCrudController;
 import top.continew.starter.extension.crud.enums.Api;
 
@@ -64,11 +62,9 @@ public class BaseController<S extends BaseService<L, D, Q, C>, L, D, Q, C> exten
             return;
         }
         // 校验权限，例如：创建用户接口（POST /system/user） => 校验 system:user:create 权限
-        CrudRequestMapping crudRequestMapping = targetClass.getDeclaredAnnotation(CrudRequestMapping.class);
-        String path = crudRequestMapping.value();
-        String prefix = String.join(StringConstants.COLON, CharSequenceUtil.splitTrim(path, StringConstants.SLASH));
+        String permissionPrefix = CrudApiPermissionPrefixCache.get(targetClass);
         String apiName = getApiName(crudApi.value());
-        StpUtil.checkPermission("%s:%s".formatted(prefix, apiName.toLowerCase()));
+        StpUtil.checkPermission("%s:%s".formatted(permissionPrefix, apiName.toLowerCase()));
     }
 
     /**
