@@ -45,6 +45,7 @@ import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -98,8 +99,9 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<Long> ids) {
-        baseMapper.lambdaUpdate().in(MenuDO::getParentId, ids).remove();
-        super.delete(ids);
+        // 级联删除菜单（包含子菜单）
+        List<Long> allDeleteIdList = this.listCascadingDeleteMenuIds(ids);
+        baseMapper.deleteByIds(allDeleteIdList);
         RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
     }
 
@@ -155,5 +157,27 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
             .ne(MenuDO::getType, MenuTypeEnum.BUTTON)
             .ne(id != null, MenuDO::getId, id)
             .exists(), "组件名称为 [{}] 的菜单已存在", name);
+    }
+
+    /**
+     * 级联获取所有待删除菜单 ID 列表（包含自身及所有子菜单）
+     *
+     * @param ids ID 列表
+     * @return 待删除菜单 ID 列表（包含自身及所有子菜单）
+     */
+    private List<Long> listCascadingDeleteMenuIds(List<Long> ids) {
+        List<Long> menuIds = new ArrayList<>(ids);
+        List<Long> childIdList = baseMapper.lambdaQuery()
+            .select(MenuDO::getId)
+            .in(MenuDO::getParentId, menuIds)
+            .list()
+            .stream()
+            .map(MenuDO::getId)
+            .toList();
+        if (childIdList.isEmpty()) {
+            return menuIds;
+        }
+        menuIds.addAll(this.listCascadingDeleteMenuIds(childIdList));
+        return menuIds;
     }
 }
