@@ -22,8 +22,12 @@ import cn.dev33.satoken.context.model.SaRequest;
 import cn.dev33.satoken.sign.template.SaSignTemplate;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.common.config.crud.CrudApiPermissionPrefixCache;
+import top.continew.starter.auth.satoken.autoconfigure.SaTokenExtensionProperties;
+import top.continew.starter.core.util.ServletUtils;
+import top.continew.starter.core.util.SpringWebUtils;
 import top.continew.starter.extension.crud.annotation.CrudApi;
 import top.continew.starter.extension.crud.controller.AbstractCrudController;
 import top.continew.starter.extension.crud.enums.Api;
@@ -60,6 +64,14 @@ public class BaseController<S extends BaseService<L, D, Q, C>, L, D, Q, C> exten
         if (AnnotationUtil.hasAnnotation(targetMethod, SaIgnore.class) || AnnotationUtil
             .hasAnnotation(targetClass, SaIgnore.class)) {
             return;
+        }
+        // 忽略排除（放行）路径
+        SaTokenExtensionProperties saTokenExtensionProperties = SpringUtil.getBean(SaTokenExtensionProperties.class);
+        if (saTokenExtensionProperties.isEnabled()) {
+            String[] excludePatterns = saTokenExtensionProperties.getSecurity().getExcludes();
+            if (SpringWebUtils.isMatch(ServletUtils.getRequestPath(), excludePatterns)) {
+                return;
+            }
         }
         // 校验权限，例如：创建用户接口（POST /system/user） => 校验 system:user:create 权限
         String permissionPrefix = CrudApiPermissionPrefixCache.get(targetClass);
