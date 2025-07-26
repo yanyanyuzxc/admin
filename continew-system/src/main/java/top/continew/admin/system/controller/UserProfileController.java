@@ -49,7 +49,6 @@ import top.continew.admin.system.service.UserSocialService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.exception.BadRequestException;
 import top.continew.starter.core.util.CollUtils;
-import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 
 import java.io.IOException;
@@ -91,41 +90,33 @@ public class UserProfileController {
     @Operation(summary = "修改密码", description = "修改用户登录密码")
     @PatchMapping("/password")
     public void updatePassword(@RequestBody @Valid UserPasswordUpdateReq updateReq) {
-        String rawOldPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(updateReq
-            .getOldPassword()));
-        ValidationUtils.throwIfNull(rawOldPassword, DECRYPT_FAILED);
-        String rawNewPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(updateReq
-            .getNewPassword()));
-        ValidationUtils.throwIfNull(rawNewPassword, "新密码解密失败");
-        userService.updatePassword(rawOldPassword, rawNewPassword, UserContextHolder.getUserId());
+        String oldPassword = SecureUtils.decryptPasswordByRsaPrivateKey(updateReq.getOldPassword(), DECRYPT_FAILED);
+        String newPassword = SecureUtils.decryptPasswordByRsaPrivateKey(updateReq.getNewPassword(), "新密码解密失败");
+        userService.updatePassword(oldPassword, newPassword, UserContextHolder.getUserId());
     }
 
     @Operation(summary = "修改手机号", description = "修改手机号")
     @PatchMapping("/phone")
     public void updatePhone(@RequestBody @Valid UserPhoneUpdateReq updateReq) {
-        String rawOldPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(updateReq
-            .getOldPassword()));
-        ValidationUtils.throwIfBlank(rawOldPassword, DECRYPT_FAILED);
+        String oldPassword = SecureUtils.decryptPasswordByRsaPrivateKey(updateReq.getOldPassword(), DECRYPT_FAILED);
         String captchaKey = CacheConstants.CAPTCHA_KEY_PREFIX + updateReq.getPhone();
         String captcha = RedisUtils.get(captchaKey);
         ValidationUtils.throwIfBlank(captcha, CAPTCHA_EXPIRED);
         ValidationUtils.throwIfNotEqualIgnoreCase(updateReq.getCaptcha(), captcha, "验证码不正确");
         RedisUtils.delete(captchaKey);
-        userService.updatePhone(updateReq.getPhone(), rawOldPassword, UserContextHolder.getUserId());
+        userService.updatePhone(updateReq.getPhone(), oldPassword, UserContextHolder.getUserId());
     }
 
     @Operation(summary = "修改邮箱", description = "修改用户邮箱")
     @PatchMapping("/email")
     public void updateEmail(@RequestBody @Valid UserEmailUpdateReq updateReq) {
-        String rawOldPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(updateReq
-            .getOldPassword()));
-        ValidationUtils.throwIfBlank(rawOldPassword, DECRYPT_FAILED);
+        String oldPassword = SecureUtils.decryptPasswordByRsaPrivateKey(updateReq.getOldPassword(), DECRYPT_FAILED);
         String captchaKey = CacheConstants.CAPTCHA_KEY_PREFIX + updateReq.getEmail();
         String captcha = RedisUtils.get(captchaKey);
         ValidationUtils.throwIfBlank(captcha, CAPTCHA_EXPIRED);
         ValidationUtils.throwIfNotEqualIgnoreCase(updateReq.getCaptcha(), captcha, "验证码不正确");
         RedisUtils.delete(captchaKey);
-        userService.updateEmail(updateReq.getEmail(), rawOldPassword, UserContextHolder.getUserId());
+        userService.updateEmail(updateReq.getEmail(), oldPassword, UserContextHolder.getUserId());
     }
 
     @Operation(summary = "查询绑定的三方账号", description = "查询绑定的三方账号")

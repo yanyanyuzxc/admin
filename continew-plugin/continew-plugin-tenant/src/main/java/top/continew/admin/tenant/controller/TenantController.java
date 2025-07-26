@@ -35,8 +35,6 @@ import top.continew.admin.tenant.model.req.TenantReq;
 import top.continew.admin.tenant.model.resp.TenantDetailResp;
 import top.continew.admin.tenant.model.resp.TenantResp;
 import top.continew.admin.tenant.service.TenantService;
-import top.continew.starter.core.util.ExceptionUtils;
-import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
 import top.continew.starter.extension.tenant.util.TenantUtils;
@@ -61,10 +59,8 @@ public class TenantController extends BaseController<TenantService, TenantResp, 
     @PutMapping("/{id}/admin/pwd")
     public void updateAdminUserPwd(@Valid @RequestBody TenantAdminUserPwdUpdateReq req, @PathVariable Long id) {
         TenantDO tenant = baseService.getById(id);
-        String encryptPassword = req.getPassword();
         TenantUtils.execute(id, () -> {
-            String password = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(encryptPassword));
-            ValidationUtils.throwIfNull(password, "新密码解密失败");
+            String password = SecureUtils.decryptPasswordByRsaPrivateKey(req.getPassword(), "新密码解密失败");
             userApi.resetPassword(password, tenant.getAdminUser());
         });
     }

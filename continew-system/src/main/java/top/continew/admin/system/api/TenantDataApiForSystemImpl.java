@@ -18,7 +18,6 @@ package top.continew.admin.system.api;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ReUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import top.continew.admin.common.api.tenant.PackageMenuApi;
 import top.continew.admin.common.api.tenant.TenantApi;
 import top.continew.admin.common.api.tenant.TenantDataApi;
 import top.continew.admin.common.constant.GlobalConstants;
-import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.enums.DataScopeEnum;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
@@ -47,8 +45,6 @@ import top.continew.admin.system.service.FileService;
 import top.continew.admin.system.service.RoleMenuService;
 import top.continew.admin.system.service.UserRoleService;
 import top.continew.starter.core.util.CollUtils;
-import top.continew.starter.core.util.ExceptionUtils;
-import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.time.LocalDateTime;
@@ -187,15 +183,12 @@ public class TenantDataApiForSystemImpl implements TenantDataApi {
      */
     private Long initUserData(TenantDTO tenant, Long deptId) {
         // 解密密码
-        String rawPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(tenant.getPassword()));
-        ValidationUtils.throwIfNull(rawPassword, "密码解密失败");
-        ValidationUtils.throwIf(!ReUtil
-            .isMatch(RegexConstants.PASSWORD, rawPassword), "密码长度为 8-32 个字符，支持大小写字母、数字、特殊字符，至少包含字母和数字");
+        String password = SecureUtils.decryptPasswordByRsaPrivateKey(tenant.getPassword(), "密码解密失败", true);
         // 初始化用户
         UserDO user = new UserDO();
         user.setUsername(tenant.getUsername());
         user.setNickname(RoleCodeEnum.TENANT_ADMIN.getDescription());
-        user.setPassword(rawPassword);
+        user.setPassword(password);
         user.setGender(GenderEnum.UNKNOWN);
         user.setDescription("系统初始用户");
         user.setStatus(DisEnableStatusEnum.ENABLE);

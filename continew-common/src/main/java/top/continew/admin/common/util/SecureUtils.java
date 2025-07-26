@@ -17,9 +17,12 @@
 package top.continew.admin.common.util;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import top.continew.admin.common.config.RsaProperties;
+import top.continew.admin.common.constant.RegexConstants;
+import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 
 /**
@@ -77,5 +80,36 @@ public class SecureUtils {
      */
     public static String decryptByRsaPrivateKey(String data, String privateKey) {
         return new String(SecureUtil.rsa(privateKey, null).decrypt(Base64.decode(data), KeyType.PrivateKey));
+    }
+
+    /**
+     * 解密密码
+     *
+     * @param encryptedPasswordByRsaPublicKey 密码（已被 Rsa 公钥加密）
+     * @param errorMsg                        错误信息
+     * @return 解密后的密码
+     */
+    public static String decryptPasswordByRsaPrivateKey(String encryptedPasswordByRsaPublicKey, String errorMsg) {
+        return decryptPasswordByRsaPrivateKey(encryptedPasswordByRsaPublicKey, errorMsg, false);
+    }
+
+    /**
+     * 解密密码
+     *
+     * @param encryptedPasswordByRsaPublicKey 密码（已被 Rsa 公钥加密）
+     * @param errorMsg                        错误信息
+     * @param isVerifyPattern                 是否验证密码格式
+     * @return 解密后的密码
+     */
+    public static String decryptPasswordByRsaPrivateKey(String encryptedPasswordByRsaPublicKey,
+                                                        String errorMsg,
+                                                        boolean isVerifyPattern) {
+        String rawPassword = ExceptionUtils.exToNull(() -> decryptByRsaPrivateKey(encryptedPasswordByRsaPublicKey));
+        ValidationUtils.throwIfBlank(rawPassword, errorMsg);
+        if (isVerifyPattern) {
+            ValidationUtils.throwIf(!ReUtil
+                .isMatch(RegexConstants.PASSWORD, rawPassword), "密码长度为 8-32 个字符，支持大小写字母、数字、特殊字符，至少包含字母和数字");
+        }
+        return rawPassword;
     }
 }

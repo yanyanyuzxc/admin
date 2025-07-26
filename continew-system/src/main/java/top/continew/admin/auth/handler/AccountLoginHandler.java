@@ -36,7 +36,6 @@ import top.continew.admin.system.enums.PasswordPolicyEnum;
 import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.model.resp.ClientResp;
 import top.continew.starter.cache.redisson.util.RedisUtils;
-import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 
@@ -58,12 +57,11 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
     @Override
     public LoginResp login(AccountLoginReq req, ClientResp client, HttpServletRequest request) {
         // 解密密码
-        String rawPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(req.getPassword()));
-        ValidationUtils.throwIfBlank(rawPassword, "密码解密失败");
+        String password = SecureUtils.decryptPasswordByRsaPrivateKey(req.getPassword(), "密码解密失败");
         // 验证用户名密码
         String username = req.getUsername();
         UserDO user = userService.getByUsername(username);
-        boolean isError = ObjectUtil.isNull(user) || !passwordEncoder.matches(rawPassword, user.getPassword());
+        boolean isError = ObjectUtil.isNull(user) || !passwordEncoder.matches(password, user.getPassword());
         // 检查账号锁定状态
         this.checkUserLocked(req.getUsername(), request, isError);
         ValidationUtils.throwIf(isError, "用户名或密码不正确");

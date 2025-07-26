@@ -17,7 +17,6 @@
 package top.continew.admin.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.util.ReUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -31,7 +30,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.base.controller.BaseController;
-import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.model.query.UserQuery;
 import top.continew.admin.system.model.req.user.UserImportReq;
@@ -43,7 +41,6 @@ import top.continew.admin.system.model.resp.user.UserImportParseResp;
 import top.continew.admin.system.model.resp.user.UserImportResp;
 import top.continew.admin.system.model.resp.user.UserResp;
 import top.continew.admin.system.service.UserService;
-import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
@@ -68,11 +65,8 @@ public class UserController extends BaseController<UserService, UserResp, UserDe
     @Override
     @Operation(summary = "新增数据", description = "新增数据")
     public IdResp<Long> create(@RequestBody @Valid UserReq req) {
-        String rawPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(req.getPassword()));
-        ValidationUtils.throwIfNull(rawPassword, "密码解密失败");
-        ValidationUtils.throwIf(!ReUtil
-            .isMatch(RegexConstants.PASSWORD, rawPassword), "密码长度为 8-32 个字符，支持大小写字母、数字、特殊字符，至少包含字母和数字");
-        req.setPassword(rawPassword);
+        String password = SecureUtils.decryptPasswordByRsaPrivateKey(req.getPassword(), "密码解密失败", true);
+        req.setPassword(password);
         return super.create(req);
     }
 
@@ -103,11 +97,8 @@ public class UserController extends BaseController<UserService, UserResp, UserDe
     @SaCheckPermission("system:user:resetPwd")
     @PatchMapping("/{id}/password")
     public void resetPassword(@RequestBody @Valid UserPasswordResetReq req, @PathVariable Long id) {
-        String rawNewPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(req.getNewPassword()));
-        ValidationUtils.throwIfNull(rawNewPassword, "新密码解密失败");
-        ValidationUtils.throwIf(!ReUtil
-            .isMatch(RegexConstants.PASSWORD, rawNewPassword), "密码长度为 8-32 个字符，支持大小写字母、数字、特殊字符，至少包含字母和数字");
-        req.setNewPassword(rawNewPassword);
+        String newPassword = SecureUtils.decryptPasswordByRsaPrivateKey(req.getNewPassword(), "新密码解密失败", true);
+        req.setNewPassword(newPassword);
         baseService.resetPassword(req, id);
     }
 
