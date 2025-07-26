@@ -30,7 +30,7 @@ import top.continew.admin.auth.enums.AuthTypeEnum;
 import top.continew.admin.auth.model.req.AccountLoginReq;
 import top.continew.admin.auth.model.resp.LoginResp;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.common.constant.SysConstants;
+import top.continew.admin.common.constant.GlobalConstants;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.enums.PasswordPolicyEnum;
 import top.continew.admin.system.model.entity.user.UserDO;
@@ -78,7 +78,7 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
         super.preLogin(req, client, request);
         // 校验验证码
         int loginCaptchaEnabled = optionService.getValueByCode2Int("LOGIN_CAPTCHA_ENABLED");
-        if (SysConstants.YES.equals(loginCaptchaEnabled)) {
+        if (GlobalConstants.Boolean.YES.equals(loginCaptchaEnabled)) {
             ValidationUtils.throwIfBlank(req.getCaptcha(), "验证码不能为空");
             ValidationUtils.throwIfBlank(req.getUuid(), "验证码标识不能为空");
             String captchaKey = CacheConstants.CAPTCHA_KEY_PREFIX + req.getUuid();
@@ -104,7 +104,7 @@ public class AccountLoginHandler extends AbstractLoginHandler<AccountLoginReq> {
     private void checkUserLocked(String username, HttpServletRequest request, boolean isError) {
         // 不锁定
         int maxErrorCount = optionService.getValueByCode2Int(PasswordPolicyEnum.PASSWORD_ERROR_LOCK_COUNT.name());
-        if (maxErrorCount <= SysConstants.NO) {
+        if (maxErrorCount <= GlobalConstants.Boolean.NO) {
             return;
         }
         // 检测是否已被锁定

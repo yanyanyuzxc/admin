@@ -85,12 +85,12 @@ public interface RoleService extends BaseService<RoleResp, RoleDetailResp, RoleQ
     Set<RoleContext> listByUserId(Long userId);
 
     /**
-     * 根据角色编码查询
+     * 根据编码查询 ID
      *
-     * @param code 角色编码
-     * @return 角色信息
+     * @param code 编码
+     * @return ID
      */
-    RoleDO getByCode(String code);
+    Long getIdByCode(String code);
 
     /**
      * 根据角色名称查询

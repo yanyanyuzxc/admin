@@ -30,8 +30,8 @@ import top.continew.admin.common.api.tenant.TenantDataApi;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.common.enums.RoleCodeEnum;
 import top.continew.admin.common.model.dto.TenantDTO;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
@@ -170,7 +170,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
         }));
         // 租户管理员：新增菜单
         tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
-            Long roleId = roleApi.getIdByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+            Long roleId = roleApi.getIdByCode(RoleCodeEnum.TENANT_ADMIN.getCode());
             List<Long> oldMenuIdList = roleMenuApi.listMenuIdByRoleIds(List.of(roleId));
             Collection<Long> addMenuIdList = CollUtil.disjunction(newMenuIds, oldMenuIdList);
             if (CollUtil.isNotEmpty(addMenuIdList)) {

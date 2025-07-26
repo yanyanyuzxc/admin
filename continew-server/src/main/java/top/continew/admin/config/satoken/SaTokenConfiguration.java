@@ -27,6 +27,7 @@ import cn.dev33.satoken.sign.template.SaSignUtil;
 import cn.dev33.satoken.stp.StpInterface;
 import cn.dev33.satoken.stp.StpUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -54,6 +55,7 @@ import java.util.*;
  * @author chengzi
  * @since 2022/12/19 22:13
  */
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class SaTokenConfiguration {
@@ -133,5 +135,6 @@ public class SaTokenConfiguration {
             // 转回数组
             properties.getSecurity().setExcludes(allExcludes.toArray(new String[0]));
         }
+        log.debug("缓存 CRUD API 权限前缀完成：{}", CrudApiPermissionPrefixCache.getAll().values());
     }
 }

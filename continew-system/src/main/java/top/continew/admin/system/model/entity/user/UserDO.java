@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import top.continew.admin.common.base.model.entity.TenantBaseDO;
+import top.continew.admin.common.base.model.entity.BaseDO;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
 import top.continew.starter.extension.crud.annotation.DictModel;
@@ -39,7 +39,7 @@ import java.time.LocalDateTime;
 @Data
 @DictModel(labelKey = "nickname", extraKeys = {"username"})
 @TableName("sys_user")
-public class UserDO extends TenantBaseDO {
+public class UserDO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 1L;

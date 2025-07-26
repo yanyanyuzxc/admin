@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.api;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import top.continew.admin.common.api.system.RoleApi;
-import top.continew.admin.system.service.RoleService;
+package top.continew.admin.common.constant;
 
 /**
- * 角色业务 API 实现
- * 
+ * 全局常量
+ *
  * @author Charles7c
- * @since 2025/7/26 9:39
+ * @since 2023/2/9 22:11
  */
-@Service
-@RequiredArgsConstructor
-public class RoleApiImpl implements RoleApi {
+public class GlobalConstants {
 
-    private final RoleService baseService;
+    /**
+     * 根父级 ID
+     */
+    public static final Long ROOT_PARENT_ID = 0L;
 
-    @Override
-    public Long getIdByCode(String code) {
-        return baseService.getIdByCode(code);
+    /**
+     * 布尔值常量
+     */
+    public static class Boolean {
+
+        /**
+         * 否
+         */
+        public static final Integer NO = 0;
+
+        /**
+         * 是
+         */
+        public static final Integer YES = 1;
     }
 
-    @Override
-    public void updateUserContext(Long roleId) {
-        baseService.updateUserContext(roleId);
+    private GlobalConstants() {
     }
 }

@@ -22,14 +22,19 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.common.constant.SysConstants;
+import top.continew.admin.common.context.RoleContext;
+import top.continew.admin.common.enums.RoleCodeEnum;
+import top.continew.admin.system.constant.SystemConstants;
 import top.continew.admin.system.mapper.UserRoleMapper;
 import top.continew.admin.system.model.entity.UserRoleDO;
 import top.continew.admin.system.model.query.RoleUserQuery;
 import top.continew.admin.system.model.resp.role.RoleUserResp;
+import top.continew.admin.system.service.RoleService;
 import top.continew.admin.system.service.UserRoleService;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
@@ -38,6 +43,7 @@ import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户和角色业务实现
@@ -50,6 +56,9 @@ import java.util.List;
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleMapper baseMapper;
+    @Lazy
+    @Resource
+    private RoleService roleService;
 
     @Override
     @AutoOperate(type = RoleUserResp.class, on = "list")
@@ -70,6 +79,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean assignRolesToUser(List<Long> roleIds, Long userId) {
+        // 超级管理员和租户管理员角色不允许分配
+        CheckUtils.throwIf(roleIds.contains(SystemConstants.SUPER_ADMIN_ROLE_ID), "不允许分配超级管理员角色");
+        Set<String> roleCodeSet = CollUtils.mapToSet(roleService.listByUserId(userId), RoleContext::getCode);
+        CheckUtils.throwIf(roleCodeSet.contains(RoleCodeEnum.TENANT_ADMIN.getCode()), "不允许分配系统管理员角色");
         // 检查是否有变更
         List<Long> oldRoleIdList = baseMapper.lambdaQuery()
             .select(UserRoleDO::getRoleId)
@@ -81,8 +94,6 @@ public class UserRoleServiceImpl implements UserRoleService {
         if (CollUtil.isEmpty(CollUtil.disjunction(roleIds, oldRoleIdList))) {
             return false;
         }
-        CheckUtils.throwIf(SysConstants.SUPER_USER_ID.equals(userId) && !roleIds
-            .contains(SysConstants.SUPER_ROLE_ID), "不允许变更超管用户角色");
         // 删除原有关联
         baseMapper.lambdaUpdate().eq(UserRoleDO::getUserId, userId).remove();
         // 保存最新关联

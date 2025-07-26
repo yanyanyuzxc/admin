@@ -26,11 +26,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.context.RoleContext;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.enums.DataScopeEnum;
+import top.continew.admin.common.enums.RoleCodeEnum;
+import top.continew.admin.system.constant.SystemConstants;
 import top.continew.admin.system.mapper.RoleMapper;
 import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.query.RoleQuery;
@@ -42,6 +43,8 @@ import top.continew.admin.system.model.resp.role.RoleResp;
 import top.continew.admin.system.service.*;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
+import top.continew.starter.extension.crud.model.query.SortQuery;
+import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,9 +63,10 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
 
     @Resource
     private MenuService menuService;
+    @Resource
+    private UserRoleService userRoleService;
     private final RoleMenuService roleMenuService;
     private final RoleDeptService roleDeptService;
-    private final UserRoleService userRoleService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -70,8 +74,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
         this.checkNameRepeat(req.getName(), null);
         String code = req.getCode();
         this.checkCodeRepeat(code, null);
-        // 防止租户添加超管
-        CheckUtils.throwIfEqual(SysConstants.SUPER_ROLE_CODE, code, "编码 [{}] 禁止使用", code);
+        // 防止租户添加超级管理员
+        CheckUtils.throwIfEqual(RoleCodeEnum.SUPER_ADMIN.getCode(), code, "编码 [{}] 禁止使用", code);
         // 新增信息
         Long roleId = super.create(req);
         // 保存角色和部门关联
@@ -91,7 +95,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
         }
         // 更新信息
         super.update(req, id);
-        if (SysConstants.SUPER_ROLE_CODE.equals(req.getCode())) {
+        if (RoleCodeEnum.isSuperRoleCode(req.getCode())) {
             return;
         }
         // 保存角色和部门关联
@@ -130,10 +134,17 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     }
 
     @Override
+    public List<LabelValueResp> listDict(RoleQuery query, SortQuery sortQuery) {
+        query.setExcludeRoleCodes(RoleCodeEnum.getSuperRoleCodes());
+        return super.listDict(query, sortQuery);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheInvalidate(key = "#id", name = CacheConstants.ROLE_MENU_KEY_PREFIX)
     public void updatePermission(Long id, RoleUpdatePermissionReq req) {
-        super.getById(id);
+        RoleDO role = super.getById(id);
+        CheckUtils.throwIf(Boolean.TRUE.equals(role.getIsSystem()), "[{}] 是系统内置角色，不允许修改角色功能权限", role.getName());
         // 保存角色和菜单关联
         boolean isSaveMenuSuccess = roleMenuService.add(req.getMenuIds(), id);
         // 如果功能权限有变更，则更新在线用户权限信息
@@ -148,7 +159,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
 
     @Override
     public void assignToUsers(Long id, List<Long> userIds) {
-        super.getById(id);
+        RoleDO role = super.getById(id);
+        CheckUtils.throwIf(Boolean.TRUE.equals(role.getIsSystem()), "[{}] 是系统内置角色，不允许分配角色给其他用户", role.getName());
         // 保存用户和角色关联
         userRoleService.assignRoleToUsers(id, userIds);
         // 更新用户上下文
@@ -172,8 +184,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     public Set<String> listPermissionByUserId(Long userId) {
         Set<String> roleCodeSet = this.listCodeByUserId(userId);
         // 超级管理员赋予全部权限
-        if (roleCodeSet.contains(SysConstants.SUPER_ROLE_CODE)) {
-            return CollUtil.newHashSet(SysConstants.ALL_PERMISSION);
+        if (roleCodeSet.contains(RoleCodeEnum.SUPER_ADMIN.getCode())) {
+            return CollUtil.newHashSet(SystemConstants.ALL_PERMISSION);
         }
         return menuService.listPermissionByUserId(userId);
     }
@@ -202,8 +214,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     }
 
     @Override
-    public RoleDO getByCode(String code) {
-        return baseMapper.lambdaQuery().eq(RoleDO::getCode, code).one();
+    public Long getIdByCode(String code) {
+        return baseMapper.lambdaQuery().eq(RoleDO::getCode, code).oneOpt().map(RoleDO::getId).orElse(null);
     }
 
     @Override

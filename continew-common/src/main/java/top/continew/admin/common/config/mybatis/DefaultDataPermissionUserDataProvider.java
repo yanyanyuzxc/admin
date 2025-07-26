@@ -34,7 +34,7 @@ public class DefaultDataPermissionUserDataProvider implements DataPermissionUser
 
     @Override
     public boolean isFilter() {
-        return !UserContextHolder.isAdmin();
+        return !UserContextHolder.isSuperAdminUser() && !UserContextHolder.isTenantAdminUser();
     }
 
     @Override

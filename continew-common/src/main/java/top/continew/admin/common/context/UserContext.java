@@ -17,9 +17,12 @@
 package top.continew.admin.common.context;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import top.continew.admin.common.constant.SysConstants;
+import top.continew.admin.common.config.TenantExtensionProperties;
+import top.continew.admin.common.constant.GlobalConstants;
+import top.continew.admin.common.enums.RoleCodeEnum;
 import top.continew.starter.core.util.CollUtils;
 
 import java.io.Serial;
@@ -101,21 +104,14 @@ public class UserContext implements Serializable {
         this.passwordExpirationDays = passwordExpirationDays;
     }
 
+    /**
+     * 设置角色
+     *
+     * @param roles 角色
+     */
     public void setRoles(Set<RoleContext> roles) {
         this.roles = roles;
         this.roleCodes = CollUtils.mapToSet(roles, RoleContext::getCode);
-    }
-
-    /**
-     * 是否为管理员
-     *
-     * @return true：是；false：否
-     */
-    public boolean isAdmin() {
-        if (CollUtil.isEmpty(roleCodes)) {
-            return false;
-        }
-        return roleCodes.contains(SysConstants.SUPER_ROLE_CODE);
     }
 
     /**
@@ -125,7 +121,7 @@ public class UserContext implements Serializable {
      */
     public boolean isPasswordExpired() {
         // 永久有效
-        if (this.passwordExpirationDays == null || this.passwordExpirationDays <= SysConstants.NO) {
+        if (this.passwordExpirationDays == null || this.passwordExpirationDays <= GlobalConstants.Boolean.NO) {
             return false;
         }
         // 初始密码（第三方登录用户）暂不提示修改
@@ -133,5 +129,30 @@ public class UserContext implements Serializable {
             return false;
         }
         return this.pwdResetTime.plusDays(this.passwordExpirationDays).isBefore(LocalDateTime.now());
+    }
+
+    /**
+     * 是否为超级管理员用户
+     *
+     * @return true：是；false：否
+     */
+    public boolean isSuperAdminUser() {
+        if (CollUtil.isEmpty(roleCodes)) {
+            return false;
+        }
+        return roleCodes.contains(RoleCodeEnum.SUPER_ADMIN.getCode());
+    }
+
+    /**
+     * 是否为租户管理员用户
+     *
+     * @return true：是；false：否
+     */
+    public boolean isTenantAdminUser() {
+        if (CollUtil.isEmpty(roleCodes)) {
+            return false;
+        }
+        TenantExtensionProperties tenantExtensionProperties = SpringUtil.getBean(TenantExtensionProperties.class);
+        return !tenantExtensionProperties.isDefaultTenant() && roleCodes.contains(RoleCodeEnum.TENANT_ADMIN.getCode());
     }
 }

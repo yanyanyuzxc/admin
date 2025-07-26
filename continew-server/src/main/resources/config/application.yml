@@ -206,7 +206,7 @@ continew-starter.tenant:
   tenant-id-header: X-Tenant-Id
   # 请求头中租户编码键名
   tenant-code-header: X-Tenant-Code
-  # 默认租户 ID：超管用户所在租户（默认：0）
+  # 默认租户 ID：超级管理员用户所在租户（默认：0）
   default-tenant-id: 0
   # 忽略表（忽略拼接租户条件）
   ignore-tables:

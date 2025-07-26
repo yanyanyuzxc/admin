@@ -164,8 +164,9 @@ VALUES
 INSERT INTO "sys_role"
 ("id", "name", "code", "data_scope", "description", "sort", "is_system", "create_user", "create_time")
 VALUES
-(1, '系统管理员', 'admin', 1, '系统初始角色', 1, true, 1, NOW()),
-(2, '普通用户', 'general', 4, '系统初始角色', 2, true, 1, NOW()),
+(1, '超级管理员', 'super_admin', 1, '系统初始角色', 0, true, 1, NOW()),
+(2, '系统管理员', 'sys_admin', 1, NULL, 1, false, 1, NOW()),
+(3, '普通用户', 'general', 4, NULL, 2, false, 1, NOW()),
 (547888897925840927, '测试人员', 'tester', 5, NULL, 3, false, 1, NOW()),
 (547888897925840928, '研发人员', 'developer', 4, NULL, 4, false, 1, NOW());
 
@@ -173,7 +174,7 @@ VALUES
 INSERT INTO "sys_user"
 ("id", "username", "nickname", "password", "gender", "email", "phone", "avatar", "description", "status", "is_system", "pwd_reset_time", "dept_id", "create_user", "create_time")
 VALUES
-(1, 'admin', '系统管理员', '{bcrypt}$2a$10$4jGwK2BMJ7FgVR.mgwGodey8.xR8FLoU1XSXpxJ9nZQt.pufhasSa', 1, '42190c6c5639d2ca4edb4150a35e058559ccf8270361a23745a2fd285a273c28', '5bda89a4609a65546422ea56bfe5eab4', NULL, '系统初始用户', 1, true, NOW(), 1, 1, NOW()),
+(1, 'admin', '超级管理员', '{bcrypt}$2a$10$4jGwK2BMJ7FgVR.mgwGodey8.xR8FLoU1XSXpxJ9nZQt.pufhasSa', 1, '42190c6c5639d2ca4edb4150a35e058559ccf8270361a23745a2fd285a273c28', '5bda89a4609a65546422ea56bfe5eab4', NULL, '系统初始用户', 1, true, NOW(), 1, 1, NOW()),
 (547889293968801822, 'test', '测试员', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 2, NULL, NULL, NULL, NULL, 1, false, NOW(), 547887852587843593, 1, NOW()),
 (547889293968801823, 'Charles', 'Charles', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '代码写到极致，就是艺术。', 1, false, NOW(), 547887852587843595, 1, NOW()),
 (547889293968801824, 'Yoofff', 'Yoofff', '{bcrypt}$2a$10$xAsoeMJ.jc/kSxhviLAg7.j2iFrhi6yYAdniNdjLiIUWU/BRZl2Ti', 1, NULL, NULL, NULL, '弱小和无知不是生存的障碍，傲慢才是。', 1, false, NOW(), 1, 1, NOW()),

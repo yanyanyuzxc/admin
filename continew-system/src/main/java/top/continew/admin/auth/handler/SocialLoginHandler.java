@@ -38,9 +38,10 @@ import top.continew.admin.auth.enums.AuthTypeEnum;
 import top.continew.admin.auth.model.req.SocialLoginReq;
 import top.continew.admin.auth.model.resp.LoginResp;
 import top.continew.admin.common.constant.RegexConstants;
-import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
+import top.continew.admin.common.enums.RoleCodeEnum;
+import top.continew.admin.system.constant.SystemConstants;
 import top.continew.admin.system.enums.MessageTemplateEnum;
 import top.continew.admin.system.enums.MessageTypeEnum;
 import top.continew.admin.system.model.entity.user.UserDO;
@@ -107,11 +108,12 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
                 user.setGender(GenderEnum.valueOf(authUser.getGender().name()));
             }
             user.setAvatar(authUser.getAvatar());
-            user.setDeptId(SysConstants.SUPER_DEPT_ID);
+            user.setDeptId(SystemConstants.SUPER_DEPT_ID);
             user.setStatus(DisEnableStatusEnum.ENABLE);
             userService.save(user);
             Long userId = user.getId();
-            userRoleService.assignRolesToUser(Collections.singletonList(SysConstants.GENERAL_ROLE_ID), userId);
+            userRoleService.assignRolesToUser(Collections.singletonList(roleService
+                .getIdByCode(RoleCodeEnum.GENERAL_USER.getCode())), userId);
             userSocial = new UserSocialDO();
             userSocial.setUserId(userId);
             userSocial.setSource(source);

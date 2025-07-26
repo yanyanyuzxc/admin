@@ -61,7 +61,7 @@ public class MenuQuery implements Serializable {
     /**
      * 排除的菜单 ID 列表
      */
-    @Schema(hidden = true, description = "菜单 ID 列表", example = "[9000]")
+    @Schema(hidden = true, description = "排除的菜单 ID 列表", example = "[9000]")
     @Query(columns = "id", type = QueryType.NOT_IN)
     private List<Long> excludeMenuIdList;
 }

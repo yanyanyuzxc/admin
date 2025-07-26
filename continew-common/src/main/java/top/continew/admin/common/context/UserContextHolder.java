@@ -181,12 +181,22 @@ public class UserContextHolder {
     }
 
     /**
-     * 是否为管理员
+     * 是否为超级管理员用户
      *
-     * @return 是否为管理员
+     * @return true：是；false：否
      */
-    public static boolean isAdmin() {
+    public static boolean isSuperAdminUser() {
         StpUtil.checkLogin();
-        return getContext().isAdmin();
+        return getContext().isSuperAdminUser();
+    }
+
+    /**
+     * 是否为租户管理员用户
+     *
+     * @return true：是；false：否
+     */
+    public static boolean isTenantAdminUser() {
+        StpUtil.checkLogin();
+        return getContext().isTenantAdminUser();
     }
 }

@@ -62,6 +62,15 @@ public class CrudApiPermissionPrefixCache {
     }
 
     /**
+     * 获取所有缓存
+     *
+     * @return 所有缓存
+     */
+    public static Map<Class<?>, String> getAll() {
+        return PERMISSION_PREFIX_CACHE;
+    }
+
+    /**
      * 解析权限前缀（解析路径获取模块名和资源名）
      *
      * <p>

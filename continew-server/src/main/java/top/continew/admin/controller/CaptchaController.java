@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.*;
 import top.continew.admin.auth.model.resp.CaptchaResp;
 import top.continew.admin.common.config.CaptchaProperties;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.common.constant.SysConstants;
+import top.continew.admin.common.constant.GlobalConstants;
 import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.model.entity.SmsConfigDO;
 import top.continew.admin.system.service.OptionService;
@@ -119,7 +119,7 @@ public class CaptchaController {
     @GetMapping("/image")
     public CaptchaResp getImageCaptcha() {
         int loginCaptchaEnabled = optionService.getValueByCode2Int("LOGIN_CAPTCHA_ENABLED");
-        if (SysConstants.NO.equals(loginCaptchaEnabled)) {
+        if (GlobalConstants.Boolean.NO.equals(loginCaptchaEnabled)) {
             return CaptchaResp.builder().isEnabled(false).build();
         }
         String uuid = IdUtil.fastUUID();

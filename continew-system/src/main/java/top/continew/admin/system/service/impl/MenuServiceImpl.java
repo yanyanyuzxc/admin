@@ -28,12 +28,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.common.enums.RoleCodeEnum;
+import top.continew.admin.system.constant.SystemConstants;
 import top.continew.admin.system.enums.MenuTypeEnum;
 import top.continew.admin.system.mapper.MenuMapper;
 import top.continew.admin.system.model.entity.MenuDO;
-import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.query.MenuQuery;
 import top.continew.admin.system.model.req.MenuReq;
 import top.continew.admin.system.model.resp.MenuResp;
@@ -113,7 +113,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
     @Override
     @Cached(key = "#roleId", name = CacheConstants.ROLE_MENU_KEY_PREFIX)
     public List<MenuResp> listByRoleId(Long roleId) {
-        if (SysConstants.SUPER_ROLE_ID.equals(roleId)) {
+        if (SystemConstants.SUPER_ADMIN_ROLE_ID.equals(roleId)) {
             return super.list(new MenuQuery(DisEnableStatusEnum.ENABLE), null);
         }
         List<MenuDO> menuList = baseMapper.selectListByRoleId(roleId);
@@ -124,9 +124,9 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuRes
 
     @Override
     public List<Long> listExcludeTenantMenu() {
-        RoleDO role = roleService.getByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+        Long roleId = roleService.getIdByCode(RoleCodeEnum.TENANT_ADMIN.getCode());
         List<Long> allMenuIdList = CollUtils.mapToList(super.list(), MenuDO::getId);
-        List<Long> menuIdList = CollUtils.mapToList(baseMapper.selectListByRoleId(role.getId()), MenuDO::getId);
+        List<Long> menuIdList = CollUtils.mapToList(baseMapper.selectListByRoleId(roleId), MenuDO::getId);
         return CollUtil.disjunction(allMenuIdList, menuIdList).stream().toList();
     }
 

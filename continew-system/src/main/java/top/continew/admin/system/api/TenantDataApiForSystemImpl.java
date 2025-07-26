@@ -27,11 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.api.tenant.PackageMenuApi;
 import top.continew.admin.common.api.tenant.TenantApi;
 import top.continew.admin.common.api.tenant.TenantDataApi;
+import top.continew.admin.common.constant.GlobalConstants;
 import top.continew.admin.common.constant.RegexConstants;
-import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DataScopeEnum;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
+import top.continew.admin.common.enums.RoleCodeEnum;
 import top.continew.admin.common.model.dto.TenantDTO;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.mapper.*;
@@ -44,7 +45,7 @@ import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.service.FileService;
 import top.continew.admin.system.service.RoleMenuService;
-import top.continew.admin.system.service.RoleService;
+import top.continew.admin.system.service.UserRoleService;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
@@ -66,7 +67,7 @@ public class TenantDataApiForSystemImpl implements TenantDataApi {
 
     private final PackageMenuApi packageMenuApi;
     private final TenantApi tenantApi;
-    private final RoleService roleService;
+    private final UserRoleService userRoleService;
     private final FileService fileService;
     private final RoleMenuService roleMenuService;
     private final DeptMapper deptMapper;
@@ -97,7 +98,7 @@ public class TenantDataApiForSystemImpl implements TenantDataApi {
             // 初始化管理用户
             Long userId = this.initUserData(tenant, deptId);
             // 用户绑定角色
-            roleService.assignToUsers(roleId, ListUtil.of(userId));
+            userRoleService.assignRoleToUsers(roleId, ListUtil.of(userId));
             // 租户绑定用户
             tenantApi.bindAdminUser(tenantId, userId);
         });
@@ -146,11 +147,12 @@ public class TenantDataApiForSystemImpl implements TenantDataApi {
     private Long initDeptData(TenantDTO tenant) {
         DeptDO dept = new DeptDO();
         dept.setName(tenant.getName());
-        dept.setParentId(SysConstants.SUPER_PARENT_ID);
-        dept.setAncestors("0");
+        dept.setParentId(GlobalConstants.ROOT_PARENT_ID);
+        dept.setAncestors(GlobalConstants.ROOT_PARENT_ID.toString());
         dept.setDescription("系统初始部门");
         dept.setSort(1);
         dept.setStatus(DisEnableStatusEnum.ENABLE);
+        dept.setIsSystem(true);
         deptMapper.insert(dept);
         return dept.getId();
     }
@@ -163,8 +165,9 @@ public class TenantDataApiForSystemImpl implements TenantDataApi {
      */
     private Long initRoleData(TenantDTO tenant) {
         RoleDO role = new RoleDO();
-        role.setName("系统管理员");
-        role.setCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+        RoleCodeEnum tenantAdmin = RoleCodeEnum.TENANT_ADMIN;
+        role.setName(tenantAdmin.getDescription());
+        role.setCode(tenantAdmin.getCode());
         role.setDataScope(DataScopeEnum.ALL);
         role.setDescription("系统初始角色");
         role.setSort(1);
@@ -191,7 +194,7 @@ public class TenantDataApiForSystemImpl implements TenantDataApi {
         // 初始化用户
         UserDO user = new UserDO();
         user.setUsername(tenant.getUsername());
-        user.setNickname("系统管理员");
+        user.setNickname(RoleCodeEnum.TENANT_ADMIN.getDescription());
         user.setPassword(rawPassword);
         user.setGender(GenderEnum.UNKNOWN);
         user.setDescription("系统初始用户");
