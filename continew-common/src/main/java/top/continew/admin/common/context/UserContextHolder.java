@@ -20,7 +20,7 @@ import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.extra.spring.SpringUtil;
-import top.continew.admin.common.service.CommonUserService;
+import top.continew.admin.common.api.system.UserApi;
 import top.continew.starter.core.util.ExceptionUtils;
 
 /**
@@ -177,7 +177,7 @@ public class UserContextHolder {
      * @return 用户昵称
      */
     public static String getNickname(Long userId) {
-        return ExceptionUtils.exToNull(() -> SpringUtil.getBean(CommonUserService.class).getNicknameById(userId));
+        return ExceptionUtils.exToNull(() -> SpringUtil.getBean(UserApi.class).getNicknameById(userId));
     }
 
     /**

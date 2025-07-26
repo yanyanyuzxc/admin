@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package top.continew.admin.tenant.handler;
-
-import top.continew.admin.tenant.model.req.TenantReq;
+package top.continew.admin.common.api.system;
 
 /**
- * 租户数据处理器
- * 
- * @author 小熊
+ * 角色业务 API
+ *
  * @author Charles7c
- * @since 2024/12/2 20:08
+ * @since 2025/7/26 9:39
  */
-public interface TenantDataHandler {
+public interface RoleApi {
 
     /**
-     * 初始化数据
+     * 根据编码查询 ID
      *
-     * @param tenant 租户信息
+     * @param code 编码
+     * @return 角色 ID
      */
-    void init(TenantReq tenant);
+    Long getIdByCode(String code);
 
     /**
-     * 清除数据
+     * 更新用户上下文
+     *
+     * @param roleId 角色 ID
      */
-    void clear();
+    void updateUserContext(Long roleId);
 }

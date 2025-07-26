@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.tenant.handler;
+package top.continew.admin.system.api;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.ListUtil;
@@ -24,11 +24,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.common.api.tenant.PackageMenuApi;
+import top.continew.admin.common.api.tenant.TenantApi;
+import top.continew.admin.common.api.tenant.TenantDataApi;
 import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DataScopeEnum;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
+import top.continew.admin.common.model.dto.TenantDTO;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.mapper.*;
 import top.continew.admin.system.mapper.user.UserMapper;
@@ -41,23 +45,16 @@ import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.service.FileService;
 import top.continew.admin.system.service.RoleMenuService;
 import top.continew.admin.system.service.RoleService;
-import top.continew.admin.tenant.constant.TenantCacheConstants;
-import top.continew.admin.tenant.mapper.TenantMapper;
-import top.continew.admin.tenant.model.entity.TenantDO;
-import top.continew.admin.tenant.model.req.TenantReq;
-import top.continew.admin.tenant.service.PackageMenuService;
-import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
-import top.continew.starter.extension.crud.model.entity.BaseIdDO;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 租户数据处理器
+ * 租户数据 API 实现
  *
  * @author 小熊
  * @author Charles7c
@@ -65,16 +62,16 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class TenantDataHandlerForSystem implements TenantDataHandler {
+public class TenantDataApiForSystemImpl implements TenantDataApi {
 
-    private final PackageMenuService packageMenuService;
+    private final PackageMenuApi packageMenuApi;
+    private final TenantApi tenantApi;
+    private final RoleService roleService;
+    private final FileService fileService;
+    private final RoleMenuService roleMenuService;
     private final DeptMapper deptMapper;
     private final RoleMapper roleMapper;
-    private final RoleMenuService roleMenuService;
     private final RoleMenuMapper roleMenuMapper;
-    private final RoleService roleService;
-    private final TenantMapper tenantMapper;
-    private final FileService fileService;
     private final LogMapper logMapper;
     private final MessageMapper messageMapper;
     private final MessageMapper messageUserMapper;
@@ -87,7 +84,7 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void init(TenantReq tenant) {
+    public void init(TenantDTO tenant) {
         Long tenantId = tenant.getId();
         TenantUtils.execute(tenantId, () -> {
             // 初始化部门
@@ -95,14 +92,14 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
             // 初始化角色
             Long roleId = this.initRoleData(tenant);
             // 角色绑定菜单
-            List<Long> menuIds = packageMenuService.listMenuIdsByPackageId(tenant.getPackageId());
+            List<Long> menuIds = packageMenuApi.listMenuIdsByPackageId(tenant.getPackageId());
             roleMenuService.add(menuIds, roleId);
             // 初始化管理用户
             Long userId = this.initUserData(tenant, deptId);
             // 用户绑定角色
             roleService.assignToUsers(roleId, ListUtil.of(userId));
             // 租户绑定用户
-            this.bindTenantUser(tenantId, userId);
+            tenantApi.bindAdminUser(tenantId, userId);
         });
     }
 
@@ -146,7 +143,7 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
      * @param tenant 租户信息
      * @return 部门 ID
      */
-    private Long initDeptData(TenantReq tenant) {
+    private Long initDeptData(TenantDTO tenant) {
         DeptDO dept = new DeptDO();
         dept.setName(tenant.getName());
         dept.setParentId(SysConstants.SUPER_PARENT_ID);
@@ -164,7 +161,7 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
      * @param tenant 租户信息
      * @return 角色 ID
      */
-    private Long initRoleData(TenantReq tenant) {
+    private Long initRoleData(TenantDTO tenant) {
         RoleDO role = new RoleDO();
         role.setName("系统管理员");
         role.setCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
@@ -185,7 +182,7 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
      * @param deptId 部门 ID
      * @return 用户 ID
      */
-    private Long initUserData(TenantReq tenant, Long deptId) {
+    private Long initUserData(TenantDTO tenant, Long deptId) {
         // 解密密码
         String rawPassword = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(tenant.getPassword()));
         ValidationUtils.throwIfNull(rawPassword, "密码解密失败");
@@ -204,18 +201,5 @@ public class TenantDataHandlerForSystem implements TenantDataHandler {
         user.setDeptId(deptId);
         userMapper.insert(user);
         return user.getId();
-    }
-
-    /**
-     * 绑定租户管理员用户
-     *
-     * @param tenantId 租户 ID
-     * @param userId   用户 ID
-     */
-    public void bindTenantUser(Long tenantId, Long userId) {
-        tenantMapper.lambdaUpdate().set(TenantDO::getAdminUser, userId).eq(BaseIdDO::getId, tenantId).update();
-        // 更新租户缓存
-        TenantDO entity = tenantMapper.selectById(tenantId);
-        RedisUtils.set(TenantCacheConstants.TENANT_KEY_PREFIX + tenantId, entity);
     }
 }

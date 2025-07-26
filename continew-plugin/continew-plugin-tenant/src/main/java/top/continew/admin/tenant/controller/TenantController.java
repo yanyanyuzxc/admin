@@ -25,11 +25,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import top.continew.admin.common.api.system.UserApi;
 import top.continew.admin.common.base.controller.BaseController;
 import top.continew.admin.common.util.SecureUtils;
-import top.continew.admin.system.model.entity.user.UserDO;
-import top.continew.admin.system.model.req.user.UserPasswordResetReq;
-import top.continew.admin.system.service.UserService;
 import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.query.TenantQuery;
 import top.continew.admin.tenant.model.req.TenantAdminUserPwdUpdateReq;
@@ -56,7 +54,7 @@ import top.continew.starter.extension.tenant.util.TenantUtils;
 @CrudRequestMapping(value = "/tenant/management", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
 public class TenantController extends BaseController<TenantService, TenantResp, TenantDetailResp, TenantQuery, TenantReq> {
 
-    private final UserService userService;
+    private final UserApi userApi;
 
     @Operation(summary = "修改租户管理员密码", description = "修改租户管理员密码")
     @SaCheckPermission("tenant:management:updateAdminUserPwd")
@@ -65,12 +63,9 @@ public class TenantController extends BaseController<TenantService, TenantResp, 
         TenantDO tenant = baseService.getById(id);
         String encryptPassword = req.getPassword();
         TenantUtils.execute(id, () -> {
-            UserDO user = userService.getById(tenant.getAdminUser());
             String password = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(encryptPassword));
             ValidationUtils.throwIfNull(password, "新密码解密失败");
-            UserPasswordResetReq passwordResetReq = new UserPasswordResetReq();
-            passwordResetReq.setNewPassword(password);
-            userService.resetPassword(passwordResetReq, user.getId());
+            userApi.resetPassword(password, tenant.getAdminUser());
         });
     }
 }

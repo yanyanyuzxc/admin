@@ -14,25 +14,32 @@
  * limitations under the License.
  */
 
-package top.continew.admin.common.service;
+package top.continew.admin.system.api;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import top.continew.admin.common.api.system.DictApi;
+import top.continew.admin.system.service.DictService;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 
 import java.util.List;
 
 /**
- * 公共字典项业务接口
+ * 字典业务 API 实现
  *
  * @author Charles7c
- * @since 2025/4/9 20:17
+ * @since 2025/7/26 10:16
  */
-public interface CommonDictItemService {
+@Service
+@RequiredArgsConstructor
+public class DictApiImpl implements DictApi {
 
-    /**
-     * 根据字典编码查询
-     *
-     * @param dictCode 字典编码
-     * @return 字典项列表
-     */
-    List<LabelValueResp> listByDictCode(String dictCode);
+    private final DictService baseService;
+
+    @Override
+    public List<LabelValueResp> listAll() {
+        List<LabelValueResp> list = baseService.listDict(null, null);
+        list.addAll(baseService.listEnumDict());
+        return list;
+    }
 }

@@ -40,8 +40,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenuDO> implements RoleMenuService {
 
-    private final RoleMenuMapper baseMapper;
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean add(List<Long> menuIds, Long roleId) {

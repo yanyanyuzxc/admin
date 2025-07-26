@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package top.continew.admin.common.service;
+package top.continew.admin.common.api.system;
 
-import cn.crane4j.annotation.ContainerMethod;
-import cn.crane4j.annotation.MappingType;
-import top.continew.admin.common.constant.ContainerConstants;
+import top.continew.starter.extension.crud.model.resp.LabelValueResp;
+
+import java.util.List;
 
 /**
- * 公共用户业务接口
+ * 字典项业务 API
  *
  * @author Charles7c
- * @since 2025/1/9 20:17
+ * @since 2025/4/9 20:17
  */
-public interface CommonUserService {
+public interface DictItemApi {
 
     /**
-     * 根据 ID 查询昵称
+     * 根据字典编码查询
      *
-     * <p>
-     * 数据填充容器 {@link ContainerConstants#USER_NICKNAME}
-     * </p>
-     * 
-     * @param id ID
-     * @return 昵称
+     * @param dictCode 字典编码
+     * @return 字典项列表
      */
-    @ContainerMethod(namespace = ContainerConstants.USER_NICKNAME, type = MappingType.ORDER_OF_KEYS)
-    String getNicknameById(Long id);
+    List<LabelValueResp> listByDictCode(String dictCode);
 }

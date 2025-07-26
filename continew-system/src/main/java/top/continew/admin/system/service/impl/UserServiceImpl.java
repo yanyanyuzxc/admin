@@ -32,9 +32,7 @@ import cn.hutool.http.ContentType;
 import cn.hutool.json.JSONUtil;
 import cn.idev.excel.EasyExcel;
 import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.CacheUpdate;
-import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -62,7 +60,6 @@ import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
-import top.continew.admin.common.service.CommonUserService;
 import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.mapper.user.UserMapper;
 import top.continew.admin.system.model.entity.DeptDO;
@@ -106,7 +103,7 @@ import static top.continew.admin.system.enums.PasswordPolicyEnum.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserResp, UserDetailResp, UserQuery, UserReq> implements UserService, CommonUserService {
+public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserResp, UserDetailResp, UserQuery, UserReq> implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserPasswordHistoryService userPasswordHistoryService;
@@ -219,12 +216,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         super.delete(ids);
         // 踢出在线用户
         ids.forEach(onlineUserService::kickOut);
-    }
-
-    @Override
-    @Cached(key = "#id", name = CacheConstants.USER_KEY_PREFIX, cacheType = CacheType.BOTH, syncLocal = true)
-    public String getNicknameById(Long id) {
-        return baseMapper.selectNicknameById(id);
     }
 
     @Override

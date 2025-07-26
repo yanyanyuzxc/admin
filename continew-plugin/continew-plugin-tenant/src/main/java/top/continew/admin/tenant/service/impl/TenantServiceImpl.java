@@ -16,24 +16,25 @@
 
 package top.continew.admin.tenant.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.alicp.jetcache.anno.Cached;
 import lombok.RequiredArgsConstructor;
 import me.ahoo.cosid.provider.IdGeneratorProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.common.api.system.RoleApi;
+import top.continew.admin.common.api.system.RoleMenuApi;
+import top.continew.admin.common.api.tenant.TenantDataApi;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.system.model.entity.RoleDO;
-import top.continew.admin.system.model.entity.RoleMenuDO;
-import top.continew.admin.system.service.RoleMenuService;
-import top.continew.admin.system.service.RoleService;
+import top.continew.admin.common.model.dto.TenantDTO;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
-import top.continew.admin.tenant.handler.TenantDataHandler;
 import top.continew.admin.tenant.mapper.TenantMapper;
 import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.query.TenantQuery;
@@ -44,13 +45,13 @@ import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
-import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -64,12 +65,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, TenantResp, TenantDetailResp, TenantQuery, TenantReq> implements TenantService {
 
+    private final Map<String, TenantDataApi> tenantDataApiMap = SpringUtil.getBeansOfType(TenantDataApi.class);
     private final TenantExtensionProperties tenantExtensionProperties;
     private final PackageService packageService;
     private final IdGeneratorProvider idGeneratorProvider;
-    private final TenantDataHandler tenantDataHandler;
-    private final RoleMenuService roleMenuService;
-    private final RoleService roleService;
+    private final RoleMenuApi roleMenuApi;
+    private final RoleApi roleApi;
 
     @Override
     public Long create(TenantReq req) {
@@ -83,7 +84,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
         Long id = super.create(req);
         // 初始化租户数据
         req.setId(id);
-        tenantDataHandler.init(req);
+        tenantDataApiMap.forEach((key, value) -> value.init(BeanUtil.copyProperties(req, TenantDTO.class)));
         return id;
     }
 
@@ -107,7 +108,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     public void beforeDelete(List<Long> ids) {
         // 在租户中执行数据清除
         for (Long id : ids) {
-            TenantUtils.execute(id, tenantDataHandler::clear);
+            TenantUtils.execute(id, () -> tenantDataApiMap.forEach((key, value) -> value.clear()));
         }
     }
 
@@ -162,27 +163,20 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
         // 删除旧菜单
         tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
             // 更新在线用户上下文
-            List<RoleMenuDO> roleMenuList = roleMenuService.lambdaQuery()
-                .select(RoleMenuDO::getRoleId)
-                .notIn(RoleMenuDO::getMenuId, newMenuIds)
-                .list();
-            Set<Long> roleIdSet = CollUtils.mapToSet(roleMenuList, RoleMenuDO::getRoleId);
-            roleIdSet.forEach(roleService::updateUserContext);
+            Set<Long> roleIdSet = roleMenuApi.listRoleIdByNotInMenuIds(newMenuIds);
+            roleIdSet.forEach(roleApi::updateUserContext);
             // 删除旧菜单
-            roleMenuService.lambdaUpdate().notIn(RoleMenuDO::getMenuId, newMenuIds).remove();
+            roleMenuApi.deleteByNotInMenuIds(newMenuIds);
         }));
         // 租户管理员：新增菜单
         tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
-            RoleDO role = roleService.getByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
-            List<Long> oldMenuIdList = roleMenuService.listMenuIdByRoleIds(List.of(role.getId()));
+            Long roleId = roleApi.getIdByCode(SysConstants.TENANT_ADMIN_ROLE_CODE);
+            List<Long> oldMenuIdList = roleMenuApi.listMenuIdByRoleIds(List.of(roleId));
             Collection<Long> addMenuIdList = CollUtil.disjunction(newMenuIds, oldMenuIdList);
             if (CollUtil.isNotEmpty(addMenuIdList)) {
-                List<RoleMenuDO> roleMenuList = addMenuIdList.stream()
-                    .map(menuId -> new RoleMenuDO(role.getId(), menuId))
-                    .toList();
-                roleMenuService.saveBatch(roleMenuList, roleMenuList.size());
+                roleMenuApi.add(addMenuIdList.stream().toList(), roleId);
                 // 更新在线用户上下文
-                roleService.updateUserContext(role.getId());
+                roleApi.updateUserContext(roleId);
             }
         }));
         // 删除缓存
