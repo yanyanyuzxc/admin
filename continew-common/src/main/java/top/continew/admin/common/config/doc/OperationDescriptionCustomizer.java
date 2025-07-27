@@ -19,14 +19,16 @@ package top.continew.admin.common.config.doc;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaMode;
-import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.web.method.HandlerMethod;
 import top.continew.admin.common.base.controller.BaseController;
+import top.continew.admin.common.config.crud.CrudApiPermissionPrefixCache;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.extension.crud.annotation.CrudApi;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+import top.continew.starter.extension.crud.enums.Api;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,18 +162,21 @@ public class OperationDescriptionCustomizer {
      *
      * @param handlerMethod 处理程序方法
      * @return 拼接好的权限信息字符串
+     * @see BaseController#preHandle(CrudApi, Object[], Method, Class)
      */
     private String getCrudPermissionInfo(HandlerMethod handlerMethod) {
-        CrudRequestMapping crudRequestMapping = handlerMethod.getBeanType().getAnnotation(CrudRequestMapping.class);
+        Class<?> targetClass = handlerMethod.getBeanType();
+        CrudRequestMapping crudRequestMapping = targetClass.getAnnotation(CrudRequestMapping.class);
         CrudApi crudApi = handlerMethod.getMethodAnnotation(CrudApi.class);
         if (crudRequestMapping == null || crudApi == null) {
             return StringConstants.EMPTY;
         }
-
-        String path = crudRequestMapping.value();
-        String prefix = String.join(StringConstants.COLON, CharSequenceUtil.splitTrim(path, StringConstants.SLASH));
+        if (Api.DICT.equals(crudApi.value()) || Api.DICT_TREE.equals(crudApi.value())) {
+            return StringConstants.EMPTY;
+        }
+        String permissionPrefix = CrudApiPermissionPrefixCache.get(targetClass);
         String apiName = BaseController.getApiName(crudApi.value());
-        String permission = "%s:%s".formatted(prefix, apiName.toLowerCase());
+        String permission = "%s:%s".formatted(permissionPrefix, apiName.toLowerCase());
         return "<font style=\"color:red\" class=\"light-red\">CRUD 权限校验：</font></br><font style=\"color:red\" class=\"light-red\">方法：</font><font style=\"color:red\" class=\"light-red\">" + permission + "</font>";
     }
 }

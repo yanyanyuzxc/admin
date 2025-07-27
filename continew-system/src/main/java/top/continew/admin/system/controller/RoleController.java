@@ -53,7 +53,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrudRequestMapping(value = "/system/role", api = {Api.LIST, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE})
+@CrudRequestMapping(value = "/system/role", api = {Api.LIST, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE, Api.DICT})
 public class RoleController extends BaseController<RoleService, RoleResp, RoleDetailResp, RoleQuery, RoleReq> {
 
     private final UserRoleService userRoleService;

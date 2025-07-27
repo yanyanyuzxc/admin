@@ -25,15 +25,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.continew.admin.tenant.model.query.PackageQuery;
-import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
-import top.continew.starter.extension.crud.model.query.SortQuery;
-import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 import top.continew.starter.extension.tenant.annotation.TenantIgnore;
 import top.continew.starter.log.annotation.Log;
-
-import java.util.List;
 
 /**
  * 公共 API
@@ -49,15 +43,7 @@ import java.util.List;
 @RequestMapping("/tenant/common")
 public class CommonController {
 
-    private final PackageService packageService;
-
     private final TenantService tenantService;
-
-    @Operation(summary = "查询套餐字典", description = "查询套餐字典列表")
-    @GetMapping("/dict/package")
-    public List<LabelValueResp> listPackageDict(PackageQuery query, SortQuery sortQuery) {
-        return packageService.listDict(query, sortQuery);
-    }
 
     @SaIgnore
     @TenantIgnore

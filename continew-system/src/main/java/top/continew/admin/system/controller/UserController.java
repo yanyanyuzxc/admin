@@ -59,7 +59,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @CrudRequestMapping(value = "/system/user", api = {Api.PAGE, Api.LIST, Api.GET, Api.CREATE, Api.UPDATE,
-    Api.BATCH_DELETE, Api.EXPORT})
+    Api.BATCH_DELETE, Api.EXPORT, Api.DICT})
 public class UserController extends BaseController<UserService, UserResp, UserDetailResp, UserQuery, UserReq> {
 
     @Override

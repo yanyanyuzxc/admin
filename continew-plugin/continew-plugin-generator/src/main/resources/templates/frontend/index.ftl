@@ -1,5 +1,5 @@
 <template>
-  <div class="gi_table_page">
+  <GiPageLayout>
     <GiTable
       title="${businessName}管理"
       row-key="id"
@@ -102,7 +102,7 @@
 
     <${classNamePrefix}AddModal ref="${classNamePrefix}AddModalRef" @save-success="search" />
     <${classNamePrefix}DetailDrawer ref="${classNamePrefix}DetailDrawerRef" />
-  </div>
+  </GiPageLayout>
 </template>
 
 <script setup lang="ts">

@@ -55,7 +55,7 @@ import java.util.List;
 @Tag(name = "菜单管理 API")
 @RestController
 @RequiredArgsConstructor
-@CrudRequestMapping(value = "/system/menu", api = {Api.TREE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE})
+@CrudRequestMapping(value = "/system/menu", api = {Api.TREE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE, Api.DICT_TREE})
 public class MenuController extends BaseController<MenuService, MenuResp, MenuResp, MenuQuery, MenuReq> {
 
     private final MenuService menuService;

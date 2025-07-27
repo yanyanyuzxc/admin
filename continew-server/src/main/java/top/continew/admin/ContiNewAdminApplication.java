@@ -36,7 +36,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.starter.core.autoconfigure.application.ApplicationProperties;
-import top.continew.starter.extension.crud.annotation.EnableCrudRestController;
+import top.continew.starter.extension.crud.annotation.EnableCrudApi;
 import top.continew.starter.web.annotation.EnableGlobalResponse;
 import top.continew.starter.web.model.R;
 
@@ -47,10 +47,10 @@ import top.continew.starter.web.model.R;
  * @since 2022/12/8 23:15
  */
 @Slf4j
+@EnableCrudApi
+@EnableGlobalResponse
 @EnableFileStorage
 @EnableMethodCache(basePackages = "top.continew.admin")
-@EnableGlobalResponse
-@EnableCrudRestController
 @EnableFeignClients
 @RestController
 @SpringBootApplication

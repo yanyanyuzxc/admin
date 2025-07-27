@@ -134,9 +134,9 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     }
 
     @Override
-    public List<LabelValueResp> listDict(RoleQuery query, SortQuery sortQuery) {
+    public List<LabelValueResp> dict(RoleQuery query, SortQuery sortQuery) {
         query.setExcludeRoleCodes(RoleCodeEnum.getSuperRoleCodes());
-        return super.listDict(query, sortQuery);
+        return super.dict(query, sortQuery);
     }
 
     @Override

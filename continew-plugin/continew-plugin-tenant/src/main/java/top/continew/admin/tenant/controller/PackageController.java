@@ -46,7 +46,7 @@ import java.util.List;
 @Tag(name = "套餐管理 API")
 @RestController
 @RequiredArgsConstructor
-@CrudRequestMapping(value = "/tenant/package", api = {Api.LIST, Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
+@CrudRequestMapping(value = "/tenant/package", api = {Api.LIST, Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE, Api.DICT})
 public class PackageController extends BaseController<PackageService, PackageResp, PackageDetailResp, PackageQuery, PackageReq> {
 
     private final TenantExtensionProperties tenantExtensionProperties;

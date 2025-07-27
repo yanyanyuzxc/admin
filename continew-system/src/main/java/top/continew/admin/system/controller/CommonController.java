@@ -17,7 +17,6 @@
 package top.continew.admin.system.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.util.StrUtil;
 import com.alicp.jetcache.anno.Cached;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,11 +31,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.system.enums.OptionCategoryEnum;
-import top.continew.admin.system.model.query.*;
+import top.continew.admin.system.model.query.OptionQuery;
 import top.continew.admin.system.model.resp.file.FileUploadResp;
 import top.continew.admin.system.service.*;
 import top.continew.starter.core.util.validation.ValidationUtils;
-import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.LabelValueResp;
 import top.continew.starter.extension.tenant.annotation.TenantIgnore;
 import top.continew.starter.extension.tenant.context.TenantContextHolder;
@@ -60,10 +58,6 @@ import java.util.List;
 public class CommonController {
 
     private final FileService fileService;
-    private final DeptService deptService;
-    private final MenuService menuService;
-    private final UserService userService;
-    private final RoleService roleService;
     private final DictItemService dictItemService;
     private final OptionService optionService;
 
@@ -80,30 +74,6 @@ public class CommonController {
             .thUrl(fileInfo.getThUrl())
             .metadata(fileInfo.getMetadata())
             .build();
-    }
-
-    @Operation(summary = "查询部门树", description = "查询树结构的部门列表")
-    @GetMapping("/tree/dept")
-    public List<Tree<Long>> listDeptTree(DeptQuery query, SortQuery sortQuery) {
-        return deptService.tree(query, sortQuery, true);
-    }
-
-    @Operation(summary = "查询菜单树", description = "查询树结构的菜单列表")
-    @GetMapping("/tree/menu")
-    public List<Tree<Long>> listMenuTree(MenuQuery query, SortQuery sortQuery) {
-        return menuService.tree(query, sortQuery, true);
-    }
-
-    @Operation(summary = "查询用户字典", description = "查询用户字典列表")
-    @GetMapping("/dict/user")
-    public List<LabelValueResp> listUserDict(UserQuery query, SortQuery sortQuery) {
-        return userService.listDict(query, sortQuery);
-    }
-
-    @Operation(summary = "查询角色字典", description = "查询角色字典列表")
-    @GetMapping("/dict/role")
-    public List<LabelValueResp> listRoleDict(RoleQuery query, SortQuery sortQuery) {
-        return roleService.listDict(query, sortQuery);
     }
 
     @Operation(summary = "查询字典", description = "查询字典列表")
