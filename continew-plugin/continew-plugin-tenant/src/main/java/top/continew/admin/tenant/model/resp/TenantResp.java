@@ -61,10 +61,10 @@ public class TenantResp extends BaseDetailResp {
     private String code;
 
     /**
-     * 绑定域名
+     * 域名
      */
-    @Schema(description = "绑定域名", example = "https://T0sL6RWv0vFh.continew.top/")
-    @ExcelProperty(value = "绑定域名", order = 4)
+    @Schema(description = "域名", example = "T0sL6RWv0vFh.continew.top")
+    @ExcelProperty(value = "域名", order = 4)
     private String domain;
 
     /**
@@ -89,10 +89,22 @@ public class TenantResp extends BaseDetailResp {
     private DisEnableStatusEnum status;
 
     /**
+     * 管理员用户
+     */
+    @Schema(description = "管理员用户", example = "2")
+    private Long adminUser;
+
+    /**
+     * 管理员用户名
+     */
+    @Schema(description = "管理员用户名", example = "admin")
+    @ExcelProperty(value = "管理员用户名", order = 9)
+    private String adminUsername;
+
+    /**
      * 套餐 ID
      */
     @Schema(description = "套餐 ID", example = "1")
-    @ExcelProperty(value = "套餐 ID", order = 9)
     @AssembleMethod(props = @Mapping(src = "name", ref = "packageName"), targetType = PackageService.class, method = @ContainerMethod(bindMethod = "get", resultType = PackageResp.class))
     private Long packageId;
 

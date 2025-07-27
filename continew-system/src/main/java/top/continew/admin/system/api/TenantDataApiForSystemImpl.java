@@ -183,10 +183,10 @@ public class TenantDataApiForSystemImpl implements TenantDataApi {
      */
     private Long initUserData(TenantDTO tenant, Long deptId) {
         // 解密密码
-        String password = SecureUtils.decryptPasswordByRsaPrivateKey(tenant.getPassword(), "密码解密失败", true);
+        String password = SecureUtils.decryptPasswordByRsaPrivateKey(tenant.getAdminPassword(), "密码解密失败", true);
         // 初始化用户
         UserDO user = new UserDO();
-        user.setUsername(tenant.getUsername());
+        user.setUsername(tenant.getAdminUsername());
         user.setNickname(RoleCodeEnum.TENANT_ADMIN.getDescription());
         user.setPassword(password);
         user.setGender(GenderEnum.UNKNOWN);

@@ -4,19 +4,20 @@
 -- comment 初始化租户插件数据表
 -- 初始化表结构
 CREATE TABLE IF NOT EXISTS "tenant" (
-    "id"          int8         NOT NULL,
-    "name"        varchar(30)  NOT NULL,
-    "code"        varchar(30)  NOT NULL,
-    "domain"      varchar(255) DEFAULT NULL,
-    "expire_time" timestamp    DEFAULT NULL,
-    "description" varchar(200) DEFAULT NULL,
-    "status"      int2         NOT NULL DEFAULT 1,
-    "admin_user"  int8         DEFAULT NULL,
-    "package_id"  int8         NOT NULL,
-    "create_user" int8         NOT NULL,
-    "create_time" timestamp    NOT NULL,
-    "update_user" int8         DEFAULT NULL,
-    "update_time" timestamp    DEFAULT NULL,
+    "id"             int8         NOT NULL,
+    "name"           varchar(30)  NOT NULL,
+    "code"           varchar(30)  NOT NULL,
+    "domain"         varchar(255) DEFAULT NULL,
+    "expire_time"    timestamp    DEFAULT NULL,
+    "description"    varchar(200) DEFAULT NULL,
+    "status"         int2         NOT NULL DEFAULT 1,
+    "admin_user"     int8         DEFAULT NULL,
+    "admin_username" varchar(64)  DEFAULT NULL,
+    "package_id"     int8         NOT NULL,
+    "create_user"    int8         NOT NULL,
+    "create_time"    timestamp    NOT NULL,
+    "update_user"    int8         DEFAULT NULL,
+    "update_time"    timestamp    DEFAULT NULL,
     PRIMARY KEY ("id")
 );
 CREATE UNIQUE INDEX "uk_tenant_code" ON "tenant" ("code");
@@ -27,12 +28,13 @@ CREATE INDEX "idx_tenant_update_user" ON "tenant" ("update_user");
 COMMENT ON COLUMN "tenant"."id" IS 'ID';
 COMMENT ON COLUMN "tenant"."name" IS '名称';
 COMMENT ON COLUMN "tenant"."code" IS '编码';
-COMMENT ON COLUMN "tenant"."domain" IS '绑定域名';
+COMMENT ON COLUMN "tenant"."domain" IS '域名';
 COMMENT ON COLUMN "tenant"."expire_time" IS '过期时间';
 COMMENT ON COLUMN "tenant"."description" IS '描述';
 COMMENT ON COLUMN "tenant"."status" IS '状态（1：启用；2：禁用）';
 COMMENT ON COLUMN "tenant"."package_id" IS '套餐ID';
-COMMENT ON COLUMN "tenant"."admin_user" IS '租户管理员';
+COMMENT ON COLUMN "tenant"."admin_user" IS '管理员用户';
+COMMENT ON COLUMN "tenant"."admin_username" IS '管理员用户名';
 COMMENT ON COLUMN "tenant"."create_user" IS '创建人';
 COMMENT ON COLUMN "tenant"."create_time" IS '创建时间';
 COMMENT ON COLUMN "tenant"."update_user" IS '修改人';

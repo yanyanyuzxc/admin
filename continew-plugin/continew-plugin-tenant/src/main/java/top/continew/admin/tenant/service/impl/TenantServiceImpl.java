@@ -197,16 +197,16 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
     }
 
     /**
-     * 检查绑定域名是否重复
+     * 检查域名是否重复
      *
-     * @param domain 绑定域名
+     * @param domain 域名
      * @param id     ID
      */
     private void checkDomainRepeat(String domain, Long id) {
         CheckUtils.throwIf(baseMapper.lambdaQuery()
             .eq(TenantDO::getDomain, domain)
             .ne(id != null, TenantDO::getId, id)
-            .exists(), "绑定域名为 [{}] 的租户已存在", domain);
+            .exists(), "域名为 [{}] 的租户已存在", domain);
     }
 
     /**

@@ -36,9 +36,9 @@ import java.util.List;
 public interface TenantService extends BaseService<TenantResp, TenantDetailResp, TenantQuery, TenantReq>, IService<TenantDO> {
 
     /**
-     * 根据绑定域名查询
+     * 根据域名查询
      *
-     * @param domain 绑定域名
+     * @param domain 域名
      * @return ID
      */
     Long getIdByDomain(String domain);

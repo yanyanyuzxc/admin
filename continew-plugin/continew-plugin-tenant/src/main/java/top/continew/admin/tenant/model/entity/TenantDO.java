@@ -49,7 +49,7 @@ public class TenantDO extends BaseDO {
     private String code;
 
     /**
-     * 绑定域名
+     * 域名
      */
     private String domain;
 
@@ -69,9 +69,14 @@ public class TenantDO extends BaseDO {
     private DisEnableStatusEnum status;
 
     /**
-     * 租户管理员
+     * 管理员用户
      */
     private Long adminUser;
+
+    /**
+     * 管理员用户名
+     */
+    private String adminUsername;
 
     /**
      * 套餐 ID

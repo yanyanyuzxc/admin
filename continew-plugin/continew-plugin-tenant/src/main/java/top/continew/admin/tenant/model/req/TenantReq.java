@@ -54,11 +54,11 @@ public class TenantReq implements Serializable {
     private String name;
 
     /**
-     * 绑定域名
+     * 域名
      */
-    @Schema(description = "绑定域名", example = "https://T0sL6RWv0vFh.continew.top/")
-    @Length(max = 255, message = "绑定域名长度不能超过 {max} 个字符")
-    @Pattern(regexp = RegexConstants.HTTP_HOST, message = "绑定域名格式不正确")
+    @Schema(description = "域名", example = "https://T0sL6RWv0vFh.continew.top/")
+    @Length(max = 255, message = "域名长度不能超过 {max} 个字符")
+    @Pattern(regexp = RegexConstants.HTTP_HOST, message = "域名格式不正确")
     private String domain;
 
     /**
@@ -89,19 +89,19 @@ public class TenantReq implements Serializable {
     private Long packageId;
 
     /**
-     * 用户名
+     * 管理员用户名
      */
-    @Schema(description = "用户名", example = "zhangsan")
-    @NotBlank(message = "用户名不能为空", groups = CrudValidationGroup.Create.class)
-    @Pattern(regexp = RegexConstants.USERNAME, message = "用户名长度为 4-64 个字符，支持大小写字母、数字、下划线，以字母开头")
-    private String username;
+    @Schema(description = "管理员用户名", example = "zhangsan")
+    @NotBlank(message = "管理员用户名不能为空", groups = CrudValidationGroup.Create.class)
+    @Pattern(regexp = RegexConstants.USERNAME, message = "管理员用户名长度为 4-64 个字符，支持大小写字母、数字、下划线，以字母开头")
+    private String adminUsername;
 
     /**
-     * 密码（加密）
+     * 管理员密码（加密）
      */
-    @Schema(description = "密码（加密）", example = "E7c72TH+LDxKTwavjM99W1MdI9Lljh79aPKiv3XB9MXcplhm7qJ1BJCj28yaflbdVbfc366klMtjLIWQGqb0qw==")
-    @NotBlank(message = "密码不能为空", groups = CrudValidationGroup.Create.class)
-    private String password;
+    @Schema(description = "管理员密码（加密）", example = "E7c72TH+LDxKTwavjM99W1MdI9Lljh79aPKiv3XB9MXcplhm7qJ1BJCj28yaflbdVbfc366klMtjLIWQGqb0qw==")
+    @NotBlank(message = "管理员密码不能为空", groups = CrudValidationGroup.Create.class)
+    private String adminPassword;
 
     /**
      * 编码
