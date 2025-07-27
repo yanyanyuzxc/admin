@@ -77,7 +77,7 @@ public class ContiNewAdminApplication implements ApplicationRunner {
         Integer port = serverProperties.getPort();
         String contextPath = serverProperties.getServlet().getContextPath();
         String baseUrl = URLUtil.normalize("%s:%s%s".formatted(hostAddress, port, contextPath));
-        log.info("-----------------------------------------------------");
+        log.info("--------------------------------------------------------");
         log.info("{} server started successfully.", applicationProperties.getName());
         log.info("ContiNew Starter: v{} (Spring Boot: v{})", SpringUtil
             .getProperty("application.starter"), SpringBootVersion.getVersion());
@@ -88,8 +88,9 @@ public class ContiNewAdminApplication implements ApplicationRunner {
         if (!knife4jProperties.isProduction()) {
             log.info("接口文档: {}/doc.html", baseUrl);
         }
-        log.info("在线文档: https://continew.top");
         log.info("常见问题: https://continew.top/admin/faq.html");
-        log.info("-----------------------------------------------------");
+        log.info("更新日志: https://continew.top/admin/changelog/");
+        log.info("ContiNew Admin: 持续迭代优化的，高质量多租户中后台管理系统框架");
+        log.info("--------------------------------------------------------");
     }
 }

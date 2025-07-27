@@ -1,7 +1,7 @@
 # ContiNew Admin 多租户中后台管理框架
 
 <a href="https://github.com/continew-org/continew-admin" title="Release" target="_blank">
-<img src="https://img.shields.io/badge/SNAPSHOT-v4.0.0-%23ff3f59.svg" alt="Release" />
+<img src="https://img.shields.io/badge/RELEASE-v4.0.0-%23ff3f59.svg" alt="Release" />
 </a>
 <a href="https://github.com/continew-org/continew-starter" title="ContiNew Starter" target="_blank">
 <img src="https://img.shields.io/badge/ContiNew Starter-2.13.4-%236CB52D.svg" alt="ContiNew Starter" />
@@ -153,7 +153,7 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 - 租户管理：管理租户信息，包含新增、修改、删除、分配角色等功能
 - 租户套餐：管理租户套餐信息，包含新增、修改、删除、查看等功能
 - 任务管理：管理系统定时任务，包含新增、修改、删除、执行功能，支持 Cron（可配置式生成 Cron 表达式） 和固定频率
-- 任务日志：管理定时任务执行日志，包含停止、重试指定批次，查询集群各节点的详细输出日志等功能
+- 任务日志：管理定时任务执行日志，包含停止、重试指定批次等功能
 - 代码生成：提供根据数据库表自动生成相应的前后端 CRUD 代码的功能，支持同步最新表结构及代码生成预览
 
 ## 系统截图

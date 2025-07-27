@@ -1,3 +1,63 @@
+## [v4.0.0](https://github.com/continew-org/continew-admin/compare/v3.7.0...v4.0.0) (2025-07-27)
+
+### ✨ 新特性
+
+- 新增多租户插件模块 (GitHub#175@xtanyu) ([ed6dd65](https://github.com/continew-org/continew-admin/commit/ed6dd65a51a1c26af2c9d76407463b7f67c71fd5)) ([dec5d61](https://github.com/continew-org/continew-admin/commit/dec5d611bef76bbd145d076f62fe5b8deced75ae)) ([af1079d](https://github.com/continew-org/continew-admin/commit/af1079da6d009fa9cdeb7c1caf7a131a0449229f)) ([6e7d371](https://github.com/continew-org/continew-admin/commit/6e7d371565e75272f027a547442adf3071dbe152)) ([7e9a950](https://github.com/continew-org/continew-admin/commit/7e9a950694ce78f11b0f2ffb8fe69617502c361e)) ([9eff846](https://github.com/continew-org/continew-admin/commit/9eff8467119d20aa7bd710d78f89fd194edd4a9f)) ([84b2c39](https://github.com/continew-org/continew-admin/commit/84b2c39a303a3423f4114c7bb59fe1de62414cab)) ([e6edb57](https://github.com/continew-org/continew-admin/commit/e6edb57a8cf991be9408df2dfaf50271d3e0b638)) ([819be06](https://github.com/continew-org/continew-admin/commit/819be0688d3138fbbe02f02a09e481852625819d)) ([19bbbd9](https://github.com/continew-org/continew-admin/commit/19bbbd93ad9e06ad6037c1eef4d7171d4e107733)) ([382c87f](https://github.com/continew-org/continew-admin/commit/382c87f8bd5cf9549617ca78c170b2638a37c486)) ([b8c44c9](https://github.com/continew-org/continew-admin/commit/b8c44c9fe286cdb911806687387cf4c21dd4f55b)) ([ada6f3e](https://github.com/continew-org/continew-admin/commit/ada6f3ef5c8f17028a360765295fe8ab8a31406a)) ([f350ee1](https://github.com/continew-org/continew-admin/commit/f350ee1567ba192b1ea2912d7ae401322b51413e))
+- 新增 database-id 配置项，适配多数据库SQL语法差异，提升MyBatis XML兼容性 (GitCode#5@onekr-billy) ([151a0fa](https://github.com/continew-org/continew-admin/commit/151a0faeb0578e98e5d72f67f83623cc846a3172)) ([7ff5166](https://github.com/continew-org/continew-admin/commit/7ff516694ee5b9ccc260ed5940538900149a7552))
+- 重构 CRUD API 权限控制，新增 CrudApiPermissionPrefixCache 缓存权限前缀 ([83514b9](https://github.com/continew-org/continew-admin/commit/83514b92518ee412398490b4a71f9657ba79266b))
+- SecureUtils 新增 decryptPasswordByRsaPrivateKey 方法统一处理密码解密 ([1ec154f](https://github.com/continew-org/continew-admin/commit/1ec154f0116020d9282bab922762e820e467c2e1))
+- 新增查询角色权限树列表接口（替换角色分配权限的菜单树列表接口） ([950942a](https://github.com/continew-org/continew-admin/commit/950942a742f991e524218eef2c09da0c2486fd65))
+
+### 💎 功能优化
+
+- 优化模块命名 continew-webapi => continew-server，continew-module-system => continew-system ([71fee0f](https://github.com/continew-org/continew-admin/commit/71fee0f58d01266469c1307284464fde737e5f58))
+- 拆分接口文档分组配置及 controller 到各自模块 ([93bd70d](https://github.com/continew-org/continew-admin/commit/93bd70dc5ce0b64dc90b04bda9547f28114da8be))
+- 使用 Snail Job Open API(SDK API) 替换修改状态接口 ([31cdf86](https://github.com/continew-org/continew-admin/commit/31cdf86eb643767339fbc8aae99104984038cb23))
+- 优化角色和用户相关查询数据填充 ([b7a5a41](https://github.com/continew-org/continew-admin/commit/b7a5a41eac09c3a04969ab551aba10278ea2fe6b))
+- 为枚举类型的字段添加自定义 Excel 转换器 ([930b1d4](https://github.com/continew-org/continew-admin/commit/930b1d461ba83caa7e9c0fc9ce796b0d4fcf9ca3))
+- 为 Mapper 接口增加 Mapper 注解，以消除 IDEA 警告标志（减少小白咨询） ([efb65c2](https://github.com/continew-org/continew-admin/commit/efb65c21a15f8493318ef6a7bc37093b85e3bc39))
+- 使用 SpEL Validator 优化部分校验场景 ([0d3c1bb](https://github.com/continew-org/continew-admin/commit/0d3c1bb2b125d9886fae069d29ac91c118ecd8ff))
+- 优化行为验证码 CaptchaService 服务获取方式，关闭行为验证码不会导致启动报错 ([dcc28bc](https://github.com/continew-org/continew-admin/commit/dcc28bcf34c8d69f53b9924bf93563bcd172e270))
+- CommonController 迁移至 system 模块、OnlineUserController 迁移至 system/auth 模块 ([08f45b5](https://github.com/continew-org/continew-admin/commit/08f45b5f4da37c1d17f98f704c684a2438239486))
+- 使用 CollUtils 替代部分 Stream 操作，提高代码的可读性，减少代码行数（缺点：方法写起来不如流式代码舒爽） ([33d8943](https://github.com/continew-org/continew-admin/commit/33d89431cf18a01fc3d09ae0d2de8e1c3745e254))
+- 重构系统模块的唯一性校验逻辑 ([c813f2e](https://github.com/continew-org/continew-admin/commit/c813f2ebbdac8edad2f101d29e2c873fc9225409))
+- 添加 SQL 解析本地缓存 ([aadf879](https://github.com/continew-org/continew-admin/commit/aadf879be07d28f1afb584b1a337409f5e88fc62))
+- 增加测试用户数据 ([5fded43](https://github.com/continew-org/continew-admin/commit/5fded43b7a4fee7c10732e268f4dfc9c66ddfb4c))
+- 优化 Lombok 配置，全局禁用 Log4j、Log4j2 注解，请使用 Slf4j ([24f233e](https://github.com/continew-org/continew-admin/commit/24f233e2b5584eae8e7840a994c1241017a8c33d))
+- CRUD Api 忽略排除（放行）路径的权限校验 ([3af43ef](https://github.com/continew-org/continew-admin/commit/3af43ef6c7fa3f4f2d4d390d47fae9c5f518e60d))
+- 重构内部 API 依赖模式（降低耦合，公众号投票结论），在 common 模块新增 api 包，在对应 biz 模块增加实现 ([7f00599](https://github.com/continew-org/continew-admin/commit/7f0059984deae80a109a457f41ef8732d52228ff))
+- 梳理用户和角色体系，内置角色：超级管理员、租户管理员（系统管理员），且内置用户和角色不允许变更及分配 ([93bf749](https://github.com/continew-org/continew-admin/commit/93bf749ce3f140e9bb6fc5a825210ad42971388c))
+- 重构用户邮箱和手机号唯一性校验逻辑 (Gitee#71@lishuyanla) ([b42902e](https://github.com/continew-org/continew-admin/commit/b42902e1b974f3339a197a8ff4c2d23c08d884e4))
+- 优化创建用户代码 ([54ba099](https://github.com/continew-org/continew-admin/commit/54ba0999e4fcc1a90c2ff366790fa93decb421a0))
+- 暂时下线查询日志详情功能（Snail Job 日志详情 API 变更为 WebSocket 模式） ([600f447](https://github.com/continew-org/continew-admin/commit/600f4477c8d3dafdaa6da41940a7b89dad9a9484))
+
+### 🐛 问题修复
+
+- 修复全部已读无效 ([271e2d8](https://github.com/continew-org/continew-admin/commit/271e2d8681e213dca0acb4573e11d9949101796c))
+- 修复查询未读公告和消息数据错误 ([13c18f1](https://github.com/continew-org/continew-admin/commit/13c18f1861e14d32dd791bfbc7864f5722e340e4))
+- 补充 captcha 和 dashboard 接口的文档分组路径 (Gitee#65@dom-w) ([ca320c7](https://github.com/continew-org/continew-admin/commit/ca320c7a172a0fc78202a68c7a49f060e96d23f4))
+- 代码生成详情页模板增加对字典字段的翻译处理 ([e0a7cfd](https://github.com/continew-org/continew-admin/commit/e0a7cfd44814384c3802b48f0dd0fbacc8867fe6))
+- 修复对象存储域名配置 ([fcc3cb9](https://github.com/continew-org/continew-admin/commit/fcc3cb909ab03c17705b0f2d0b8a25eeb44898c8))
+- 修复查询角色关联用户时，角色信息映射错误问题 ([b514c9e](https://github.com/continew-org/continew-admin/commit/b514c9eeba2639b6108432dd49aaedf350b39f85))
+- 修复 SaToken 全局异常处理中的错误信息 ([d4df425](https://github.com/continew-org/continew-admin/commit/d4df4254fca36264a882d1d4de715dc4e288ec8d))
+- 修复了在过滤无效 token 时，没有增加对StpUtil.getLoginIdByToken 返回 null情况处理，导致 执行 groupingBy 报错 (GitCode#3@onekr-billy) ([53fc674](https://github.com/continew-org/continew-admin/commit/53fc674f4adb8cdcf768b83e70d09d91d447bfe6))
+- 修复数据权限重写 deleteById 方法导致 Parameter 'id' 未映射异常 (GitCode#7@QAQ_Z) ([4c14feb](https://github.com/continew-org/continew-admin/commit/4c14feb15f9d52be14345f0b10db64bed3d4a111))
+- 将"代码生成"菜单项重命名为"开发工具"（显示一级菜单时出现的key重复问题） ([1076b4a](https://github.com/continew-org/continew-admin/commit/1076b4a19b7c86d7d51633895f2ebd45aafdb76e))
+- 修复非管理员用户查询个人已读公告时出现重复数据的问题 ([72493f8](https://github.com/continew-org/continew-admin/commit/72493f8161582a0afe329f8d54de347aad76959b))
+- SpelFuture => Future 以修复定时发布时间校验错误 ([317a937](https://github.com/continew-org/continew-admin/commit/317a9372dac89e512581061844097e104dc61e78))
+- 修复菜单删除功能不支持级联删除子菜单的问题 ([15cd05b](https://github.com/continew-org/continew-admin/commit/15cd05bf77acb7c0110f6c071229195079d59e1c))
+- 修复 PostgreSQL JDBC URL 配置及部分 SQL 语法错误 (GitHub#178@BruceMaa) ([d95bb15](https://github.com/continew-org/continew-admin/commit/d95bb15beba13476351820c8deba5a076c0ae5db))
+
+### 📦 依赖升级
+
+- continew-starter 2.12.2 => 2.13.0 ([2138bee](https://github.com/continew-org/continew-admin/commit/2138bee42c7105363f4413a847d4e6e4daca48d1))
+- continew-starter 2.13.0 => 2.13.1 ([6136797](https://github.com/continew-org/continew-admin/commit/61367975887ffa7c673f5a656e69be151432f60d))
+- continew-starter 2.13.1 => 2.13.2-SNAPSHOT ([2f445d9](https://github.com/continew-org/continew-admin/commit/2f445d9150ed98ed0dbc150a930ee8f4ddecefa8))
+- continew-starter 2.13.2-SNAPSHOT => 2.13.2 ([bc44de4](https://github.com/continew-org/continew-admin/commit/bc44de4bdd96ee92d90b64974c62128c0a1edbd2))
+- continew-starter 2.13.2 => 2.13.3 ([57b1868](https://github.com/continew-org/continew-admin/commit/57b186835d72f5410cf85a1324ad65e1ace3230c))
+- continew-starter 2.13.3 => 2.13.4 ([e6169bd](https://github.com/continew-org/continew-admin/commit/e6169bdb6c2d6c41986e81e2df12ceaf472aaf7d))
+- 升级环境版本 mysql 8.0.33 => 8.0.42，redis 7.2.3 => 7.2.8，nginx 1.25.3 => 1.27.0 ([f1a87b4](https://github.com/continew-org/continew-admin/commit/f1a87b4c236a635b5a3330537b88c4ff002d0924))
+
 ## [v3.7.0](https://github.com/continew-org/continew-admin/compare/v3.6.0...v3.7.0) (2025-06-13)
 
 ### ✨ 新特性
