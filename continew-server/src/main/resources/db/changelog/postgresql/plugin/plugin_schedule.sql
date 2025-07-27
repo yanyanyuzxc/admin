@@ -17,6 +17,5 @@ VALUES
 
 (8020, '任务日志', 8000, 2, '/schedule/log', 'ScheduleLog', 'schedule/log/index', NULL, 'find-replace', false, false, false, NULL, 2, 1, 1, NOW()),
 (8021, '列表', 8020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'schedule:log:list', 1, 1, 1, NOW()),
-(8022, '详情', 8020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'schedule:log:get', 2, 1, 1, NOW()),
-(8023, '停止', 8020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'schedule:log:stop', 3, 1, 1, NOW()),
-(8024, '重试', 8020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'schedule:log:retry', 4, 1, 1, NOW());
+(8022, '停止', 8020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'schedule:log:stop', 3, 1, 1, NOW()),
+(8023, '重试', 8020, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'schedule:log:retry', 4, 1, 1, NOW());

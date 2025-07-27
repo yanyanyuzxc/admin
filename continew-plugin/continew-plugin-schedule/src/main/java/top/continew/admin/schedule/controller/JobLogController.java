@@ -24,16 +24,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import top.continew.admin.schedule.model.JobInstanceLogPageResult;
-import top.continew.admin.schedule.model.query.JobInstanceLogQuery;
-import top.continew.admin.schedule.model.query.JobInstanceQuery;
 import top.continew.admin.schedule.model.query.JobLogQuery;
-import top.continew.admin.schedule.model.resp.JobInstanceResp;
 import top.continew.admin.schedule.model.resp.JobLogResp;
 import top.continew.admin.schedule.service.JobLogService;
 import top.continew.starter.extension.crud.model.resp.PageResp;
-
-import java.util.List;
 
 /**
  * 任务日志 API
@@ -71,19 +65,5 @@ public class JobLogController {
     @PostMapping("/retry/{id}")
     public void retry(@PathVariable Long id) {
         baseService.retry(id);
-    }
-
-    @Operation(summary = "查询任务实例列表", description = "查询任务实例列表")
-    @SaCheckPermission("schedule:log:list")
-    @GetMapping("/instance")
-    public List<JobInstanceResp> listInstance(@Valid JobInstanceQuery query) {
-        return baseService.listInstance(query);
-    }
-
-    @Operation(summary = "分页查询任务实例日志列表", description = "分页查询任务实例日志列表")
-    @SaCheckPermission("schedule:log:list")
-    @GetMapping("/instance/log")
-    public JobInstanceLogPageResult pageInstanceLog(@Valid JobInstanceLogQuery query) {
-        return baseService.pageInstanceLog(query);
     }
 }

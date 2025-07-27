@@ -31,6 +31,7 @@ import top.continew.admin.schedule.model.req.JobStatusReq;
 import top.continew.admin.schedule.model.req.JobTriggerReq;
 import top.continew.admin.schedule.model.resp.JobResp;
 import top.continew.admin.schedule.service.JobService;
+import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.extension.crud.validation.CrudValidationGroup;
 import top.continew.starter.log.annotation.Log;
@@ -64,7 +65,7 @@ public class JobController {
     @PostMapping
     @Validated(CrudValidationGroup.Create.class)
     public void create(@RequestBody @Valid JobReq req) {
-        baseService.create(req);
+        CheckUtils.throwIf(!baseService.create(req), "任务创建失败");
     }
 
     @Operation(summary = "修改任务", description = "修改任务")
@@ -73,14 +74,14 @@ public class JobController {
     @PutMapping("/{id}")
     @Validated(CrudValidationGroup.Update.class)
     public void update(@RequestBody @Valid JobReq req, @PathVariable Long id) {
-        baseService.update(req, id);
+        CheckUtils.throwIf(!baseService.update(req, id), "任务修改失败");
     }
 
     @Operation(summary = "修改任务状态", description = "修改任务状态")
     @SaCheckPermission("schedule:job:update")
     @PatchMapping("/{id}/status")
     public void updateStatus(@RequestBody @Valid JobStatusReq req, @PathVariable Long id) {
-        baseService.updateStatus(req, id);
+        CheckUtils.throwIf(!baseService.updateStatus(req, id), "任务状态修改失败");
     }
 
     @Operation(summary = "删除任务", description = "删除任务")
@@ -88,7 +89,7 @@ public class JobController {
     @SaCheckPermission("schedule:job:delete")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        baseService.delete(id);
+        CheckUtils.throwIf(!baseService.delete(id), "任务删除失败");
     }
 
     @Operation(summary = "执行任务", description = "执行任务")
@@ -98,7 +99,7 @@ public class JobController {
     public void trigger(@PathVariable Long id) {
         JobTriggerReq req = new JobTriggerReq();
         req.setJobId(id);
-        baseService.trigger(req);
+        CheckUtils.throwIf(!baseService.trigger(req), "任务执行失败");
     }
 
     @Log(ignore = true)
