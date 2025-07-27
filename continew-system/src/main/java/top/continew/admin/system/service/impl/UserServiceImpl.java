@@ -136,12 +136,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     @Override
     public void beforeCreate(UserReq req) {
         this.checkUsernameRepeat(req.getUsername(), null);
-        String email = req.getEmail();
-        CheckUtils.throwIf(StrUtil.isNotBlank(email) && this.isEmailExists(email, null), "邮箱为 [%s] 的用户已存在"
-            .formatted(email));
-        String phone = req.getPhone();
-        CheckUtils.throwIf(StrUtil.isNotBlank(phone) && this.isPhoneExists(phone, null), "手机号为 [%s] 的用户已存在"
-            .formatted(phone));
+        this.checkEmailRepeat(req.getEmail(), null, "邮箱为 [{}] 的用户已存在");
+        this.checkPhoneRepeat(req.getPhone(), null, "手机号为 [{}] 的用户已存在");
     }
 
     @Override
@@ -157,12 +153,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     @CacheUpdate(key = "#id", value = "#req.nickname", name = CacheConstants.USER_KEY_PREFIX)
     public void update(UserReq req, Long id) {
         this.checkUsernameRepeat(req.getUsername(), id);
-        String email = req.getEmail();
-        CheckUtils.throwIf(StrUtil.isNotBlank(email) && this.isEmailExists(email, id), "邮箱为 [%s] 的用户已存在"
-            .formatted(email));
-        String phone = req.getPhone();
-        CheckUtils.throwIf(StrUtil.isNotBlank(phone) && this.isPhoneExists(phone, id), "手机号为 [%s] 的用户已存在"
-            .formatted(phone));
+        this.checkEmailRepeat(req.getEmail(), id, "邮箱为 [{}] 的用户已存在");
+        this.checkPhoneRepeat(req.getPhone(), id, "手机号为 [{}] 的用户已存在");
         DisEnableStatusEnum newStatus = req.getStatus();
         CheckUtils.throwIf(DisEnableStatusEnum.DISABLE.equals(newStatus) && ObjectUtil.equal(id, UserContextHolder
             .getUserId()), "不允许禁用当前用户");
@@ -439,7 +431,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     public void updatePhone(String newPhone, String oldPassword, Long id) {
         UserDO user = super.getById(id);
         CheckUtils.throwIf(!passwordEncoder.matches(oldPassword, user.getPassword()), "当前密码不正确");
-        CheckUtils.throwIf(this.isPhoneExists(newPhone, id), "手机号已绑定其他账号，请更换其他手机号");
+        this.checkPhoneRepeat(newPhone, id, "手机号已绑定其他账号，请更换其他手机号");
         CheckUtils.throwIfEqual(newPhone, user.getPhone(), "新手机号不能与当前手机号相同");
         // 更新手机号
         baseMapper.lambdaUpdate().set(UserDO::getPhone, newPhone).eq(UserDO::getId, id).update();
@@ -449,7 +441,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     public void updateEmail(String newEmail, String oldPassword, Long id) {
         UserDO user = super.getById(id);
         CheckUtils.throwIf(!passwordEncoder.matches(oldPassword, user.getPassword()), "当前密码不正确");
-        CheckUtils.throwIf(this.isEmailExists(newEmail, id), "邮箱已绑定其他账号，请更换其他邮箱");
+        this.checkEmailRepeat(newEmail, id, "邮箱已绑定其他账号，请更换其他邮箱");
         CheckUtils.throwIfEqual(newEmail, user.getEmail(), "新邮箱不能与当前邮箱相同");
         // 更新邮箱
         baseMapper.lambdaUpdate().set(UserDO::getEmail, newEmail).eq(UserDO::getId, id).update();
@@ -672,27 +664,30 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     }
 
     /**
-     * 邮箱是否存在
+     * 检查邮箱是否重复
      *
-     * @param email 邮箱
-     * @param id    ID
-     * @return 是否存在
+     * @param email    邮箱
+     * @param id       ID
+     * @param template 提示模板
      */
-    private boolean isEmailExists(String email, Long id) {
-        Long count = baseMapper.selectCountByEmail(email, id);
-        return count != null && count > 0;
+    private void checkEmailRepeat(String email, Long id, String template) {
+        CheckUtils.throwIf(StrUtil.isNotBlank(email) && baseMapper.lambdaQuery()
+            .eq(UserDO::getEmail, EncryptHelper.encrypt(email))
+            .ne(ObjectUtil.isNotNull(id), UserDO::getId, id)
+            .exists(), template, email);
     }
 
     /**
-     * 手机号码是否存在
+     * 检查手机号码是否重复
      *
      * @param phone 手机号码
      * @param id    ID
-     * @return 是否存在
      */
-    private boolean isPhoneExists(String phone, Long id) {
-        Long count = baseMapper.selectCountByPhone(phone, id);
-        return count != null && count > 0;
+    private void checkPhoneRepeat(String phone, Long id, String template) {
+        CheckUtils.throwIf(StrUtil.isNotBlank(phone) && baseMapper.lambdaQuery()
+            .eq(UserDO::getPhone, EncryptHelper.encrypt(phone))
+            .ne(ObjectUtil.isNotNull(id), UserDO::getId, id)
+            .exists(), template, phone);
     }
 
     /**

@@ -35,22 +35,4 @@
         <include refid="selectUser" />
         ${ew.customSqlSegment}
     </select>
-
-    <select id="selectCountByEmail" resultType="java.lang.Long">
-        SELECT count(*)
-        FROM sys_user
-        WHERE email = #{email}
-          <if test="id != null">
-            AND id != #{id}
-          </if>
-    </select>
-
-    <select id="selectCountByPhone" resultType="java.lang.Long">
-        SELECT count(*)
-        FROM sys_user
-        WHERE phone = #{phone}
-        <if test="id != null">
-            AND id != #{id}
-        </if>
-    </select>
 </mapper>

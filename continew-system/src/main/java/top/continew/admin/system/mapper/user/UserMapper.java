@@ -94,22 +94,4 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
      */
     @Select("SELECT nickname FROM sys_user WHERE id = #{id}")
     String selectNicknameById(@Param("id") Long id);
-
-    /**
-     * 根据邮箱查询数量
-     *
-     * @param email 邮箱
-     * @param id    ID
-     * @return 用户数量
-     */
-    Long selectCountByEmail(@FieldEncrypt @Param("email") String email, @Param("id") Long id);
-
-    /**
-     * 根据手机号查询数量
-     *
-     * @param phone 手机号
-     * @param id    ID
-     * @return 用户数量
-     */
-    Long selectCountByPhone(@FieldEncrypt @Param("phone") String phone, @Param("id") Long id);
 }
