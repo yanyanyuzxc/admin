@@ -59,6 +59,7 @@ import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
+import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.constant.SystemConstants;
 import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.mapper.user.UserMapper;
@@ -135,6 +136,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
 
     @Override
     public void beforeCreate(UserReq req) {
+        String password = SecureUtils.decryptPasswordByRsaPrivateKey(req.getPassword(), "密码解密失败", true);
+        req.setPassword(password);
         this.checkUsernameRepeat(req.getUsername(), null);
         this.checkEmailRepeat(req.getEmail(), null, "邮箱为 [{}] 的用户已存在");
         this.checkPhoneRepeat(req.getPhone(), null, "手机号为 [{}] 的用户已存在");
@@ -680,8 +683,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     /**
      * 检查手机号码是否重复
      *
-     * @param phone 手机号码
-     * @param id    ID
+     * @param phone    手机号码
+     * @param id       ID
+     * @param template 提示模板
      */
     private void checkPhoneRepeat(String phone, Long id, String template) {
         CheckUtils.throwIf(StrUtil.isNotBlank(phone) && baseMapper.lambdaQuery()

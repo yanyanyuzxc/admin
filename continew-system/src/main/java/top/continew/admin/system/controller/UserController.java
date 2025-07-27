@@ -44,7 +44,6 @@ import top.continew.admin.system.service.UserService;
 import top.continew.starter.core.util.validation.ValidationUtils;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;
-import top.continew.starter.extension.crud.model.resp.IdResp;
 
 import java.io.IOException;
 
@@ -61,14 +60,6 @@ import java.io.IOException;
 @CrudRequestMapping(value = "/system/user", api = {Api.PAGE, Api.LIST, Api.GET, Api.CREATE, Api.UPDATE,
     Api.BATCH_DELETE, Api.EXPORT, Api.DICT})
 public class UserController extends BaseController<UserService, UserResp, UserDetailResp, UserQuery, UserReq> {
-
-    @Override
-    @Operation(summary = "新增数据", description = "新增数据")
-    public IdResp<Long> create(@RequestBody @Valid UserReq req) {
-        String password = SecureUtils.decryptPasswordByRsaPrivateKey(req.getPassword(), "密码解密失败", true);
-        req.setPassword(password);
-        return super.create(req);
-    }
 
     @Operation(summary = "下载导入模板", description = "下载导入模板")
     @SaCheckPermission("system:user:import")
