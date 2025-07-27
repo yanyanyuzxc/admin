@@ -49,7 +49,6 @@ import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -160,24 +159,20 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantMapper, TenantDO, T
         if (CollUtil.isEmpty(tenantIdList)) {
             return;
         }
-        // 删除旧菜单
+        // 所有租户角色：删除旧菜单
         tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
+            // 删除旧菜单
+            roleMenuApi.deleteByNotInMenuIds(newMenuIds);
             // 更新在线用户上下文
             Set<Long> roleIdSet = roleMenuApi.listRoleIdByNotInMenuIds(newMenuIds);
             roleIdSet.forEach(roleApi::updateUserContext);
-            // 删除旧菜单
-            roleMenuApi.deleteByNotInMenuIds(newMenuIds);
         }));
         // 租户管理员：新增菜单
         tenantIdList.forEach(tenantId -> TenantUtils.execute(tenantId, () -> {
             Long roleId = roleApi.getIdByCode(RoleCodeEnum.TENANT_ADMIN.getCode());
-            List<Long> oldMenuIdList = roleMenuApi.listMenuIdByRoleIds(List.of(roleId));
-            Collection<Long> addMenuIdList = CollUtil.disjunction(newMenuIds, oldMenuIdList);
-            if (CollUtil.isNotEmpty(addMenuIdList)) {
-                roleMenuApi.add(addMenuIdList.stream().toList(), roleId);
-                // 更新在线用户上下文
-                roleApi.updateUserContext(roleId);
-            }
+            roleMenuApi.add(newMenuIds, roleId);
+            // 更新在线用户上下文
+            roleApi.updateUserContext(roleId);
         }));
         // 删除缓存
         RedisUtils.deleteByPattern(CacheConstants.ROLE_MENU_KEY_PREFIX + StringConstants.ASTERISK);
