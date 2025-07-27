@@ -17,6 +17,8 @@
 package top.continew.admin.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.tree.Tree;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -32,8 +34,10 @@ import top.continew.admin.system.model.query.RoleUserQuery;
 import top.continew.admin.system.model.req.RoleReq;
 import top.continew.admin.system.model.req.RoleUpdatePermissionReq;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
+import top.continew.admin.system.model.resp.role.RolePermissionResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
 import top.continew.admin.system.model.resp.role.RoleUserResp;
+import top.continew.admin.system.service.MenuService;
 import top.continew.admin.system.service.RoleService;
 import top.continew.admin.system.service.UserRoleService;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
@@ -53,10 +57,20 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrudRequestMapping(value = "/system/role", api = {Api.LIST, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE, Api.DICT})
+@CrudRequestMapping(value = "/system/role", api = {Api.LIST, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE,
+    Api.DICT})
 public class RoleController extends BaseController<RoleService, RoleResp, RoleDetailResp, RoleQuery, RoleReq> {
 
     private final UserRoleService userRoleService;
+    private final MenuService menuService;
+
+    @Operation(summary = "查询角色权限树列表", description = "查询角色权限树列表")
+    @SaCheckPermission("system:role:updatePermission")
+    @GetMapping("/permission/tree")
+    public List<RolePermissionResp> listPermissionTree() {
+        List<Tree<Long>> treeList = menuService.tree(null, null, false);
+        return BeanUtil.copyToList(treeList, RolePermissionResp.class);
+    }
 
     @Operation(summary = "修改权限", description = "修改角色的功能权限")
     @SaCheckPermission("system:role:updatePermission")

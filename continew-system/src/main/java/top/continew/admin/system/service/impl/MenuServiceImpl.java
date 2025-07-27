@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.RoleCodeEnum;
@@ -44,6 +45,7 @@ import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.query.SortQuery;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,12 +61,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, MenuDO, MenuResp, MenuResp, MenuQuery, MenuReq> implements MenuService {
 
+    private final TenantExtensionProperties tenantExtensionProperties;
     @Lazy
     @Resource
     private RoleService roleService;
 
     @Override
     public List<Tree<Long>> tree(MenuQuery query, SortQuery sortQuery, boolean isSimple) {
+        if (TenantContextHolder.isTenantEnabled() && !tenantExtensionProperties.isDefaultTenant()) {
+            query = query == null ? new MenuQuery() : query;
+            query.setExcludeMenuIdList(this.listExcludeTenantMenu());
+        }
         return this.tree(query, sortQuery, isSimple, true);
     }
 

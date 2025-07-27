@@ -116,15 +116,15 @@ public class SaTokenConfiguration {
             if (AopUtils.isAopProxy(bean)) {
                 clazz = AopProxyUtils.ultimateTargetClass(bean);
             }
-            // 使用 @CrudRequestMapping 的 Controller，如果使用了 @SaIgnore 注解，则表示忽略认证和权限校验
             CrudRequestMapping crudRequestMapping = AnnotationUtils.findAnnotation(clazz, CrudRequestMapping.class);
             SaIgnore saIgnore = AnnotationUtils.findAnnotation(clazz, SaIgnore.class);
             if (crudRequestMapping != null) {
+                // 缓存权限前缀
+                CrudApiPermissionPrefixCache.put(clazz, crudRequestMapping.value());
+                // 使用 @CrudRequestMapping 的 Controller，如果使用了 @SaIgnore 注解，则表示忽略认证和权限校验
                 if (saIgnore != null) {
                     return crudRequestMapping.value() + StringConstants.PATH_PATTERN;
                 }
-                // 缓存权限前缀
-                CrudApiPermissionPrefixCache.put(clazz, crudRequestMapping.value());
             }
             return null;
         }).filter(Objects::nonNull).toList();
