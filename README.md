@@ -292,9 +292,9 @@ continew-admin
 │  │  ├─ main
 │  │  │  ├─ java/top/continew/admin
 │  │  │  │  ├─ config （配置）
-│  │  │  │  ├─ controller
-│  │  │  │  │  ├─ common（通用相关 API）
-│  │  │  │  │  └─ monitor（系统监控相关 API）
+│  │  │  │  │  ├─ log（操作日志配置）
+│  │  │  │  │  └─ satoken（SaToken 认证配置）
+│  │  │  │  ├─ controller（通用 API）
 │  │  │  │  ├─ job （定时任务）
 │  │  │  │  └─ ContiNewAdminApplication.java（ContiNew Admin 启动程序）
 │  │  │  └─ resources
@@ -323,9 +323,11 @@ continew-admin
 │  │  │  │  │  │  ├─ req（系统认证相关请求参数（Request））
 │  │  │  │  │  │  └─ resp（系统认证相关响应参数（Response））
 │  │  │  │  │  ├─ enums（系统认证相关枚举）
+│  │  │  │  │  ├─ constant（系统认证相关常量）
 │  │  │  │  │  ├─ handler（系统认证相关处理器）
 │  │  │  │  │  └─ config（系统认证相关配置）
 │  │  │  │  └─ system（系统管理相关业务）
+│  │  │  │     ├─ api（系统管理相关公共业务 API 实现）
 │  │  │  │     ├─ controller（系统管理相关 API）
 │  │  │  │     ├─ service（系统管理相关业务接口及实现类）
 │  │  │  │     ├─ mapper（系统管理相关 Mapper）
@@ -335,8 +337,10 @@ continew-admin
 │  │  │  │     │  ├─ req（系统管理相关请求参数（Request））
 │  │  │  │     │  └─ resp（系统管理相关响应参数（Response））
 │  │  │  │     ├─ enums（系统管理相关枚举）
+│  │  │  │     ├─ constant（系统管理相关常量）
 │  │  │  │     ├─ util（系统管理相关工具类）
 │  │  │  │     ├─ validation（系统管理相关参数校验工具类）
+│  │  │  │     ├─ container（系统管理相关 Crane4j 数据填充容器配置）
 │  │  │  │     └─ config（系统管理相关配置）
 │  │  │  └─ resources
 │  │  │     └─ mapper（系统管理相关 Mapper XML 文件目录）
@@ -355,23 +359,26 @@ continew-admin
 │  │  │  │  │  ├─ req（能力开放相关请求参数（Request））
 │  │  │  │  │  └─ resp（能力开放相关响应参数（Response））
 │  │  │  │  ├─ util（能力开放相关工具类）
+│  │  │  │  ├─ handler（能力开放相关处理器）
+│  │  │  │  ├─ sign（能力开放相关 API 参数签名算法）
 │  │  │  │  └─ config（能力开放相关配置）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
 │  ├─ continew-plugin-tenant（租户插件模块）
 │  │  ├─ src
 │  │  │  ├─ main/java/top/continew/admin/tenant
+│  │  │  │  ├─ api（租户相关公共业务 API 实现）
 │  │  │  │  ├─ controller（租户相关 API）
 │  │  │  │  ├─ service（租户相关业务接口及实现类）
 │  │  │  │  ├─ mapper（租户相关 Mapper）
 │  │  │  │  ├─ model（租户相关模型）
-│  │  │  │  │  ├─ enums（租户相关枚举）
 │  │  │  │  │  ├─ entity（租户相关实体）
 │  │  │  │  │  ├─ query（租户相关查询条件）
 │  │  │  │  │  ├─ req（租户相关请求参数（Request））
 │  │  │  │  │  └─ resp（租户相关响应参数（Response））
-│  │  │  │  ├─ util（租户相关工具类）
+│  │  │  │  ├─ enums（租户相关枚举）
 │  │  │  │  ├─ constant（租户相关常量类）
+│  │  │  │  ├─ util（租户相关工具类）
 │  │  │  │  └─ config（租户相关配置）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
@@ -380,14 +387,15 @@ continew-admin
 │  │  │  ├─ main/java/top/continew/admin/schedule
 │  │  │  │  ├─ controller（任务调度相关 API）
 │  │  │  │  ├─ service（代码生成器相关业务接口及实现类）
-│  │  │  │  ├─ api（任务调度中心相关 API）
+│  │  │  │  ├─ api（任务调度中心相关 Feign API）
 │  │  │  │  ├─ model（任务调度相关模型）
 │  │  │  │  │  ├─ query（任务调度相关查询条件）
 │  │  │  │  │  ├─ req（任务调度相关请求参数（Request））
 │  │  │  │  │  └─ resp（任务调度相关响应参数（Response））
-│  │  │  │  ├─ constant（任务调度相关常量类）
 │  │  │  │  ├─ enums（任务调度相关枚举）
+│  │  │  │  ├─ constant（任务调度相关常量类）
 │  │  │  │  ├─ exception（任务调度相关异常）
+│  │  │  │  ├─ annotation（任务调度相关注解）
 │  │  │  │  └─ config（任务调度相关配置）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
@@ -415,6 +423,7 @@ continew-admin
 ├─ continew-common（公共模块，存放公共工具类，公共配置等）
 │  ├─ src
 │  │  ├─ main/java/top/continew/admin/common
+│  │  │  ├─ api（公共业务 API）
 │  │  │  ├─ base（公共基类）
 │  │  │  │  ├─ controller（控制器基类）
 │  │  │  │  ├─ mapper（Mapper 接口基类）
@@ -422,14 +431,15 @@ continew-admin
 │  │  │  │  │  ├─ entity（实体基类）
 │  │  │  │  │  └─ resp（列表、详情响应基类）
 │  │  │  │  └─ service（业务接口及实现基类）
-│  │  │  ├─ service（公共服务接口）
 │  │  │  ├─ model（公共模型）
+│  │  │  │  ├─ dto（公共数据传输对象（DTO））
 │  │  │  │  └─ req（公共请求参数（Request））
 │  │  │  ├─ context（公共上下文）
-│  │  │  ├─ constant（公共常量类）
 │  │  │  ├─ enums（公共枚举）
+│  │  │  ├─ constant（公共常量类）
 │  │  │  ├─ util（公共工具类）
 │  │  │  └─ config（公共配置）
+│  │  │    ├─ crud（CRUD 配置）
 │  │  │    ├─ mybatis（MyBatis Plus 配置）
 │  │  │    ├─ websocket（Websocket 配置）
 │  │  │    ├─ doc（接口文档配置）
