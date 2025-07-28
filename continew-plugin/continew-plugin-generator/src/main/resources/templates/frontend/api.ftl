@@ -68,5 +68,5 @@ export function export${classNamePrefix}(query: ${classNamePrefix}Query) {
 
 /** @desc 查询${businessName}字典 */
 export function list${classNamePrefix}Dict(query?: ${classNamePrefix}Query) {
-return http.get<LabelValueState[]>(`${BASE_URL}/dict`, query)
+return http.get<LabelValueState[]>(`${'$'}{BASE_URL}/dict`, query)
 }
