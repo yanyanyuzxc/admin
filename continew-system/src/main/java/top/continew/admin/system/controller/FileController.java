@@ -60,7 +60,7 @@ public class FileController extends BaseController<FileService, FileResp, FileRe
     /**
      * 上传文件
      * <p>
-     * 公共上传文件请使用 {@link top.continew.admin.controller.common.CommonController#upload}
+     * 公共上传文件请使用 {@link CommonController#upload}
      * </p>
      *
      * @param file       文件
@@ -69,7 +69,7 @@ public class FileController extends BaseController<FileService, FileResp, FileRe
      * @throws IOException /
      */
     @Operation(summary = "上传文件", description = "上传文件")
-    @Parameter(name = "parentPath", description = "上级目录", example = "/", in = ParameterIn.QUERY)
+    @Parameter(name = "parentPath", description = "上级目录（默认：/yyyy/MM/dd）", example = "/", in = ParameterIn.QUERY)
     @SaCheckPermission("system:file:upload")
     @PostMapping("/upload")
     public FileUploadResp upload(@NotNull(message = "文件不能为空") @RequestPart MultipartFile file,

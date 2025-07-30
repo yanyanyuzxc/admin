@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.service;
 
+import cn.hutool.core.util.StrUtil;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.base.service.BaseService;
@@ -60,7 +61,7 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @throws IOException /
      */
     default FileInfo upload(MultipartFile file, String parentPath) throws IOException {
-        return upload(file, parentPath, null);
+        return upload(file, StrUtil.blankToDefault(parentPath, getDefaultParentPath()), null);
     }
 
     /**
@@ -94,7 +95,7 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @throws IOException /
      */
     default FileInfo upload(File file, String parentPath) throws IOException {
-        return upload(file, parentPath, null);
+        return upload(file, StrUtil.blankToDefault(parentPath, getDefaultParentPath()), null);
     }
 
     /**

@@ -252,10 +252,9 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
      * 处理路径
      *
      * <p>
-     * 1.如果 path 为空，则使用 {@link FileService#getDefaultParentPath()} 作为默认值 <br />
-     * 2.如果 path 为 {@code /}，则设置为空 <br />
-     * 3.如果 path 不以 {@code /} 结尾，则添加后缀 {@code /} <br />
-     * 4.如果 path 以 {@code /} 开头，则移除前缀 {@code /} <br />
+     * 1.如果 path 为 {@code /}，则设置为空 <br />
+     * 2.如果 path 不以 {@code /} 结尾，则添加后缀 {@code /} <br />
+     * 3.如果 path 以 {@code /} 开头，则移除前缀 {@code /} <br />
      * 示例：yyyy/MM/dd/
      * </p>
      *
@@ -263,9 +262,6 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
      * @return 处理路径
      */
     private String pretreatmentPath(String path) {
-        if (StrUtil.isBlank(path)) {
-            return this.getDefaultParentPath();
-        }
         if (StringConstants.SLASH.equals(path)) {
             return StringConstants.EMPTY;
         }
