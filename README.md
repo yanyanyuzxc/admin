@@ -134,7 +134,7 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 ##  系统功能
 
 > [!TIP]
-> 更多功能和优化正在赶来💦，最新项目计划、进展请进群或关注 [需求墙](https://continew.top/admin/other/feature.html) 和 [更新日志](https://continew.top/admin/changelog/)。
+> 更多功能和优化正在赶来💦，最新项目计划、进展请进群或关注 [需求墙](https://continew.top/admin/feature.html) 和 [更新日志](https://continew.top/admin/changelog/)。
 > 功能不会用？请查看 [功能手册](https://continew.top/admin/function/tenant/management.html)。
 
 - 仪表盘：提供工作台、分析页，工作台提供功能快捷导航入口、最新公告、动态；分析页提供全面数据可视化能力
@@ -489,53 +489,40 @@ continew-admin
 └─ pom.xml（包含版本锁定及全局插件相关配置）
 ```
 
-## 贡献指南
+## 参与贡献
 
-ContiNew Admin 致力于提供开箱即用，持续舒适的开发体验。作为一个开源项目，Creator 的初心是希望 ContiNew Admin 依托开源协作模式，提升技术透明度、放大集体智慧、共创优秀实践，源源不断地为企业级项目开发提供助力。
+ContiNew（Continue New）系列项目致力于通过持续迭代，为开发者提供舒适的开发体验。作为开源社区，我们的初衷是希望通过开源协作模式，提升技术透明度、放大集体智慧、共创优秀实践，源源不断地为企业级项目开发提供助力。
 
-我们非常欢迎广大社区用户为 ContiNew Admin **贡献（开发，测试、文档、答疑等）** 或优化代码，欢迎各位感兴趣的小伙伴儿，[添加微信](https://continew.top/discussion.html) 讨论或认领任务。
+我们诚挚邀请广大社区用户为 ContiNew 项目贡献力量，包括但不限于 Issue 排查、测试验证、代码开发与重构等。每一份贡献，都是推动项目进步的重要力量（请查阅 [贡献指南](https://continew.top/about/contributing.html)）。欢迎各位感兴趣的小伙伴儿，[添加微信](https://continew.top/discussion.html) 讨论或认领任务。
 
 ### 分支说明
 
-ContiNew Admin 的分支目前分为下个大版本的开发分支和上个大版本的维护分支，PR 前请注意对应分支是否处于维护状态，版本支持情况请查看 [更新日志/版本支持](https://continew.top/admin/changelog/)。
+ContiNew 系列项目采用清晰的分支策略，确保开发与维护有序进行。提交 PR 前，请确认目标分支是否处于活跃维护状态，版本支持情况请查看 [更新日志#版本支持](https://continew.top/admin/changelog/)。
 
 | 分支  | 说明                                                         |
 | ----- | ------------------------------------------------------------ |
-| dev   | 开发分支，默认为下个大版本的 SNAPSHOT 版本，接受新功能或新功能优化 PR |
-| x.x.x | 维护分支，在 vx.x.x 版本维护期终止前（一般为下个大版本发布前），用于修复上个版本的 Bug，只接受已有功能修复，不接受新功能 PR |
+| dev   | 开发分支，用于下个大版本的 SNAPSHOT 开发，接受新功能或功能优化 PR |
+| x.x.x | 维护分支，用于特定版本（如 vx.x.x）的 bug 修复，仅接受已有功能的修复 PR，不接受新功能 |
 
-### 贡献代码
+### 流程步骤
 
-如果您想提交新功能或优化现有代码，可以按照以下步骤操作：
+若您希望提交新功能或优化现有代码，请遵循以下步骤：
 
-1. 首先，在 Gitee 或 Github 上将项目 fork 到您自己的仓库
-2. 然后，将 fork 过来的项目（即您的项目）克隆到本地
-3. 基于当前仍在维护的分支（例如：dev），切出来一个新的分支（例如：feat/tenant）（不要修改源分支，源分支仅做同步 continew 最新代码用）
-4. 在新分支开始修改代码，修改完成后，将代码 commit 并 push 到您的远程仓库
-5. 在 Gitee 或 Github 上新建 pull request（pr），选择好源和目标，按模板要求填写说明信息后提交即可（多多参考 [已批准合并的 pr 记录](https://github.com/continew-org/continew-admin/pulls?q=is%3Apr+is%3Amerged)，会大大增加批准合并率）
-6. 提交后，会提示你需要签署 CLA（Contributor License Agreement，贡献者协议），请确保你的 commit 所用邮箱和对应平台绑定邮箱一致（如果不一致，可以在本地通过 `git reset --soft HEAD~1` 回退，然后使用正确邮箱重新提交，最后 `git push -f` 即可，不需要重新创建 PR），然后使用该邮箱签署即可
-7. 最后，耐心等待维护者合并您的请求即可
-8. PR 合并后，下次 PR 时请先同步最新代码，然后再次从步骤 3 开始
-
-以下是向 `continew-admin` 项目提交 pull request 为例的简单步骤：
-
-```
-1.continew/continew-admin -> fork -> your/continew-admin
-2.git clone your/continew-admin
-3.dev -> feat/tenant
-4.feat/tenant 本地开发，开发完 push 到 your/continew-admin
-5.your/continew-admin:feat/tenant -> continew/continew-admin:dev
-6.阅读并签署 CLA
-7.PR 合并完成，删除 feat/tenant 分支
-8.强制从 continew/continew-admin 覆盖更新 your/continew-admin，然后重复步骤 3...
-```
+1. 在开源平台上将项目 fork 到您的个人仓库
+2. 将 fork 的项目克隆到本地开发环境
+3. 基于当前维护的分支（如 dev）创建新分支（如 feat/newFeature），请勿直接修改源分支（源分支仅做同步 ContiNew 最新代码用）
+4. 在新分支上进行代码修改，完成后提交并 push 到您的远程仓库
+5. 在开源平台上创建 pull request (PR)，选择正确的源分支和目标分支，按模板填写说明信息（参考 [已合并的 PR](https://github.com/continew-org/continew-admin-ui/pulls?q=is%3Apr+is%3Amerged) 可提高合并率）
+6. 提交 PR 后，系统会提示签署 CLA（贡献者协议）。请确保 commit 使用的邮箱与平台绑定邮箱一致（如果不一致，可以在本地通过 `git reset --soft HEAD~1` 回退，然后使用正确邮箱重新提交，最后 `git push -f` 即可，不需要重新创建 PR），然后使用该邮箱签署即可
+7. 耐心等待维护者审核并合并您的 PR（建议通过交流群进行快捷沟通）
+8. PR 合并后，下次贡献前请先同步最新代码，再重复步骤 3 开始
 
 > [!IMPORTANT]
-> 欢迎大家为 ContiNew Admin 贡献代码，我们非常感谢您的支持！为了更好地管理项目，维护者有一些要求：
+> 为了确保项目质量和协作效率，请注意以下事项：
 >
-> 1. 请确保代码、配置文件的结构和命名规范良好，完善的代码注释甚至包括接口文档参数示例，并遵循阿里巴巴的 <a href="https://github.com/continew-org/continew-admin/blob/dev/.style/Java%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C(%E9%BB%84%E5%B1%B1%E7%89%88).pdf" target="_blank">《Java开发手册(黄山版)》</a> 中的代码规范，保证代码质量和可维护性
-> 2. 在提交代码前，请按照 [Angular 提交规范](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular) 编写 commit 的 message（建议在 IntelliJ IDEA 中下载并安装 Git Commit Template 插件，以便按照规范进行 commit）
-> 3. 提交代码之前，请关闭所有代码窗口，执行 `mvn compile` 命令（代码格式化插件会在项目编译时对全局代码进行格式修正），编译通过后，不要再打开查看任何代码窗口，直接提交即可，以免不同的 IDE 配置会自动进行代码格式化
+> 1. 代码和配置文件请参考已有风格，遵循清晰的结构与命名规范，提供完善的注释（包括接口文档和参数示例），后端代码请符合阿里巴巴 <a href="https://github.com/continew-org/continew-admin/blob/dev/.style/Java%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C(%E9%BB%84%E5%B1%B1%E7%89%88).pdf" target="_blank">《Java开发手册(黄山版)》</a> 中的代码规范
+> 2. 提交后端代码前请关闭所有代码窗口，执行 `mvn compile` 命令进行代码格式化（ContiNew 项目后端编译时会自动执行插件进行代码格式修正）。编译通过后请勿再次打开代码窗口，避免不同 IDE 配置导致的格式差异 
+> 3. 提交时，请按照 [Angular 提交规范](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular) 编写 commit message（参考已有风格）
 
 ## 反馈交流
 
