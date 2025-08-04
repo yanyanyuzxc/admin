@@ -47,6 +47,7 @@ import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Sa-Token 配置
@@ -110,7 +111,7 @@ public class SaTokenConfiguration {
     @EventListener(ApplicationReadyEvent.class)
     public void configureSaTokenExcludes() {
         String[] beanNames = applicationContext.getBeanDefinitionNames();
-        List<String> additionalExcludes = Arrays.stream(beanNames).parallel().map(beanName -> {
+        List<String> additionalExcludes = Arrays.stream(beanNames).map(beanName -> {
             Object bean = applicationContext.getBean(beanName);
             Class<?> clazz = bean.getClass();
             if (AopUtils.isAopProxy(bean)) {
@@ -130,10 +131,10 @@ public class SaTokenConfiguration {
         }).filter(Objects::nonNull).toList();
         if (!additionalExcludes.isEmpty()) {
             // 合并现有的 excludes 和新扫描到的
-            List<String> allExcludes = new ArrayList<>(Arrays.asList(properties.getSecurity().getExcludes()));
-            allExcludes.addAll(additionalExcludes);
-            // 转回数组
-            properties.getSecurity().setExcludes(allExcludes.toArray(new String[0]));
+            String[] existingExcludes = Optional.ofNullable(properties.getSecurity().getExcludes()).orElse(new String[0]);
+            String[] combinedExcludes = Stream.concat(Arrays.stream(existingExcludes), additionalExcludes.stream())
+                                              .toArray(String[]::new);
+            properties.getSecurity().setExcludes(combinedExcludes);
         }
         log.debug("缓存 CRUD API 权限前缀完成：{}", CrudApiPermissionPrefixCache.getAll().values());
     }
