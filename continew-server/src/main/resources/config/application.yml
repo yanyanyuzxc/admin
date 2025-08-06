@@ -236,9 +236,10 @@ continew-starter.rate-limiter:
 sa-token:
   # Token 名称（同时也是 cookie 名称）
   token-name: Authorization
-  ## 提示：通过 [系统管理/系统配置/客户端配置]功能 动态维护，如果不需要可移除相关配置代码，放开下方注释
   # 是否启用动态 activeTimeout 功能
   dynamic-active-timeout: true
+  ## 提示：请通过页面功能 [系统管理/系统配置/客户端配置] 动态调整 timeout、active-timeout 配置项
+  ## 如果不需要动态配置，请将 dynamic-active-timeout 设为 false，并取消下方 timeout 和 active-timeout 配置的注释，最好再移除相关登录处理代码
 #  # Token 有效期（单位：秒，默认 30 天，-1 代表永不过期）
 #  timeout: 86400
 #  # Token 最低活跃频率（单位：秒，默认 -1，代表不限制，永不冻结。如果 token 超过此时间没有访问系统就会被冻结）
