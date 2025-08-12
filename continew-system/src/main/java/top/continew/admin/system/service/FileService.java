@@ -21,6 +21,7 @@ import org.dromara.x.file.storage.core.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.system.model.entity.FileDO;
+import top.continew.admin.system.model.entity.StorageDO;
 import top.continew.admin.system.model.query.FileQuery;
 import top.continew.admin.system.model.req.FileReq;
 import top.continew.admin.system.model.resp.file.FileResp;
@@ -147,6 +148,18 @@ public interface FileService extends BaseService<FileResp, FileResp, FileQuery, 
      * @return 文件数量
      */
     Long countByStorageIds(List<Long> storageIds);
+
+    /**
+     * 创建上级文件夹（支持多级）
+     *
+     * <p>
+     * user/avatar/ => user（path：/user）、avatar（path：/user/avatar）
+     * </p>
+     *
+     * @param parentPath 上级目录
+     * @param storage    存储配置
+     */
+    void createParentDir(String parentPath, StorageDO storage);
 
     /**
      * 获取默认上级目录

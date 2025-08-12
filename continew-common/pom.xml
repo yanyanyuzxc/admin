@@ -31,10 +31,16 @@
             <groupId>org.dromara.x-file-storage</groupId>
             <artifactId>x-file-storage-spring</artifactId>
         </dependency>
-        <!-- Amazon S3（Amazon Simple Storage Service，亚马逊简单存储服务，通用存储协议 S3，兼容主流云厂商对象存储） -->
+        <!-- Amazon S3（Amazon Simple Storage Service，亚马逊简单存储服务，通用存储协议 S3，兼容主流云厂商对象存储）后续会移除替换1.x的版本 -->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
+        </dependency>
+
+        <!-- Amazon S3 2.x version （Amazon Simple Storage Service，亚马逊简单存储服务，通用存储协议 S3，兼容主流云厂商对象存储） -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
         </dependency>
 
         <!-- FreeMarker（模板引擎） -->

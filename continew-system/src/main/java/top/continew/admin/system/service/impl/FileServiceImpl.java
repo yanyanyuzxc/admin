@@ -278,7 +278,8 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
      * @param parentPath 上级目录
      * @param storage    存储配置
      */
-    private void createParentDir(String parentPath, StorageDO storage) {
+    @Override
+    public void createParentDir(String parentPath, StorageDO storage) {
         if (StrUtil.isBlank(parentPath) || StringConstants.SLASH.equals(parentPath)) {
             return;
         }
