@@ -64,7 +64,9 @@ public class LocalStorageHandler implements StorageHandler {
         String parentPath = req.getParentPath();
         String fileName = req.getFileName();
         StrUtil.blankToDefault(parentPath, StrUtil.SLASH);
-        String relativePath = StrUtil.endWith(parentPath, StrUtil.SLASH) ? parentPath + fileName : parentPath + StrUtil.SLASH + fileName;
+        String relativePath = StrUtil.endWith(parentPath, StrUtil.SLASH)
+            ? parentPath + fileName
+            : parentPath + StrUtil.SLASH + fileName;
         try {
             // 创建临时目录用于存储分片
             String tempDirPath = buildTempDirPath(bucket, uploadId);
@@ -93,7 +95,11 @@ public class LocalStorageHandler implements StorageHandler {
     }
 
     @Override
-    public MultipartUploadResp uploadPart(StorageDO storageDO, String path, String uploadId, Integer partNumber, MultipartFile file) {
+    public MultipartUploadResp uploadPart(StorageDO storageDO,
+                                          String path,
+                                          String uploadId,
+                                          Integer partNumber,
+                                          MultipartFile file) {
         try {
             long size = file.getSize();
             String bucket = storageDO.getBucketName();
@@ -135,7 +141,11 @@ public class LocalStorageHandler implements StorageHandler {
     }
 
     @Override
-    public void completeMultipartUpload(StorageDO storageDO, List<MultipartUploadResp> parts, String path, String uploadId, boolean needVerify) {
+    public void completeMultipartUpload(StorageDO storageDO,
+                                        List<MultipartUploadResp> parts,
+                                        String path,
+                                        String uploadId,
+                                        boolean needVerify) {
         String bucket = storageDO.getBucketName(); // 本地存储中，bucket是存储根路径
         String tempDirPath = buildTempDirPath(bucket, uploadId);
 
@@ -146,13 +156,13 @@ public class LocalStorageHandler implements StorageHandler {
 
             // 合并分片
             try (OutputStream out = Files
-                    .newOutputStream(targetPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                .newOutputStream(targetPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 
                 // 按分片编号排序
                 List<MultipartUploadResp> sortedParts = parts.stream()
-                        .filter(MultipartUploadResp::isSuccess)
-                        .sorted(Comparator.comparingInt(MultipartUploadResp::getPartNumber))
-                        .toList();
+                    .filter(MultipartUploadResp::isSuccess)
+                    .sorted(Comparator.comparingInt(MultipartUploadResp::getPartNumber))
+                    .toList();
 
                 // 逐个读取并写入
                 for (MultipartUploadResp part : sortedParts) {
@@ -206,9 +216,9 @@ public class LocalStorageHandler implements StorageHandler {
      * @return 临时目录路径
      */
     private String buildTempDirPath(String bucket, String uploadId) {
-        return StrUtil.appendIfMissing(bucket, File.separator) + MultipartUploadConstants.TEMP_DIR_NAME + File.separator + uploadId;
+        return StrUtil
+            .appendIfMissing(bucket, File.separator) + MultipartUploadConstants.TEMP_DIR_NAME + File.separator + uploadId;
     }
-
 
     /**
      * 构建目标文件路径

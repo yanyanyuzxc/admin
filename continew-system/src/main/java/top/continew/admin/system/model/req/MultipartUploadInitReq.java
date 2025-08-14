@@ -77,5 +77,5 @@ public class MultipartUploadInitReq implements Serializable {
      * 文件元信息
      */
     @Schema(description = "文件元信息")
-    private Map<String,String> metaData;
+    private Map<String, String> metaData;
 }

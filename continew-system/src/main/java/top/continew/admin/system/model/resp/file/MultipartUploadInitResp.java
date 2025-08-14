@@ -116,5 +116,4 @@ public class MultipartUploadInitResp implements Serializable {
     @Schema(description = "已上传分片编号集合")
     private Set<Integer> uploadedPartNumbers;
 
-
 }

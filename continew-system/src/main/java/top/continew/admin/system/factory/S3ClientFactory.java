@@ -44,13 +44,13 @@ public class S3ClientFactory {
         String key = storage.getEndpoint() + "|" + storage.getAccessKey();
         return CLIENT_CACHE.computeIfAbsent(key, k -> {
             StaticCredentialsProvider auth = StaticCredentialsProvider.create(AwsBasicCredentials.create(storage
-                    .getAccessKey(), storage.getSecretKey()));
+                .getAccessKey(), storage.getSecretKey()));
             return S3Client.builder()
-                    .credentialsProvider(auth)
-                    .endpointOverride(URI.create(storage.getEndpoint()))
-                    .region(Region.US_EAST_1)
-                    .serviceConfiguration(S3Configuration.builder().chunkedEncodingEnabled(false).build())
-                    .build();
+                .credentialsProvider(auth)
+                .endpointOverride(URI.create(storage.getEndpoint()))
+                .region(Region.US_EAST_1)
+                .serviceConfiguration(S3Configuration.builder().chunkedEncodingEnabled(false).build())
+                .build();
         });
     }
 

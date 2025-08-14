@@ -131,9 +131,10 @@ public class SaTokenConfiguration {
         }).filter(Objects::nonNull).toList();
         if (!additionalExcludes.isEmpty()) {
             // 合并现有的 excludes 和新扫描到的
-            String[] existingExcludes = Optional.ofNullable(properties.getSecurity().getExcludes()).orElse(new String[0]);
+            String[] existingExcludes = Optional.ofNullable(properties.getSecurity().getExcludes())
+                .orElse(new String[0]);
             String[] combinedExcludes = Stream.concat(Arrays.stream(existingExcludes), additionalExcludes.stream())
-                                              .toArray(String[]::new);
+                .toArray(String[]::new);
             properties.getSecurity().setExcludes(combinedExcludes);
         }
         log.debug("缓存 CRUD API 权限前缀完成：{}", CrudApiPermissionPrefixCache.getAll().values());

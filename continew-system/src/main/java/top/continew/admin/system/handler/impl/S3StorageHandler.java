@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2022-present Charles7c Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package top.continew.admin.system.handler.impl;
 
 import cn.hutool.core.io.FileUtil;
@@ -46,20 +62,22 @@ public class S3StorageHandler implements StorageHandler {
         String fileName = req.getFileName();
         String contentType = req.getContentType();
         StrUtil.blankToDefault(parentPath, StrUtil.SLASH);
-        String relativePath = StrUtil.endWith(parentPath, StrUtil.SLASH) ? parentPath + fileName : parentPath + StrUtil.SLASH + fileName;
+        String relativePath = StrUtil.endWith(parentPath, StrUtil.SLASH)
+            ? parentPath + fileName
+            : parentPath + StrUtil.SLASH + fileName;
 
         fileService.createParentDir(parentPath, storageDO);
         try {
             // 构建请求
             CreateMultipartUploadRequest.Builder requestBuilder = CreateMultipartUploadRequest.builder()
-                    .bucket(bucket)
-                    .key(buildS3Key(relativePath))
-                    .contentType(contentType);
+                .bucket(bucket)
+                .key(buildS3Key(relativePath))
+                .contentType(contentType);
 
             // 添加元数据 暂时注释掉 mataData传递中文会导致签名校验不通过
-//            if (metaData != null && !metaData.isEmpty()) {
-//                requestBuilder.metadata(metaData);
-//            }
+            //            if (metaData != null && !metaData.isEmpty()) {
+            //                requestBuilder.metadata(metaData);
+            //            }
 
             S3Client s3Client = s3ClientFactory.getClient(storageDO);
             log.info("S3初始化分片上传: bucket={}, key={}, contentType={}", bucket, buildS3Key(relativePath), contentType);
@@ -85,14 +103,17 @@ public class S3StorageHandler implements StorageHandler {
             log.info("S3初始化分片上传成功: uploadId={}, path={}", uploadId, relativePath);
             return result;
 
-
         } catch (Exception e) {
             throw new BaseException("S3初始化分片上传失败: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public MultipartUploadResp uploadPart(StorageDO storageDO, String path, String uploadId, Integer partNumber, MultipartFile file) {
+    public MultipartUploadResp uploadPart(StorageDO storageDO,
+                                          String path,
+                                          String uploadId,
+                                          Integer partNumber,
+                                          MultipartFile file) {
         try {
             String bucket = storageDO.getBucketName();
             // 读取数据到内存（注意：实际使用时可能需要优化大文件处理）
@@ -100,12 +121,12 @@ public class S3StorageHandler implements StorageHandler {
 
             // 构建请求
             UploadPartRequest request = UploadPartRequest.builder()
-                    .bucket(bucket)
-                    .key(buildS3Key(path))
-                    .uploadId(uploadId)
-                    .partNumber(partNumber)
-                    .contentLength((long) bytes.length)
-                    .build();
+                .bucket(bucket)
+                .key(buildS3Key(path))
+                .uploadId(uploadId)
+                .partNumber(partNumber)
+                .contentLength((long)bytes.length)
+                .build();
 
             // 执行上传
             S3Client s3Client = s3ClientFactory.getClient(storageDO);
@@ -125,13 +146,18 @@ public class S3StorageHandler implements StorageHandler {
             result.setPartNumber(partNumber);
             result.setSuccess(false);
             result.setErrorMessage(e.getMessage());
-            log.error("S3上传分片失败: partNumber={} for key={} with uploadId={} errorMessage={}", partNumber, path, uploadId, e.getMessage());
+            log.error("S3上传分片失败: partNumber={} for key={} with uploadId={} errorMessage={}", partNumber, path, uploadId, e
+                .getMessage());
             return result;
         }
     }
 
     @Override
-    public void completeMultipartUpload(StorageDO storageDO, List<MultipartUploadResp> parts, String path, String uploadId, boolean needVerify) {
+    public void completeMultipartUpload(StorageDO storageDO,
+                                        List<MultipartUploadResp> parts,
+                                        String path,
+                                        String uploadId,
+                                        boolean needVerify) {
         if (path == null) {
             throw new BaseException("无效的uploadId: " + uploadId);
         }
@@ -144,18 +170,18 @@ public class S3StorageHandler implements StorageHandler {
         }
         // 构建已完成的分片列表
         List<CompletedPart> completedParts = parts.stream()
-                .filter(MultipartUploadResp::isSuccess)
-                .map(part -> CompletedPart.builder().partNumber(part.getPartNumber()).eTag(part.getPartETag()).build())
-                .sorted(Comparator.comparingInt(CompletedPart::partNumber))
-                .collect(Collectors.toList());
+            .filter(MultipartUploadResp::isSuccess)
+            .map(part -> CompletedPart.builder().partNumber(part.getPartNumber()).eTag(part.getPartETag()).build())
+            .sorted(Comparator.comparingInt(CompletedPart::partNumber))
+            .collect(Collectors.toList());
 
         // 构建请求
         CompleteMultipartUploadRequest request = CompleteMultipartUploadRequest.builder()
-                .bucket(bucket)
-                .key(buildS3Key(path))
-                .uploadId(uploadId)
-                .multipartUpload(CompletedMultipartUpload.builder().parts(completedParts).build())
-                .build();
+            .bucket(bucket)
+            .key(buildS3Key(path))
+            .uploadId(uploadId)
+            .multipartUpload(CompletedMultipartUpload.builder().parts(completedParts).build())
+            .build();
 
         // 完成上传
         s3Client.completeMultipartUpload(request);
@@ -169,26 +195,25 @@ public class S3StorageHandler implements StorageHandler {
             S3Client s3Client = s3ClientFactory.getClient(storageDO);
 
             // 列出所有未完成的分片上传
-            ListMultipartUploadsRequest listRequest = ListMultipartUploadsRequest.builder()
-                    .bucket(bucket)
-                    .build();
+            ListMultipartUploadsRequest listRequest = ListMultipartUploadsRequest.builder().bucket(bucket).build();
 
             ListMultipartUploadsResponse listResponse = s3Client.listMultipartUploads(listRequest);
 
             // 查找匹配的上传任务
-            Optional<MultipartUpload> targetUpload = listResponse.uploads().stream()
-                    .filter(upload -> upload.uploadId().equals(uploadId))
-                    .findFirst();
+            Optional<MultipartUpload> targetUpload = listResponse.uploads()
+                .stream()
+                .filter(upload -> upload.uploadId().equals(uploadId))
+                .findFirst();
 
             if (targetUpload.isPresent()) {
                 MultipartUpload upload = targetUpload.get();
 
                 // 取消分片上传
                 AbortMultipartUploadRequest abortRequest = AbortMultipartUploadRequest.builder()
-                        .bucket(bucket)
-                        .key(upload.key())
-                        .uploadId(uploadId)
-                        .build();
+                    .bucket(bucket)
+                    .key(upload.key())
+                    .uploadId(uploadId)
+                    .build();
 
                 s3Client.abortMultipartUpload(abortRequest);
                 log.info("S3清理分片上传成功: bucket={}, key={}, uploadId={}", bucket, upload.key(), uploadId);
@@ -207,14 +232,17 @@ public class S3StorageHandler implements StorageHandler {
         return StorageTypeEnum.OSS;
     }
 
-
     /**
      * 列出已上传的分片
      */
     public List<MultipartUploadResp> listParts(String bucket, String path, String uploadId, S3Client s3Client) {
         try {
             // 构建请求
-            ListPartsRequest request = ListPartsRequest.builder().bucket(bucket).key(buildS3Key(path)).uploadId(uploadId).build();
+            ListPartsRequest request = ListPartsRequest.builder()
+                .bucket(bucket)
+                .key(buildS3Key(path))
+                .uploadId(uploadId)
+                .build();
 
             // 获取分片列表
             ListPartsResponse response = s3Client.listParts(request);
@@ -241,10 +269,10 @@ public class S3StorageHandler implements StorageHandler {
      */
     private void validateParts(List<MultipartUploadResp> recordParts, List<MultipartUploadResp> s3Parts) {
         Map<Integer, String> recordMap = recordParts.stream()
-                .collect(Collectors.toMap(MultipartUploadResp::getPartNumber, MultipartUploadResp::getPartETag));
+            .collect(Collectors.toMap(MultipartUploadResp::getPartNumber, MultipartUploadResp::getPartETag));
 
         Map<Integer, String> s3Map = s3Parts.stream()
-                .collect(Collectors.toMap(MultipartUploadResp::getPartNumber, MultipartUploadResp::getPartETag));
+            .collect(Collectors.toMap(MultipartUploadResp::getPartNumber, MultipartUploadResp::getPartETag));
 
         // 检查分片数量
         if (recordMap.size() != s3Map.size()) {

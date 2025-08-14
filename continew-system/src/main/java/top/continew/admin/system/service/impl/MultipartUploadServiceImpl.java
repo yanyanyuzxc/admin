@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2022-present Charles7c Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.io.FileUtil;
@@ -51,17 +67,18 @@ public class MultipartUploadServiceImpl implements MultipartUploadService {
         // 后续可以增加storageCode参数 指定某个存储平台 当前设计是默认存储平台
         StorageDO storageDO = storageService.getByCode(null);
         // 根据文件Md5查询当前存储平台是否初始化过分片
-        String uploadId = multipartUploadDao.getUploadIdByMd5(multiPartUploadInitReq
-                .getFileMd5());
+        String uploadId = multipartUploadDao.getUploadIdByMd5(multiPartUploadInitReq.getFileMd5());
         if (StrUtil.isNotBlank(uploadId)) {
             MultipartUploadInitResp multipartUpload = multipartUploadDao.getMultipartUpload(uploadId);
             //对比存储平台和分片大小是否一致 一致则返回结果
-            if (multipartUpload != null
-                    && multipartUpload.getPartSize().equals(MultipartUploadConstants.MULTIPART_UPLOAD_PART_SIZE)
-                    && multipartUpload.getPlatform().equals(storageDO.getCode())) {
+            if (multipartUpload != null && multipartUpload.getPartSize()
+                .equals(MultipartUploadConstants.MULTIPART_UPLOAD_PART_SIZE) && multipartUpload.getPlatform()
+                    .equals(storageDO.getCode())) {
                 // 获取已上传分片信息
                 List<FilePartInfo> fileParts = multipartUploadDao.getFileParts(uploadId);
-                Set<Integer> partNumbers = fileParts.stream().map(FilePartInfo::getPartNumber).collect(Collectors.toSet());
+                Set<Integer> partNumbers = fileParts.stream()
+                    .map(FilePartInfo::getPartNumber)
+                    .collect(Collectors.toSet());
                 multipartUpload.setUploadedPartNumbers(partNumbers);
                 return multipartUpload;
             }
@@ -71,7 +88,8 @@ public class MultipartUploadServiceImpl implements MultipartUploadService {
         StorageHandler storageHandler = storageHandlerFactory.createHandler(storageDO.getType());
         //文件元信息
         Map<String, String> metaData = multiPartUploadInitReq.getMetaData();
-        MultipartUploadInitResp multipartUploadInitResp = storageHandler.initMultipartUpload(storageDO, multiPartUploadInitReq);
+        MultipartUploadInitResp multipartUploadInitResp = storageHandler
+            .initMultipartUpload(storageDO, multiPartUploadInitReq);
         // 缓存文件信息,md5和uploadId映射
         multipartUploadDao.setMultipartUpload(multipartUploadInitResp.getUploadId(), multipartUploadInitResp, metaData);
         multipartUploadDao.setMd5Mapping(multiPartUploadInitReq.getFileMd5(), multipartUploadInitResp.getUploadId());
@@ -174,9 +192,9 @@ public class MultipartUploadServiceImpl implements MultipartUploadService {
 
         // 检查是否所有分片都成功
         List<Integer> failedParts = parts.stream()
-                .filter(part -> !part.isSuccess())
-                .map(MultipartUploadResp::getPartNumber)
-                .toList();
+            .filter(part -> !part.isSuccess())
+            .map(MultipartUploadResp::getPartNumber)
+            .toList();
 
         if (!failedParts.isEmpty()) {
             throw new BaseException("存在失败的分片: " + failedParts);
