@@ -36,7 +36,7 @@ import top.continew.admin.system.mapper.RoleMapper;
 import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.query.RoleQuery;
 import top.continew.admin.system.model.req.RoleReq;
-import top.continew.admin.system.model.req.RoleUpdatePermissionReq;
+import top.continew.admin.system.model.req.RolePermissionUpdateReq;
 import top.continew.admin.system.model.resp.MenuResp;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
@@ -142,7 +142,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     @Override
     @Transactional(rollbackFor = Exception.class)
     @CacheInvalidate(key = "#id", name = CacheConstants.ROLE_MENU_KEY_PREFIX)
-    public void updatePermission(Long id, RoleUpdatePermissionReq req) {
+    public void updatePermission(Long id, RolePermissionUpdateReq req) {
         RoleDO role = super.getById(id);
         CheckUtils.throwIf(Boolean.TRUE.equals(role.getIsSystem()), "[{}] 是系统内置角色，不允许修改角色功能权限", role.getName());
         // 保存角色和菜单关联

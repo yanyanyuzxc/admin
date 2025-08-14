@@ -21,7 +21,7 @@ import top.continew.admin.common.context.RoleContext;
 import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.query.RoleQuery;
 import top.continew.admin.system.model.req.RoleReq;
-import top.continew.admin.system.model.req.RoleUpdatePermissionReq;
+import top.continew.admin.system.model.req.RolePermissionUpdateReq;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
 import top.continew.starter.data.service.IService;
@@ -43,7 +43,7 @@ public interface RoleService extends BaseService<RoleResp, RoleDetailResp, RoleQ
      * @param id  角色 ID
      * @param req 请求参数
      */
-    void updatePermission(Long id, RoleUpdatePermissionReq req);
+    void updatePermission(Long id, RolePermissionUpdateReq req);
 
     /**
      * 分配角色给用户

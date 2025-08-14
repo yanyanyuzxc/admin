@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.system.model.query.OptionQuery;
 import top.continew.admin.system.model.req.OptionReq;
-import top.continew.admin.system.model.req.OptionResetValueReq;
+import top.continew.admin.system.model.req.OptionValueResetReq;
 import top.continew.admin.system.model.resp.OptionResp;
 import top.continew.admin.system.service.OptionService;
 
@@ -65,7 +65,7 @@ public class OptionController {
     @SaCheckPermission(value = {"system:siteConfig:update", "system:securityConfig:update", "system:loginConfig:update",
         "system:mailConfig:update"}, mode = SaMode.OR)
     @PatchMapping("/value")
-    public void resetValue(@RequestBody @Valid OptionResetValueReq req) {
+    public void resetValue(@RequestBody @Valid OptionValueResetReq req) {
         baseService.resetValue(req);
     }
 }

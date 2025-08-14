@@ -32,7 +32,7 @@ import top.continew.admin.system.mapper.OptionMapper;
 import top.continew.admin.system.model.entity.OptionDO;
 import top.continew.admin.system.model.query.OptionQuery;
 import top.continew.admin.system.model.req.OptionReq;
-import top.continew.admin.system.model.req.OptionResetValueReq;
+import top.continew.admin.system.model.req.OptionValueResetReq;
 import top.continew.admin.system.model.resp.OptionResp;
 import top.continew.admin.system.service.OptionService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
@@ -104,7 +104,7 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public void resetValue(OptionResetValueReq req) {
+    public void resetValue(OptionValueResetReq req) {
         RedisUtils.deleteByPattern(CacheConstants.OPTION_KEY_PREFIX + StringConstants.ASTERISK);
         String category = req.getCategory();
         List<String> codeList = req.getCode();

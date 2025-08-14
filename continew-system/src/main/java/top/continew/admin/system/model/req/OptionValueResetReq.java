@@ -21,37 +21,30 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 角色功能权限修改请求参数
+ * 参数重置请求参数
  *
- * @author Charles7c
- * @since 2025/2/5 21:00
+ * @author Bull-BCLS
+ * @since 2023/9/21 23:10
  */
 @Data
-@Schema(description = "角色功能权限修改请求参数")
-public class RoleUpdatePermissionReq implements Serializable {
+@Schema(description = "参数重置请求参数")
+public class OptionValueResetReq implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 角色 ID
+     * 键列表
      */
-    @Schema(description = "角色 ID", example = "1")
-    private Long roleId;
+    @Schema(description = "键列表", example = "SITE_TITLE,SITE_COPYRIGHT")
+    private List<String> code;
 
     /**
-     * 功能权限：菜单 ID 列表
+     * 类别
      */
-    @Schema(description = "功能权限：菜单 ID 列表", example = "1000,1010,1011,1012,1013,1014")
-    private List<Long> menuIds = new ArrayList<>();
-
-    /**
-     * 菜单选择是否父子节点关联
-     */
-    @Schema(description = "菜单选择是否父子节点关联", example = "false")
-    private Boolean menuCheckStrictly;
+    @Schema(description = "类别", example = "SITE")
+    private String category;
 }

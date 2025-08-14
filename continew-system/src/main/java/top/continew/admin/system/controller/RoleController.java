@@ -32,7 +32,7 @@ import top.continew.admin.common.base.controller.BaseController;
 import top.continew.admin.system.model.query.RoleQuery;
 import top.continew.admin.system.model.query.RoleUserQuery;
 import top.continew.admin.system.model.req.RoleReq;
-import top.continew.admin.system.model.req.RoleUpdatePermissionReq;
+import top.continew.admin.system.model.req.RolePermissionUpdateReq;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
 import top.continew.admin.system.model.resp.role.RolePermissionResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
@@ -75,7 +75,7 @@ public class RoleController extends BaseController<RoleService, RoleResp, RoleDe
     @Operation(summary = "修改权限", description = "修改角色的功能权限")
     @SaCheckPermission("system:role:updatePermission")
     @PutMapping("/{id}/permission")
-    public void updatePermission(@PathVariable("id") Long id, @RequestBody @Valid RoleUpdatePermissionReq req) {
+    public void updatePermission(@PathVariable("id") Long id, @RequestBody @Valid RolePermissionUpdateReq req) {
         baseService.updatePermission(id, req);
     }
 
