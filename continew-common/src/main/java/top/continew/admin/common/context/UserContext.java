@@ -132,11 +132,11 @@ public class UserContext implements Serializable {
     }
 
     /**
-     * 是否为超级管理员用户
+     * 是否为超级管理员
      *
      * @return true：是；false：否
      */
-    public boolean isSuperAdminUser() {
+    public boolean isSuperAdmin() {
         if (CollUtil.isEmpty(roleCodes)) {
             return false;
         }
@@ -144,11 +144,11 @@ public class UserContext implements Serializable {
     }
 
     /**
-     * 是否为租户管理员用户
+     * 是否为租户管理员
      *
      * @return true：是；false：否
      */
-    public boolean isTenantAdminUser() {
+    public boolean isTenantAdmin() {
         if (CollUtil.isEmpty(roleCodes)) {
             return false;
         }
