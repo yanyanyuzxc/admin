@@ -334,7 +334,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             if (!isBackend) {
                 fileName = ".vue".equals(extension) && "index".equals(classNameSuffix)
                     ? "index.vue"
-                    : this.getFrontendFileName(classNamePrefix, className, extension);
+                    : this.getFrontendFileName(classNamePrefix, classNameSuffix, extension);
             }
             generatePreview.setFileName(fileName);
             generatePreview.setContent(engine.getTemplate(templateConfig.getTemplatePath())
