@@ -88,6 +88,7 @@ public class StorageReq implements Serializable {
     @Schema(description = "Endpoint", example = "")
     @Length(max = 255, message = "Endpoint长度不能超过 {max} 个字符")
     @NotBlank(message = "Endpoint不能为空", groups = ValidationGroup.Storage.OSS.class)
+    @Pattern(regexp = RegexConstants.URL_HTTP, message = "Endpoint格式不正确", groups = ValidationGroup.Storage.OSS.class)
     private String endpoint;
 
     /**

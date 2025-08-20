@@ -65,7 +65,7 @@ public enum StorageTypeEnum implements BaseEnum<Integer> {
         public void validate(StorageReq req) {
             ValidationUtils.validate(req, ValidationGroup.Storage.OSS.class);
             ValidationUtils.throwIf(StrUtil.isNotBlank(req.getDomain()) && !ReUtil
-                .isMatch(RegexConstants.HTTP_DOMAIN_URL, req.getDomain()), "域名格式不正确");
+                .isMatch(RegexConstants.URL_HTTP_NOT_IP, req.getDomain()), "域名格式不正确");
         }
     };
 
