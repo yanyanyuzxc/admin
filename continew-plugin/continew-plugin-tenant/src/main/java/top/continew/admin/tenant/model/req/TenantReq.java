@@ -97,9 +97,9 @@ public class TenantReq implements Serializable {
     private String adminUsername;
 
     /**
-     * 管理员密码（加密）
+     * 管理员密码
      */
-    @Schema(description = "管理员密码（加密）", example = "E7c72TH+LDxKTwavjM99W1MdI9Lljh79aPKiv3XB9MXcplhm7qJ1BJCj28yaflbdVbfc366klMtjLIWQGqb0qw==")
+    @Schema(description = "管理员密码", example = "RSA 公钥加密的管理员密码")
     @NotBlank(message = "管理员密码不能为空", groups = CrudValidationGroup.Create.class)
     private String adminPassword;
 

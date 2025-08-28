@@ -60,9 +60,9 @@ public class UserReq implements Serializable {
     private String nickname;
 
     /**
-     * 密码（加密）
+     * 密码
      */
-    @Schema(description = "密码（加密）", example = "E7c72TH+LDxKTwavjM99W1MdI9Lljh79aPKiv3XB9MXcplhm7qJ1BJCj28yaflbdVbfc366klMtjLIWQGqb0qw==")
+    @Schema(description = "密码", example = "RSA 公钥加密的密码")
     @NotBlank(message = "密码不能为空", groups = CrudValidationGroup.Create.class)
     private String password;
 
