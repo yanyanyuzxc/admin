@@ -21,7 +21,6 @@ import lombok.Data;
 import top.continew.admin.common.base.model.resp.BaseDetailResp;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.system.enums.StorageTypeEnum;
-import top.continew.starter.security.mask.annotation.JsonMask;
 
 import java.io.Serial;
 
@@ -67,13 +66,6 @@ public class StorageResp extends BaseDetailResp {
      */
     @Schema(description = "Access Key", example = "")
     private String accessKey;
-
-    /**
-     * Secret Key
-     */
-    @Schema(description = "Secret Key", example = "")
-    @JsonMask(left = 4, right = 3)
-    private String secretKey;
 
     /**
      * Endpoint

@@ -47,7 +47,7 @@ public class StorageReq implements Serializable {
     /**
      * 名称
      */
-    @Schema(description = "名称", example = "存储1")
+    @Schema(description = "名称", example = "S3对象存储")
     @NotBlank(message = "名称不能为空")
     @Length(max = 100, message = "名称长度不能超过 {max} 个字符")
     private String name;
@@ -55,7 +55,7 @@ public class StorageReq implements Serializable {
     /**
      * 编码
      */
-    @Schema(description = "编码", example = "local")
+    @Schema(description = "编码", example = "s3_aliyun")
     @NotBlank(message = "编码不能为空")
     @Pattern(regexp = RegexConstants.GENERAL_CODE, message = "编码长度为 2-30 个字符，支持大小写字母、数字、下划线，以字母开头")
     private String code;
@@ -70,7 +70,7 @@ public class StorageReq implements Serializable {
     /**
      * Access Key
      */
-    @Schema(description = "Access Key", example = "")
+    @Schema(description = "Access Key", example = "LBAI4Fp4dXYcZamU5EXTBdTa")
     @Length(max = 255, message = "Access Key长度不能超过 {max} 个字符")
     @NotBlank(message = "Access Key不能为空", groups = ValidationGroup.Storage.OSS.class)
     private String accessKey;
@@ -78,14 +78,13 @@ public class StorageReq implements Serializable {
     /**
      * Secret Key
      */
-    @Schema(description = "Secret Key", example = "")
-    @NotBlank(message = "Secret Key不能为空", groups = ValidationGroup.Storage.OSS.class)
+    @Schema(description = "Secret Key", example = "RSA 公钥加密的 Secret Key")
     private String secretKey;
 
     /**
      * Endpoint
      */
-    @Schema(description = "Endpoint", example = "")
+    @Schema(description = "Endpoint", example = "http://oss-cn-shanghai.aliyuncs.com")
     @Length(max = 255, message = "Endpoint长度不能超过 {max} 个字符")
     @NotBlank(message = "Endpoint不能为空", groups = ValidationGroup.Storage.OSS.class)
     @Pattern(regexp = RegexConstants.URL_HTTP, message = "Endpoint格式不正确", groups = ValidationGroup.Storage.OSS.class)
@@ -94,7 +93,7 @@ public class StorageReq implements Serializable {
     /**
      * Bucket/存储路径
      */
-    @Schema(description = "Bucket/存储路径", example = "C:/continew-admin/data/file/")
+    @Schema(description = "Bucket/存储路径", example = "continew-admin")
     @Length(max = 255, message = "Bucket长度不能超过 {max} 个字符", groups = ValidationGroup.Storage.OSS.class)
     @Length(max = 255, message = "存储路径长度不能超过 {max} 个字符", groups = ValidationGroup.Storage.Local.class)
     @NotBlank(message = "Bucket不能为空", groups = ValidationGroup.Storage.OSS.class)
@@ -104,7 +103,7 @@ public class StorageReq implements Serializable {
     /**
      * 域名/访问路径
      */
-    @Schema(description = "域名/访问路径", example = "http://localhost:8000/file")
+    @Schema(description = "域名/访问路径", example = "https://continew-admin.file.continew.top/")
     @Length(max = 255, message = "域名长度不能超过 {max} 个字符", groups = ValidationGroup.Storage.OSS.class)
     @Length(max = 255, message = "访问路径长度不能超过 {max} 个字符", groups = ValidationGroup.Storage.Local.class)
     @NotBlank(message = "访问路径不能为空", groups = ValidationGroup.Storage.Local.class)

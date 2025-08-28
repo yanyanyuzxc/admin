@@ -28,9 +28,9 @@ import org.dromara.x.file.storage.core.FileStorageServiceBuilder;
 import org.dromara.x.file.storage.core.platform.FileStorage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.common.model.req.CommonStatusUpdateReq;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.common.model.req.CommonStatusUpdateReq;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.enums.StorageTypeEnum;
 import top.continew.admin.system.mapper.StorageMapper;
@@ -40,7 +40,6 @@ import top.continew.admin.system.model.req.StorageReq;
 import top.continew.admin.system.model.resp.StorageResp;
 import top.continew.admin.system.service.FileService;
 import top.continew.admin.system.service.StorageService;
-import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.SpringWebUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
@@ -68,6 +67,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
     public void beforeCreate(StorageReq req) {
         // 解密密钥
         if (StorageTypeEnum.OSS.equals(req.getType())) {
+            ValidationUtils.throwIfBlank(req.getSecretKey(), "Secret Key不能为空");
             req.setSecretKey(this.decryptSecretKey(req.getSecretKey(), null));
         }
         // 指定配置参数校验及预处理
@@ -228,13 +228,9 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
      * @return 解密后的 SecretKey
      */
     private String decryptSecretKey(String encryptSecretKey, StorageDO oldStorage) {
-        // 修改时，SecretKey 为空或带 *，将不更改
-        if (oldStorage != null) {
-            boolean isSecretKeyNotUpdate = StrUtil.isBlank(encryptSecretKey) || encryptSecretKey
-                .contains(StringConstants.ASTERISK);
-            if (isSecretKeyNotUpdate) {
-                return oldStorage.getSecretKey();
-            }
+        // 修改时，SecretKey 为空将不更改
+        if (oldStorage != null && StrUtil.isBlank(encryptSecretKey)) {
+            return oldStorage.getSecretKey();
         }
         // 解密
         String secretKey = ExceptionUtils.exToNull(() -> SecureUtils.decryptByRsaPrivateKey(encryptSecretKey));
