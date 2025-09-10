@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alicp.jetcache.anno.CacheInvalidate;
@@ -50,6 +51,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 角色业务实现
@@ -135,7 +137,13 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
 
     @Override
     public List<LabelValueResp> dict(RoleQuery query, SortQuery sortQuery) {
-        query.setExcludeRoleCodes(RoleCodeEnum.getSuperRoleCodes());
+        List<String> currentUserRoleCodes = StpUtil.getRoleList();
+        final List<String> superRoleCodes = RoleCodeEnum.getSuperRoleCodes();
+        // dict查询的时候，需要查询当前用户拥有的角色而不是排除，避免前端显示角色数字而不是角色名称
+        final List<String> excludeRoleCodes = superRoleCodes.stream()
+            .filter(roleCode -> !currentUserRoleCodes.contains(roleCode))
+            .collect(Collectors.toList());
+        query.setExcludeRoleCodes(CollUtil.defaultIfEmpty(excludeRoleCodes, superRoleCodes));
         return super.dict(query, sortQuery);
     }
 
