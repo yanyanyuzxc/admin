@@ -43,6 +43,7 @@ import top.continew.admin.system.model.resp.file.FileResp;
 import top.continew.admin.system.model.resp.file.FileStatisticsResp;
 import top.continew.admin.system.service.FileService;
 import top.continew.admin.system.service.StorageService;
+import top.continew.starter.cache.redisson.util.RedisLockUtils;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.StrUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
@@ -280,38 +281,44 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
      */
     @Override
     public void createParentDir(String parentPath, StorageDO storage) {
-        if (StrUtil.isBlank(parentPath) || StringConstants.SLASH.equals(parentPath)) {
-            return;
-        }
-        // user/avatar/ => user、avatar
-        String[] parentPathParts = StrUtil.split(parentPath, StringConstants.SLASH, false, true).toArray(String[]::new);
-        String lastPath = StringConstants.SLASH;
-        StringBuilder currentPathBuilder = new StringBuilder();
-        for (int i = 0; i < parentPathParts.length; i++) {
-            String parentPathPart = parentPathParts[i];
-            if (i > 0) {
-                lastPath = currentPathBuilder.toString();
+        String lockKey = StrUtil.format("Lock:{}:{}", storage.getCode(), parentPath);
+        try (RedisLockUtils lock = RedisLockUtils.tryLock(lockKey)) {
+            if (!lock.isLocked()) {
+                return; // 获取锁失败，直接返回
             }
-            // /user、/user/avatar
-            currentPathBuilder.append(StringConstants.SLASH).append(parentPathPart);
-            String currentPath = currentPathBuilder.toString();
-            // 文件夹和文件存储引擎需要一致
-            FileDO dirFile = baseMapper.lambdaQuery()
-                .eq(FileDO::getPath, currentPath)
-                .eq(FileDO::getType, FileTypeEnum.DIR)
-                .one();
-            if (dirFile != null) {
-                CheckUtils.throwIfNotEqual(dirFile.getStorageId(), storage.getId(), "文件夹和上传文件存储引擎不一致");
-                continue;
+            if (StrUtil.isBlank(parentPath) || StringConstants.SLASH.equals(parentPath)) {
+                return;
             }
-            FileDO file = new FileDO();
-            file.setName(parentPathPart);
-            file.setOriginalName(parentPathPart);
-            file.setPath(currentPath);
-            file.setParentPath(lastPath);
-            file.setType(FileTypeEnum.DIR);
-            file.setStorageId(storage.getId());
-            baseMapper.insert(file);
+            // user/avatar/ => user、avatar
+            String[] parentPathParts = StrUtil.split(parentPath, StringConstants.SLASH, false, true).toArray(String[]::new);
+            String lastPath = StringConstants.SLASH;
+            StringBuilder currentPathBuilder = new StringBuilder();
+            for (int i = 0; i < parentPathParts.length; i++) {
+                String parentPathPart = parentPathParts[i];
+                if (i > 0) {
+                    lastPath = currentPathBuilder.toString();
+                }
+                // /user、/user/avatar
+                currentPathBuilder.append(StringConstants.SLASH).append(parentPathPart);
+                String currentPath = currentPathBuilder.toString();
+                // 文件夹和文件存储引擎需要一致
+                FileDO dirFile = baseMapper.lambdaQuery()
+                    .eq(FileDO::getPath, currentPath)
+                    .eq(FileDO::getType, FileTypeEnum.DIR)
+                    .one();
+                if (dirFile != null) {
+                    CheckUtils.throwIfNotEqual(dirFile.getStorageId(), storage.getId(), "文件夹和上传文件存储引擎不一致");
+                    continue;
+                }
+                FileDO file = new FileDO();
+                file.setName(parentPathPart);
+                file.setOriginalName(parentPathPart);
+                file.setPath(currentPath);
+                file.setParentPath(lastPath);
+                file.setType(FileTypeEnum.DIR);
+                file.setStorageId(storage.getId());
+                baseMapper.insert(file);
+            }
         }
     }
 }
