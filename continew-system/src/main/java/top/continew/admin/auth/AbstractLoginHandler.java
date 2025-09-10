@@ -110,7 +110,7 @@ public abstract class AbstractLoginHandler<T extends LoginReq> implements LoginH
             return roles;
         }, threadPoolTaskExecutor);
         CompletableFuture<Integer> passwordExpirationDaysFuture = CompletableFuture.supplyAsync(() -> optionService
-            .getValueByCode2Int(PASSWORD_EXPIRATION_DAYS.name()));
+            .getValueByCode2Int(PASSWORD_EXPIRATION_DAYS.name()), threadPoolTaskExecutor);
         CompletableFuture.allOf(permissionFuture, roleFuture, passwordExpirationDaysFuture);
         UserContext userContext = new UserContext(permissionFuture.join(), roleFuture
             .join(), passwordExpirationDaysFuture.join());
