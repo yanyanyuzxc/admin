@@ -20,6 +20,7 @@ import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.extra.spring.SpringUtil;
+import com.alibaba.ttl.TransmittableThreadLocal;
 import top.continew.admin.common.api.system.UserApi;
 import top.continew.starter.core.util.ExceptionUtils;
 
@@ -31,8 +32,8 @@ import top.continew.starter.core.util.ExceptionUtils;
  */
 public class UserContextHolder {
 
-    private static final ThreadLocal<UserContext> CONTEXT_HOLDER = new ThreadLocal<>();
-    private static final ThreadLocal<UserExtraContext> EXTRA_CONTEXT_HOLDER = new ThreadLocal<>();
+    private static final TransmittableThreadLocal<UserContext> CONTEXT_HOLDER = new TransmittableThreadLocal<>();
+    private static final TransmittableThreadLocal<UserExtraContext> EXTRA_CONTEXT_HOLDER = new TransmittableThreadLocal<>();
 
     private UserContextHolder() {
     }
