@@ -38,10 +38,7 @@ import top.continew.starter.data.enums.DatabaseType;
 import top.continew.starter.data.util.MetaUtils;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 部门业务实现
@@ -128,7 +125,7 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
     }
 
     @Override
-    public int countByNames(List<String> deptNames) {
+    public int countByNames(Set<String> deptNames) {
         if (CollUtil.isEmpty(deptNames)) {
             return 0;
         }

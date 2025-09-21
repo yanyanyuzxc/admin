@@ -24,6 +24,7 @@ import top.continew.admin.system.model.resp.DeptResp;
 import top.continew.starter.data.service.IService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门业务接口
@@ -55,5 +56,5 @@ public interface DeptService extends BaseService<DeptResp, DeptResp, DeptQuery, 
      * @param deptNames 名称列表
      * @return 部门数量
      */
-    int countByNames(List<String> deptNames);
+    int countByNames(Set<String> deptNames);
 }

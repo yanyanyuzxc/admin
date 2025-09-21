@@ -24,6 +24,8 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
+import java.util.HashMap;
+import java.util.Map;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -264,10 +266,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         List<String> roleNames = validRowList.stream().map(UserImportRowReq::getRoleName).distinct().toList();
         int existRoleCount = roleService.countByNames(roleNames);
         CheckUtils.throwIf(existRoleCount < roleNames.size(), "存在无效角色，请检查数据");
-        // 校验是否存在无效部门
-        List<String> deptNames = CollUtils.mapToList(validRowList, UserImportRowReq::getDeptName);
-        int existDeptCount = deptService.countByNames(deptNames);
-        CheckUtils.throwIf(existDeptCount < deptNames.size(), "存在无效部门，请检查数据");
+        // 校验是否存在无效部门（支持多级部门解析）
+        Set<String> deptNames = CollUtils.mapToSet(validRowList, UserImportRowReq::getDeptName);
+        int existDeptCount = countValidMultiLevelDepts(deptNames);
+        CheckUtils.throwIf(existDeptCount < deptNames.size(), "存在无效部门，请检查部门名称或部门层级是否正确");
 
         // 查询重复用户
         userImportResp
@@ -319,11 +321,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
             .distinct()
             .toList());
         Map<String, Long> roleMap = roleList.stream().collect(Collectors.toMap(RoleDO::getName, RoleDO::getId));
-        List<DeptDO> deptList = deptService.listByNames(importUserList.stream()
+        // 获取多级部门映射
+        Map<String, Long> deptMap = buildMultiLevelDeptMapping(importUserList.stream()
             .map(UserImportRowReq::getDeptName)
             .distinct()
             .toList());
-        Map<String, Long> deptMap = deptList.stream().collect(Collectors.toMap(DeptDO::getName, DeptDO::getId));
 
         // 批量操作数据库集合
         List<UserDO> insertList = new ArrayList<>();
@@ -730,5 +732,131 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         UserDO user = baseMapper.lambdaQuery().eq(UserDO::getId, id).one();
         CheckUtils.throwIfNull(user, "用户不存在");
         return user;
+    }
+
+    /**
+     * 统计有效的多级部门数量
+     * <p>
+     * 支持多级部门路径解析，使用冒号(:)作为层级分隔符
+     * 例如：公司A:研发部:前端组 或 研发部
+     * </p>
+     *
+     * @param deptNames 部门名称集合
+     * @return 有效部门数量
+     */
+    private int countValidMultiLevelDepts(Set<String> deptNames) {
+        CheckUtils.throwIfEmpty(deptNames, "部门名称集合不能为空");
+
+        int validCount = 0;
+        List<String> invalidDepts = new ArrayList<>();
+
+        for (String deptName : deptNames) {
+            try {
+                findDeptByHierarchicalPath(deptName);
+                validCount++;
+            } catch (Exception e) {
+                invalidDepts.add(deptName);
+            }
+        }
+
+        CheckUtils.throwIf(CollUtil.isNotEmpty(invalidDepts), "以下部门无效或存在歧义：{}", String.join(", ", invalidDepts));
+
+        return validCount;
+    }
+
+    /**
+     * 构建多级部门映射关系
+     * <p>
+     * 将部门名称列表转换为部门名称到ID的映射，支持多级部门路径解析
+     * </p>
+     *
+     * @param deptNames 部门名称列表
+     * @return 部门名称到ID的映射
+     */
+    private Map<String, Long> buildMultiLevelDeptMapping(List<String> deptNames) {
+        CheckUtils.throwIfEmpty(deptNames, "部门名称列表不能为空");
+
+        Map<String, Long> deptMap = new HashMap<>();
+        for (String deptName : deptNames) {
+            DeptDO dept = findDeptByHierarchicalPath(deptName);
+            CheckUtils.throwIfNull(dept, "部门 [{}] 不存在或存在歧义", deptName);
+            deptMap.put(deptName, dept.getId());
+        }
+        return deptMap;
+    }
+
+    /**
+     * 根据层级路径查找部门
+     * <p>
+     * 支持两种格式：
+     * <ul>
+     * <li>多级部门：公司A:研发部:前端组</li>
+     * <li>单级部门：研发部</li>
+     * </ul>
+     * 使用冒号(:)作为层级分隔符，会逐级查找对应的部门
+     * </p>
+     *
+     * @param deptPath 部门路径
+     * @return 部门信息，未找到时返回null
+     */
+    private DeptDO findDeptByHierarchicalPath(String deptPath) {
+        CheckUtils.throwIfBlank(deptPath, "部门路径不能为空");
+
+        // 根据是否包含冒号选择处理方式
+        return deptPath.contains(":") ? findMultiLevelDept(deptPath) : findSingleLevelDept(deptPath.trim());
+    }
+
+    /**
+     * 查找多级部门
+     * <p>
+     * 从根部门开始逐级查找，确保部门层级关系正确
+     * </p>
+     *
+     * @param deptPath 多级部门路径
+     * @return 部门信息，未找到时返回null
+     */
+    private DeptDO findMultiLevelDept(String deptPath) {
+        String[] pathParts = deptPath.split(":");
+        CheckUtils.throwIf(pathParts.length == 0, "部门路径格式错误：{}", deptPath);
+
+        // 从根部门开始逐级查找
+        DeptDO currentDept = null;
+        Long parentId = 0L; // 根部门的parentId为null
+
+        for (String part : pathParts) {
+            String trimmedPart = part.trim();
+            CheckUtils.throwIfBlank(trimmedPart, "部门路径包含空名称：{}", deptPath);
+
+            // 查找当前层级下指定名称的部门
+            currentDept = deptService.lambdaQuery()
+                .eq(DeptDO::getName, trimmedPart)
+                .eq(DeptDO::getParentId, parentId)
+                .one();
+
+            CheckUtils.throwIfNull(currentDept, "找不到部门 [{}] 在路径 [{}] 中", trimmedPart, deptPath);
+            parentId = currentDept.getId(); // 更新父级ID为当前部门ID
+        }
+
+        return currentDept;
+    }
+
+    /**
+     * 查找单级部门
+     * <p>
+     * 当只提供部门名称时，检查是否存在多个同名部门
+     * 如果存在多个同名部门，则要求用户提供完整的层级路径
+     * </p>
+     *
+     * @param deptName 部门名称
+     * @return 部门信息，未找到或存在歧义时返回null
+     */
+    private DeptDO findSingleLevelDept(String deptName) {
+        // 查找所有同名部门
+        List<DeptDO> deptList = deptService.lambdaQuery().eq(DeptDO::getName, deptName).list();
+
+        CheckUtils.throwIfEmpty(deptList, "部门 [{}] 不存在", deptName);
+        CheckUtils.throwIf(deptList.size() > 1, "存在多个同名部门 [{}]，请使用完整层级路径，如：公司名:{}", deptName, deptName);
+
+        return deptList.get(0);
     }
 }
