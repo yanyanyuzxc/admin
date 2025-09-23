@@ -38,7 +38,7 @@
 <img src="https://gitcode.com/continew/continew-admin/star/badge.svg" alt="GitCode Stars" />
 </a>
 
-📚 [在线文档](https://continew.top) | 🚀 [演示地址](https://continew.top/docs/admin/guide/demo.html)
+📚 [在线文档](https://continew.top) | 🚀 [演示地址](https://continew.top/docs/admin/guide/demo.html) | 💬 [吐槽广场（你就是 Talk King!）](https://continew.top/docs/admin/issue-hub.html) | [![问 DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/continew-org/continew-admin)
 
 ## 简介
 
@@ -556,7 +556,7 @@ ContiNew 系列项目采用清晰的分支策略，确保开发与维护有序�
 ## License
 
 - 遵循 <a href="https://github.com/continew-org/continew-admin/blob/dev/LICENSE" target="_blank">Apache-2.0</a> 开源许可协议
-- Copyright © 2022-present <a href="https://blog.charles7c.top" target="_blank">Charles7c</a>
+- Copyright © 2022-present <a href="https://charles7c.top" target="_blank">Charles7c</a>
 
 ## GitHub Star 趋势
 
