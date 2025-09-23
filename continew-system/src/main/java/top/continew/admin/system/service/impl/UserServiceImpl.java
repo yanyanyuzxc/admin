@@ -24,8 +24,6 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
-import java.util.HashMap;
-import java.util.Map;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -790,10 +788,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
      * <p>
      * 支持两种格式：
      * <ul>
-     * <li>多级部门：公司A:研发部:前端组</li>
+     * <li>多级部门：公司A/研发部/前端组</li>
      * <li>单级部门：研发部</li>
      * </ul>
-     * 使用冒号(:)作为层级分隔符，会逐级查找对应的部门
+     * 使用左斜杠/作为层级分隔符，会逐级查找对应的部门
      * </p>
      *
      * @param deptPath 部门路径
@@ -801,9 +799,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
      */
     private DeptDO findDeptByHierarchicalPath(String deptPath) {
         CheckUtils.throwIfBlank(deptPath, "部门路径不能为空");
-
-        // 根据是否包含冒号选择处理方式
-        return deptPath.contains(":") ? findMultiLevelDept(deptPath) : findSingleLevelDept(deptPath.trim());
+        return deptPath.contains(StringConstants.SLASH)
+            ? findMultiLevelDept(deptPath)
+            : findSingleLevelDept(deptPath.trim());
     }
 
     /**
@@ -816,7 +814,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
      * @return 部门信息，未找到时返回null
      */
     private DeptDO findMultiLevelDept(String deptPath) {
-        String[] pathParts = deptPath.split(":");
+        String[] pathParts = deptPath.split(StringConstants.SLASH);
         CheckUtils.throwIf(pathParts.length == 0, "部门路径格式错误：{}", deptPath);
 
         // 从根部门开始逐级查找
