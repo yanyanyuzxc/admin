@@ -7,7 +7,7 @@ application:
   description: 持续迭代优化的前后端分离中后台管理系统框架，开箱即用，持续提供舒适的开发体验。
   # 版本
   version: 4.1.0-SNAPSHOT
-  starter: 2.13.4
+  starter: 2.14.0
   # 基本包
   base-package: top.continew.admin
   ## 作者信息配置
@@ -182,8 +182,8 @@ continew-starter.trace:
 
 --- ### CRUD 配置
 continew-starter.crud:
-  ## 全局树结构配置（简单树，对应前端 UI）
-  tree:
+  ## 树型字典结构映射配置（简单树，对应前端 UI）
+  tree-dict-model:
     id-key: key
     name-key: title
     weight-key: sort

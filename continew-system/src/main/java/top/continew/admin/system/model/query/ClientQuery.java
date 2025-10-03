@@ -44,6 +44,7 @@ public class ClientQuery implements Serializable {
      * 客户端类型
      */
     @Schema(description = "客户端类型", example = "PC")
+    @Query(type = QueryType.EQ)
     private String clientType;
 
     /**
@@ -57,5 +58,6 @@ public class ClientQuery implements Serializable {
      * 状态
      */
     @Schema(description = "状态", example = "1")
+    @Query(type = QueryType.EQ)
     private DisEnableStatusEnum status;
 }

@@ -26,7 +26,7 @@ import top.continew.admin.common.base.mapper.DataPermissionMapper;
 import top.continew.admin.system.model.entity.user.UserDO;
 import top.continew.admin.system.model.resp.user.UserDetailResp;
 import top.continew.starter.extension.datapermission.annotation.DataPermission;
-import top.continew.starter.security.crypto.annotation.FieldEncrypt;
+import top.continew.starter.encrypt.field.annotation.FieldEncrypt;
 
 import java.util.List;
 

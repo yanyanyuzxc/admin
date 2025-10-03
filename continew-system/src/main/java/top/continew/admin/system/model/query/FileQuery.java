@@ -49,11 +49,13 @@ public class FileQuery implements Serializable {
      * 上级目录
      */
     @Schema(description = "上级目录", example = "/")
+    @Query(type = QueryType.EQ)
     private String parentPath;
 
     /**
      * 类型
      */
     @Schema(description = "类型", example = "2")
+    @Query(type = QueryType.EQ)
     private FileTypeEnum type;
 }

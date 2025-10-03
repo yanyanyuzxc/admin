@@ -50,19 +50,20 @@ public class SmsConfigQuery implements Serializable {
      * 厂商
      */
     @Schema(description = "厂商", example = "cloopen")
-    @Query
+    @Query(type = QueryType.EQ)
     private String supplier;
 
     /**
      * Access Key
      */
     @Schema(description = "Access Key", example = "7aaf0708674db3ee05676ecbc2f31b7b")
-    @Query
+    @Query(type = QueryType.EQ)
     private String accessKey;
 
     /**
      * 状态
      */
     @Schema(description = "状态", example = "1")
+    @Query(type = QueryType.EQ)
     private DisEnableStatusEnum status;
 }

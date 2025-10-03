@@ -50,11 +50,13 @@ public class StorageQuery implements Serializable {
      * 状态
      */
     @Schema(description = "状态", example = "1")
+    @Query(type = QueryType.EQ)
     private DisEnableStatusEnum status;
 
     /**
      * 类型
      */
     @Schema(description = "类型", example = "2")
+    @Query(type = QueryType.EQ)
     private StorageTypeEnum type;
 }

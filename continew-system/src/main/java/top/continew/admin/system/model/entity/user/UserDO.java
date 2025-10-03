@@ -23,9 +23,9 @@ import lombok.Data;
 import top.continew.admin.common.base.model.entity.BaseDO;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
+import top.continew.starter.encrypt.field.annotation.FieldEncrypt;
+import top.continew.starter.encrypt.password.encoder.encryptor.PasswordEncoderEncryptor;
 import top.continew.starter.extension.crud.annotation.DictModel;
-import top.continew.starter.security.crypto.annotation.FieldEncrypt;
-import top.continew.starter.security.crypto.enums.Algorithm;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -57,7 +57,7 @@ public class UserDO extends BaseDO {
     /**
      * 密码
      */
-    @FieldEncrypt(Algorithm.PASSWORD_ENCODER)
+    @FieldEncrypt(encryptor = PasswordEncoderEncryptor.class)
     private String password;
 
     /**

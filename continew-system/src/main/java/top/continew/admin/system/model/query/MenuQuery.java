@@ -52,6 +52,7 @@ public class MenuQuery implements Serializable {
      * 状态
      */
     @Schema(description = "状态", example = "1")
+    @Query(type = QueryType.EQ)
     private DisEnableStatusEnum status;
 
     public MenuQuery(DisEnableStatusEnum status) {

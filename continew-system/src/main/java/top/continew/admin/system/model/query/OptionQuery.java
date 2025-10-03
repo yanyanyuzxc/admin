@@ -51,6 +51,7 @@ public class OptionQuery implements Serializable {
      * 类别
      */
     @Schema(description = "类别", example = "SITE")
+    @Query(type = QueryType.EQ)
     @EnumValue(value = OptionCategoryEnum.class, message = "类别无效")
     private String category;
 }

@@ -74,7 +74,7 @@ public class BaseController<S extends BaseService<L, D, Q, C>, L, D, Q, C> exten
             }
         }
         // 不需要校验 DICT、DICT_TREE 接口权限
-        if (Api.DICT.equals(crudApi.value()) || Api.DICT_TREE.equals(crudApi.value())) {
+        if (Api.DICT.equals(crudApi.value()) || Api.TREE_DICT.equals(crudApi.value())) {
             return;
         }
         // 校验权限，例如：创建用户接口（POST /system/user） => 校验 system:user:create 权限

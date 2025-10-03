@@ -50,7 +50,7 @@ import java.lang.reflect.Method;
 @RestController
 @RequiredArgsConstructor
 @CrudRequestMapping(value = "/system/menu", api = {Api.TREE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE,
-    Api.DICT_TREE})
+    Api.TREE_DICT})
 public class MenuController extends BaseController<MenuService, MenuResp, MenuResp, MenuQuery, MenuReq> {
 
     @Operation(summary = "清除缓存", description = "清除缓存")

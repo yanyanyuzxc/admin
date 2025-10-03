@@ -171,7 +171,7 @@ public class OperationDescriptionCustomizer {
         if (crudRequestMapping == null || crudApi == null) {
             return StringConstants.EMPTY;
         }
-        if (Api.DICT.equals(crudApi.value()) || Api.DICT_TREE.equals(crudApi.value())) {
+        if (Api.DICT.equals(crudApi.value()) || Api.TREE_DICT.equals(crudApi.value())) {
             return StringConstants.EMPTY;
         }
         String permissionPrefix = CrudApiPermissionPrefixCache.get(targetClass);

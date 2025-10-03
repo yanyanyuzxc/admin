@@ -80,10 +80,10 @@ import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.core.util.FileUploadUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
+import top.continew.starter.encrypt.field.util.EncryptHelper;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
-import top.continew.starter.security.crypto.util.EncryptHelper;
 
 import java.io.IOException;
 import java.time.Duration;

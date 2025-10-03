@@ -36,7 +36,7 @@ import top.continew.admin.system.model.resp.DeptResp;
 import top.continew.admin.system.service.DeptService;
 import top.continew.starter.excel.converter.ExcelBaseEnumConverter;
 import top.continew.starter.excel.converter.ExcelListConverter;
-import top.continew.starter.security.crypto.annotation.FieldEncrypt;
+import top.continew.starter.encrypt.field.annotation.FieldEncrypt;
 
 import java.io.Serial;
 import java.time.LocalDateTime;

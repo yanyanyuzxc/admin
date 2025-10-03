@@ -34,8 +34,8 @@ public class RsaProperties {
     public static final String PUBLIC_KEY;
 
     static {
-        PRIVATE_KEY = SpringUtil.getProperty("continew-starter.security.crypto.private-key");
-        PUBLIC_KEY = SpringUtil.getProperty("continew-starter.security.crypto.public-key");
+        PRIVATE_KEY = SpringUtil.getProperty("continew-starter.encrypt.field.private-key");
+        PUBLIC_KEY = SpringUtil.getProperty("continew-starter.encrypt.field.public-key");
     }
 
     private RsaProperties() {
