@@ -1,0 +1,52 @@
+@import './base.scss';
+
+@import './init.scss';
+
+@import './icon.scss';
+
+@import './edit.scss';
+
+// 全局类名样式
+// @import './global.scss';
+.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled)+.el-radio-button__inner{
+    background-color: white !important;
+    border-color: white !important;
+    box-shadow: none;
+    color: rgb(var(--primary-6)) !important;
+}
+.el-button{
+    background-color: rgb(var(--primary-6)) !important;
+    border-color: rgb(var(--primary-6)) !important;
+    color: white !important;
+}
+.el-radio-button__inner {
+    background: rgb(242, 243, 245) !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: scale(0.9) !important;
+}
+
+.el-radio-group {
+    // padding: 4px;
+    background: rgb(242, 243, 245);
+    box-sizing: border-box !important;
+
+}
+.el-button.is-disabled {
+    opacity: 0.6;
+}
+.el-table__header-wrapper  {
+    background: #476593 !important; /* 表头背景色（替换为你想要的颜色） */
+   
+  }
+// 自定义原生滚动条样式
+@import './scrollbar-reset.scss';
+
+// 自定义 nprogress 插件进度条颜色
+@import './nprogress.scss';
+
+
+// 动画类名
+@import './animated.scss';
+
+@import './reset.scss'

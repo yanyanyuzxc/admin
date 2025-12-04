@@ -1,0 +1,8 @@
+export const isExternal = (path: string) => {
+    const reg = /^(https?:|mailto:|tel:|ftp:|ftps:|\/\/)/
+    return reg.test(path)
+  }
+  /** 判断 url 是否是 http 或 https */
+export function isHttp(url: string) {
+  return url.includes('http://') || url.includes('https://')
+}
